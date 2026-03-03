@@ -104,7 +104,7 @@ export default function Nav() {
         overflowY: 'auto',
       }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 4, flex: 1 }}>
- {[
+{[
   { href: '/#find-talent', label: 'Find Talent' },
   { href: '/#how-it-works', label: 'How It Works' },
   { href: '/#verify', label: 'Verification' },
