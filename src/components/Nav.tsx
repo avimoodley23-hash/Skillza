@@ -108,7 +108,7 @@ export default function Nav() {
   { href: '/#find-talent', label: 'Find Talent' },
   { href: '/#how-it-works', label: 'How It Works' },
   { href: '/#verify', label: 'Verification' },
-  { href: '/for-students', label: 'For Students' }
+{ href: '/#for-students', label: 'For Students' }
 ].map(({ href, label }) => (
   <a
     key={href}

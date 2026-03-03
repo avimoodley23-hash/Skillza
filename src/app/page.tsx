@@ -25,11 +25,11 @@ async function getStudents(): Promise<Student[]> {
     return []
   }
 
-  // Map the data to ensure null values like 'emoji' become empty strings
+  // Use this single return block to handle the null emoji
   return (data || []).map((student: any) => ({
     ...student,
-    emoji: student.emoji ?? '', // Provides a fallback for the null error
-  }))
+    emoji: student.emoji ?? '🎓' 
+  })) as Student[]
 }
 
 export default async function HomePage() {
