@@ -26,13 +26,14 @@ export default function BookPage() {
     const { data, error: dbError } = await supabase
       .from('bookings')
       .insert({
-        student_id: studentId,
-        client_name: form.name,
-        client_email: form.email,
-        client_whatsapp: form.whatsapp,
-        description: form.description,
-        status: 'pending',
-      })
+  student_id: studentId,
+  client_name: form.name,
+  client_email: form.email,
+  client_whatsapp: form.whatsapp,
+  description: form.description,
+  status: 'pending',
+  reference: reference, // Add this specific line
+})
       .select('reference')
       .single()
 
