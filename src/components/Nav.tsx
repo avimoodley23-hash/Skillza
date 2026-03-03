@@ -138,7 +138,7 @@ export default function Nav() {
           fontSize: 22, letterSpacing: 2,
           display: 'block',
         }}>
-          JOIN FREE →
+          JOIN THE WAITLIST →
         </Link>
       </div>
 
