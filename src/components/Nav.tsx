@@ -57,13 +57,13 @@ export default function Nav() {
             onMouseLeave={e => (e.currentTarget.style.color = 'var(--muted)')}>
             How It Works
           </Link>
-          <Link href="/join" style={{ fontSize: 13, fontWeight: 500, color: 'var(--muted)', transition: 'color .2s', letterSpacing: '.2px' }}
+          <Link href="/#for-students" style={{ fontSize: 13, fontWeight: 500, color: 'var(--muted)', transition: 'color .2s', letterSpacing: '.2px' }}
             onMouseEnter={e => (e.currentTarget.style.color = 'var(--cream)')}
             onMouseLeave={e => (e.currentTarget.style.color = 'var(--muted)')}>
             For Students
           </Link>
           <Link href="/join" className="btn-primary" style={{ padding: '9px 20px', fontSize: 13 }}>
-            Join Free
+            Join Now
           </Link>
         </div>
 
