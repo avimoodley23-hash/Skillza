@@ -24,7 +24,12 @@ async function getStudents(): Promise<Student[]> {
     console.error('Error fetching students:', error)
     return []
   }
-  return data || []
+
+  // Map the data to ensure null values like 'emoji' become empty strings
+  return (data || []).map((student: any) => ({
+    ...student,
+    emoji: student.emoji ?? '', // Provides a fallback for the null error
+  }))
 }
 
 export default async function HomePage() {
