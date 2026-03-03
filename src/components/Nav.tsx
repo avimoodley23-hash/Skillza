@@ -110,7 +110,7 @@ export default function Nav() {
   { href: '/#verify', label: 'Verification' },
 { href: '/#for-students', label: 'For Students' }
 ].map(({ href, label }) => (
-  <a
+  <Link
     key={href}
     href={href}
     onClick={() => setMenuOpen(false)}
@@ -127,7 +127,7 @@ export default function Nav() {
     }}
   >
     {label}
-  </a>
+  </Link>
 ))}
         </div>
         <Link href="/join" onClick={() => setMenuOpen(false)} style={{
