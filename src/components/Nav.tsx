@@ -57,11 +57,14 @@ export default function Nav() {
             onMouseLeave={e => (e.currentTarget.style.color = 'var(--muted)')}>
             How It Works
           </Link>
-          <Link href="/join" style={{ fontSize: 13, fontWeight: 500, color: 'var(--muted)', transition: 'color .2s', letterSpacing: '.2px' }}
+          <a
+            href="/#for-students"
+            style={{ fontSize: 13, fontWeight: 500, color: 'var(--muted)', transition: 'color .2s', letterSpacing: '.2px', cursor: 'pointer' }}
             onMouseEnter={e => (e.currentTarget.style.color = 'var(--cream)')}
-            onMouseLeave={e => (e.currentTarget.style.color = 'var(--muted)')}>
+            onMouseLeave={e => (e.currentTarget.style.color = 'var(--muted)')}
+          >
             For Students
-          </Link>
+          </a>
           <Link href="/join" className="btn-primary" style={{ padding: '9px 20px', fontSize: 13 }}>
             Join Free
           </Link>
@@ -86,22 +89,30 @@ export default function Nav() {
                 : 'none'
                 : 'none',
               opacity: menuOpen && i === 1 ? 0 : 1,
-            }} />
-          ))}
-        </button>
-      </nav>
-
-      {/* Mobile overlay menu */}
-      <div style={{
-        position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 398,
-        background: 'rgba(16,15,13,.98)',
-        backdropFilter: 'blur(24px)',
-        WebkitBackdropFilter: 'blur(24px)',
-        padding: '80px 28px 40px',
-        transform: menuOpen ? 'translateX(0)' : 'translateX(100%)',
-        transition: 'transform .38s cubic-bezier(.16,1,.3,1)',
-        display: 'flex', flexDirection: 'column',
-        overflowY: 'auto',
+            {[
+              { href: '/#find-talent', label: 'Find Talent' },
+              { href: '/#how-it-works', label: 'How It Works' },
+              { href: '/#verify', label: 'Verification' },
+              { href: '/#for-students', label: 'For Students' },
+            ].map(({ href, label }) => (
+              <a
+                key={href}
+                href={href}
+                onClick={() => setMenuOpen(false)}
+                style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                  padding: '16px 0',
+                  fontFamily: 'Bebas Neue, sans-serif',
+                  fontSize: 28, letterSpacing: 1.5,
+                  color: 'var(--muted-2)',
+                  borderBottom: '1px solid var(--border)',
+                  transition: 'color .2s',
+                  cursor: 'pointer',
+                }}
+              >
+                {label}
+              </a>
+            ))}
       }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 4, flex: 1 }}>
           {[
