@@ -1,13 +1,11 @@
 'use client'
 import { useState } from 'react'
-import { useParams, useRouter } from 'next/navigation'
-import { supabase } from '@/lib/supabase'
+import { useParams } from 'next/navigation'
 import Nav from '@/components/Nav'
 import Link from 'next/link'
 
 export default function BookPage() {
   const params = useParams()
-  const router = useRouter()
   const studentId = params.id as string
 
   const [form, setForm] = useState({ name: '', email: '', whatsapp: '', description: '' })
@@ -23,21 +21,21 @@ export default function BookPage() {
     setLoading(true)
     setError('')
 
-    const { data, error: dbError } = await supabase
-      .from('bookings')
-      .insert({
-  student_id: studentId,
-  client_name: form.name,
-  client_email: form.email,
-  client_whatsapp: form.whatsapp,
-  description: form.description,
-  status: 'pending',
-  reference: reference, // Add this specific line
-})
-      .select('reference')
-      .single()
+    const res = await fetch('/api/book', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        studentId,
+        clientName: form.name,
+        clientEmail: form.email,
+        clientWhatsapp: form.whatsapp,
+        description: form.description,
+      }),
+    })
 
-    if (dbError) {
+    const data = await res.json()
+
+    if (!res.ok || data.error) {
       setError('Something went wrong. Please try again.')
       setLoading(false)
       return
@@ -66,10 +64,10 @@ export default function BookPage() {
             <div style={{ background: 'rgba(255,74,28,.06)', border: '1px solid rgba(255,74,28,.15)', borderRadius: 12, padding: '14px 18px', marginBottom: 28, textAlign: 'left' }}>
               <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--orange)', marginBottom: 6 }}>Safety reminder</div>
               <p style={{ fontSize: 13, color: 'rgba(245,239,227,.7)', lineHeight: 1.6 }}>
-                Only pay the 30% deposit once scope is agreed on WhatsApp. Never pay the full amount upfront. All payments go directly to the student via EFT or SnapScan.
+                Only pay the 30% deposit once scope is agreed on WhatsApp. Never pay the full amount upfront.
               </p>
             </div>
-            <Link href="/" className="btn-outline" style={{ display: 'inline-flex' }}>Back to Skillza</Link>
+            <Link href="/" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, border: '1.5px solid rgba(245,239,227,.2)', color: 'var(--cream)', padding: '12px 24px', borderRadius: 8, textDecoration: 'none', fontSize: 14, fontWeight: 600 }}>Back to Skillza</Link>
           </div>
         </main>
       </>
@@ -81,9 +79,7 @@ export default function BookPage() {
       <Nav />
       <main style={{ paddingTop: 'calc(60px + env(safe-area-inset-top, 0px))', minHeight: '100svh', padding: '100px 20px 60px' }}>
         <div style={{ maxWidth: 560, margin: '0 auto' }}>
-          <Link href={`/students/${studentId}`} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 13, color: 'var(--muted)', marginBottom: 32, transition: 'color .2s' }}
-            onMouseEnter={e => (e.currentTarget.style.color = 'var(--cream)')}
-            onMouseLeave={e => (e.currentTarget.style.color = 'var(--muted)')}>
+          <Link href={`/students/${studentId}`} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontSize: 13, color: 'var(--muted)', marginBottom: 32, transition: 'color .2s', textDecoration: 'none' }}>
             ← Back to profile
           </Link>
 
@@ -92,11 +88,10 @@ export default function BookPage() {
             No account required. We'll connect you directly on WhatsApp within 24 hours.
           </p>
 
-          {/* Safety note */}
           <div style={{ background: 'rgba(52,213,142,.06)', border: '1px solid rgba(52,213,142,.2)', borderRadius: 12, padding: '14px 18px', marginBottom: 28 }}>
             <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--green)', marginBottom: 6 }}>Before you book</div>
             <p style={{ fontSize: 13, color: 'rgba(245,239,227,.7)', lineHeight: 1.6 }}>
-              Skillza connects you with verified students. Only pay the 30% deposit once you've agreed on scope via WhatsApp. Never pay the full amount before the work is done.
+              Skillza connects you with verified students. Only pay the 30% deposit once you've agreed on scope via WhatsApp.
             </p>
           </div>
 
@@ -123,7 +118,9 @@ export default function BookPage() {
             ))}
 
             <div>
-              <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--muted-2)', marginBottom: 8, letterSpacing: .3 }}>What do you need? <span style={{ color: 'var(--muted)', fontWeight: 400 }}>(optional but helps)</span></label>
+              <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--muted-2)', marginBottom: 8, letterSpacing: .3 }}>
+                What do you need? <span style={{ color: 'var(--muted)', fontWeight: 400 }}>(optional but helps)</span>
+              </label>
               <textarea
                 placeholder="e.g. I need a photographer for my 21st birthday party on 15 April in Claremont..."
                 value={form.description}
@@ -135,13 +132,16 @@ export default function BookPage() {
               />
             </div>
 
-            {error && <p style={{ fontSize: 13, color: '#ff6b6b', background: 'rgba(255,107,107,.1)', border: '1px solid rgba(255,107,107,.2)', borderRadius: 8, padding: '10px 14px' }}>{error}</p>}
+            {error && (
+              <p style={{ fontSize: 13, color: '#ff6b6b', background: 'rgba(255,107,107,.1)', border: '1px solid rgba(255,107,107,.2)', borderRadius: 8, padding: '10px 14px' }}>
+                {error}
+              </p>
+            )}
 
             <button
               onClick={handleSubmit}
               disabled={loading}
-              className="btn-primary"
-              style={{ width: '100%', justifyContent: 'center', fontSize: 15, padding: '16px 28px', opacity: loading ? .7 : 1, cursor: loading ? 'not-allowed' : 'pointer' }}
+              style={{ width: '100%', background: 'var(--orange)', color: '#fff', border: 'none', borderRadius: 10, padding: '16px 28px', fontSize: 15, fontWeight: 700, fontFamily: 'Bebas Neue, sans-serif', letterSpacing: 1.5, cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? .7 : 1 }}
             >
               {loading ? 'Sending...' : 'Send Booking Request →'}
             </button>
