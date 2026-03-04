@@ -15,10 +15,9 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Invalid request' }, { status: 400 })
     }
 
-    // Verify the booking belongs to this student
     const { data: booking, error: fetchError } = await supabase
       .from('bookings')
-      .select('student_id, client_name, client_email, reference')
+      .select('student_id')
       .eq('id', bookingId)
       .single()
 
