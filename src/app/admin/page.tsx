@@ -39,9 +39,14 @@ export default async function AdminPage() {
       },
     }
   )
-  const { data: { user } } = await supabase.auth.getUser()
+  // ✅ FIX: getSession works in server components, getUser was failing to read the cookie
+  const { data: { session } } = await supabase.auth.getSession()
 
-  if (!user || user.email !== ADMIN_EMAIL) {
+  if (!session) {
+    redirect("/login")
+  }
+
+  if (session.user.email !== ADMIN_EMAIL) {
     redirect("/")
   }
 
@@ -55,7 +60,7 @@ export default async function AdminPage() {
         <div style={{ fontFamily: "Bebas Neue, sans-serif", fontSize: 32, letterSpacing: 2, marginBottom: 8 }}>
           SKILL<span style={{ color: "var(--orange)" }}>ZA</span> ADMIN
         </div>
-        <p style={{ fontSize: 13, color: "var(--muted)", marginBottom: 40 }}>Internal dashboard</p>
+        <p style={{ fontSize: 13, color: "var(--muted)", marginBottom: 40 }}>Internal dashboard · {session.user.email}</p>
 
         {/* Stats */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: 12, marginBottom: 40 }}>
