@@ -40,10 +40,13 @@ interface Booking {
 }
 
 interface PricingPackage {
+  id?: number
+  student_id?: number
   name: string
   description: string
   price: string
   featured: boolean
+  sort_order?: number
 }
 
 const UNIVERSITIES = ['UCT', 'Wits', 'AFDA', 'Red & Yellow', 'ICA', 'Stellenbosch', 'UJ', 'CPUT', 'Other']
@@ -96,6 +99,7 @@ export default function DashboardPage() {
   const [uploadDone, setUploadDone] = useState(false)
   const [uploadingPhoto, setUploadingPhoto] = useState(false)
   const [updatingBooking, setUpdatingBooking] = useState<number | null>(null)
+  const [packages, setPackages] = useState<PricingPackage[]>([])
 
   // Registration form — mirrors Google Form exactly
   const [reg, setReg] = useState({
@@ -143,6 +147,9 @@ export default function DashboardPage() {
         const { data: bookingData } = await (supabase as any)
           .from('bookings').select('*').eq('student_id', studentData.id).order('created_at', { ascending: false })
         setBookings((bookingData as Booking[]) || [])
+        const { data: pkgData } = await (supabase as any)
+          .from('student_pricing').select('*').eq('student_id', studentData.id).order('sort_order')
+        setPackages(pkgData || [])
         setScreen('dashboard')
         return
       }
@@ -218,7 +225,16 @@ export default function DashboardPage() {
       bio: student.bio, city: student.city, starting_price: student.starting_price,
       price_unit: student.price_unit, whatsapp: student.whatsapp,
       portfolio_links: student.portfolio_links, extra_info: student.extra_info,
+      secondary_skill: student.secondary_skill || null,
+      availability: student.availability || [],
     }).eq('id', student.id)
+    for (const pkg of packages) {
+      if (pkg.id) {
+        await (supabase as any).from('student_pricing').update({
+          name: pkg.name, description: pkg.description, price: pkg.price,
+        }).eq('id', pkg.id)
+      }
+    }
     setSaving(false); setSaved(true); setTimeout(() => setSaved(false), 2500)
   }
 
@@ -536,16 +552,60 @@ export default function DashboardPage() {
             <Field label="Degree" value={student!.degree} disabled />
             <Field label="Year" value={student!.year} disabled />
             <Field label="Skill" value={student!.skill} disabled />
+            <div>
+              <label style={labelStyle}>Secondary Skill</label>
+              <select value={student!.secondary_skill || ''} onChange={e => setStudent({ ...student!, secondary_skill: e.target.value })} style={inputStyle}>
+                <option value="">None</option>
+                {SKILLS.filter(s => s !== student!.skill).map(s => <option key={s}>{s}</option>)}
+              </select>
+            </div>
             <Field label="WhatsApp" value={student!.whatsapp || ''} onChange={v => setStudent({ ...student!, whatsapp: v })} />
             <div>
               <label style={labelStyle}>Bio</label>
               <textarea value={student!.bio} onChange={e => setStudent({ ...student!, bio: e.target.value })} rows={4} style={{ ...inputStyle, resize: 'vertical' }} />
+            </div>
+            <div>
+              <label style={labelStyle}>Availability</label>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 4 }}>
+                {AVAILABILITY_OPTIONS.map(opt => (
+                  <button key={opt} type="button"
+                    onClick={() => setStudent(s => {
+                      const avail = s!.availability || []
+                      return { ...s!, availability: avail.includes(opt) ? avail.filter(a => a !== opt) : [...avail, opt] }
+                    })}
+                    style={{
+                      padding: '7px 14px', borderRadius: 20, fontSize: 12, fontWeight: 600, cursor: 'pointer', transition: 'all .15s',
+                      background: (student!.availability || []).includes(opt) ? 'var(--orange)' : 'transparent',
+                      color: (student!.availability || []).includes(opt) ? '#fff' : 'var(--muted)',
+                      border: `1px solid ${(student!.availability || []).includes(opt) ? 'var(--orange)' : 'var(--border)'}`,
+                    }}>
+                    {opt}
+                  </button>
+                ))}
+              </div>
             </div>
             <Field label="City" value={student!.city} onChange={v => setStudent({ ...student!, city: v })} />
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
               <Field label="Starting Price (R)" value={student!.starting_price} onChange={v => setStudent({ ...student!, starting_price: v })} />
               <Field label="Price Unit" value={student!.price_unit} onChange={v => setStudent({ ...student!, price_unit: v })} />
             </div>
+            {packages.length > 0 && (
+              <div>
+                <label style={labelStyle}>Pricing Packages</label>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginTop: 4 }}>
+                  {packages.map((pkg, i) => (
+                    <div key={pkg.id ?? i} style={{ background: pkg.featured ? 'rgba(255,74,28,.04)' : 'transparent', border: `1px solid ${pkg.featured ? 'rgba(255,74,28,.2)' : 'var(--border)'}`, borderRadius: 10, padding: 14 }}>
+                      {pkg.featured && <p style={{ fontSize: 10, color: 'var(--orange)', fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 8 }}>Popular</p>}
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                        <input value={pkg.name} onChange={e => setPackages(prev => prev.map((p, j) => j === i ? { ...p, name: e.target.value } : p))} placeholder="Package name" style={inputStyle} />
+                        <input value={pkg.description} onChange={e => setPackages(prev => prev.map((p, j) => j === i ? { ...p, description: e.target.value } : p))} placeholder="Description" style={inputStyle} />
+                        <input value={pkg.price} onChange={e => setPackages(prev => prev.map((p, j) => j === i ? { ...p, price: e.target.value } : p))} placeholder="Price e.g. R550" style={inputStyle} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
             <div>
               <label style={labelStyle}>Portfolio Links</label>
               <textarea value={student!.portfolio_links || ''} onChange={e => setStudent({ ...student!, portfolio_links: e.target.value })} rows={3} style={{ ...inputStyle, resize: 'vertical' }} />

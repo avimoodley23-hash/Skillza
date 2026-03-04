@@ -181,16 +181,16 @@ export function VerifySection() {
           <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 4, background: 'linear-gradient(90deg, var(--orange), var(--gold))', borderRadius: '18px 18px 0 0' }} />
           <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 10, letterSpacing: 3, color: 'var(--muted)', marginBottom: 16, textTransform: 'uppercase' }}>University of Cape Town — Student Services</div>
           <div style={{ display: 'flex', gap: 13, alignItems: 'center', marginBottom: 16 }}>
-            <div style={{ width: 48, height: 48, borderRadius: 10, background: 'linear-gradient(135deg, #2a2a2a, #1a1a1a)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, border: '1px solid rgba(255,255,255,.07)', flexShrink: 0 }}>📸</div>
+            <div style={{ width: 48, height: 48, borderRadius: 10, background: 'linear-gradient(135deg, #2a2a2a, #1a1a1a)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, border: '1px solid rgba(255,255,255,.07)', flexShrink: 0 }}>🎬</div>
             <div>
               <div style={{ fontWeight: 600, fontSize: 14, color: 'var(--cream)' }}>Amahle Khumalo</div>
-              <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 1 }}>BA Visual Communication</div>
-              <div style={{ fontSize: 10, color: 'var(--orange)', marginTop: 2, fontWeight: 600 }}>3rd Year · 2024</div>
+              <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 1 }}>BA Film & Media Production</div>
+              <div style={{ fontSize: 10, color: 'var(--orange)', marginTop: 2, fontWeight: 600 }}>3rd Year · 2025</div>
             </div>
           </div>
           <div style={{ height: 1, background: 'rgba(255,255,255,.06)', margin: '14px 0' }} />
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 9 }}>
-            {[['Student No.', 'UCT2021-4872'], ['Faculty', 'Humanities'], ['Campus', 'Upper Campus'], ['Valid Until', 'Nov 2025']].map(([label, value]) => (
+            {[['Student No.', 'UCT2023-0841'], ['Faculty', 'Humanities'], ['Campus', 'Upper Campus'], ['Valid Until', 'Nov 2026']].map(([label, value]) => (
               <div key={label}>
                 <div style={{ fontSize: 9, letterSpacing: 1, textTransform: 'uppercase', color: 'var(--muted)', display: 'block', marginBottom: 2 }}>{label}</div>
                 <div style={{ fontSize: 12, color: 'var(--cream)', fontWeight: 500 }}>{value}</div>
