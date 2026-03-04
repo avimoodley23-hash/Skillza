@@ -40,7 +40,7 @@ export default function AdminPage() {
     const res = await fetch('/api/waitlist/approve', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: w.id, name: w.name, email: w.email }),
+      body: JSON.stringify({ id: w.id, name: w.name, email: w.email, university: w.university, year: w.year, skill: w.skill }),
     })
     if (res.ok) {
       setData(prev => prev ? {
