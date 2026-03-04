@@ -50,7 +50,7 @@ export default function Nav() {
           <Link href="/#find-talent" style={{ fontSize: 13, fontWeight: 500, color: 'var(--muted)', transition: 'color .2s', letterSpacing: '.2px' }}
             onMouseEnter={e => (e.currentTarget.style.color = 'var(--cream)')}
             onMouseLeave={e => (e.currentTarget.style.color = 'var(--muted)')}>
-            Find Talent
+            Browse Talent
           </Link>
           <Link href="/#how-it-works" style={{ fontSize: 13, fontWeight: 500, color: 'var(--muted)', transition: 'color .2s', letterSpacing: '.2px' }}
             onMouseEnter={e => (e.currentTarget.style.color = 'var(--cream)')}
