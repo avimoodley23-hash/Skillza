@@ -14,6 +14,24 @@ export type Database = {
   }
   public: {
     Tables: {
+      approved_emails: {
+        Row: {
+          created_at: string | null
+          email: string
+          id: string
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          id?: string
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          id?: string
+        }
+        Relationships: []
+      }
       bookings: {
         Row: {
           client_email: string
@@ -33,7 +51,7 @@ export type Database = {
           created_at?: string | null
           description?: string | null
           id?: string
-          reference: string
+          reference?: string
           status?: string | null
           student_id?: string | null
         }
@@ -179,67 +197,91 @@ export type Database = {
         Row: {
           active: boolean | null
           auth_user_id: string | null
+          availability: string[] | null
           bio: string | null
-          category: string
+          category: string | null
           city: string
           created_at: string | null
           degree: string
+          email: string | null
           emoji: string | null
+          extra_info: string | null
           id: string
           name: string
+          portfolio_links: string | null
           price_unit: string
           rating: number | null
           review_count: number | null
+          secondary_skill: string | null
           short_name: string
           skill: string
           starting_price: string
+          student_card_link: string | null
+          student_number: string | null
           tags: string[] | null
           university: string
           verified: boolean | null
+          whatsapp: string | null
           year: string
         }
         Insert: {
           active?: boolean | null
           auth_user_id?: string | null
+          availability?: string[] | null
           bio?: string | null
-          category: string
+          category?: string | null
           city?: string
           created_at?: string | null
           degree: string
+          email?: string | null
           emoji?: string | null
+          extra_info?: string | null
           id?: string
           name: string
+          portfolio_links?: string | null
           price_unit: string
           rating?: number | null
           review_count?: number | null
+          secondary_skill?: string | null
           short_name: string
           skill: string
           starting_price: string
+          student_card_link?: string | null
+          student_number?: string | null
           tags?: string[] | null
           university: string
           verified?: boolean | null
+          whatsapp?: string | null
           year: string
         }
         Update: {
           active?: boolean | null
           auth_user_id?: string | null
+          availability?: string[] | null
           bio?: string | null
-          category?: string
+          category?: string | null
           city?: string
           created_at?: string | null
           degree?: string
+          email?: string | null
           emoji?: string | null
+          extra_info?: string | null
           id?: string
           name?: string
+          portfolio_links?: string | null
           price_unit?: string
           rating?: number | null
           review_count?: number | null
+          secondary_skill?: string | null
           short_name?: string
           skill?: string
           starting_price?: string
+          student_card_link?: string | null
+          student_number?: string | null
           tags?: string[] | null
           university?: string
           verified?: boolean | null
+          whatsapp?: string | null
           year?: string
         }
         Relationships: []
@@ -289,6 +331,7 @@ export type Database = {
           id: string
           name: string
           skill: string | null
+          status: string | null
           university: string | null
           year: string | null
         }
@@ -298,6 +341,7 @@ export type Database = {
           id?: string
           name: string
           skill?: string | null
+          status?: string | null
           university?: string | null
           year?: string | null
         }
@@ -307,6 +351,7 @@ export type Database = {
           id?: string
           name?: string
           skill?: string | null
+          status?: string | null
           university?: string | null
           year?: string | null
         }
