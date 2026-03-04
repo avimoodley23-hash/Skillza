@@ -1,5 +1,5 @@
 import { supabase } from '@/lib/supabase'
-import type { Student } from '@/types/database'
+import type { StudentFull } from '@/types/database'
 import Nav from '@/components/Nav'
 import HeroSection from '@/components/HeroSection'
 import FindTalentSection from '@/components/FindTalentSection'
@@ -12,10 +12,10 @@ import Footer from '@/components/Footer'
 
 export const revalidate = 60 // revalidate every 60 seconds
 
-async function getStudents(): Promise<Student[]> {
+async function getStudents(): Promise<StudentFull[]> {
   const { data, error } = await supabase
     .from('students')
-    .select('*')
+    .select('*, student_pricing(*), student_portfolio(*), student_reviews(*)')
     .eq('verified', true)
     .eq('active', true)
     .order('created_at', { ascending: true })
@@ -25,11 +25,13 @@ async function getStudents(): Promise<Student[]> {
     return []
   }
 
-  // Use this single return block to handle the null emoji
   return (data || []).map((student: any) => ({
     ...student,
-    emoji: student.emoji ?? '🎓' 
-  })) as Student[]
+    emoji: student.emoji ?? '🎓',
+    student_pricing: (student.student_pricing || []).sort((a: any, b: any) => a.sort_order - b.sort_order),
+    student_portfolio: (student.student_portfolio || []).sort((a: any, b: any) => a.sort_order - b.sort_order),
+    student_reviews: student.student_reviews || [],
+  })) as StudentFull[]
 }
 
 export default async function HomePage() {

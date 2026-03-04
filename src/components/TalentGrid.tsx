@@ -1,6 +1,6 @@
 'use client'
 import { useState } from 'react'
-import type { Student } from '@/types/database'
+import type { StudentFull as Student } from '@/types/database'
 import { ProfilePanel } from '@/components/ProfilePanel'
 import { BookingModal } from '@/components/BookingModal'
 
