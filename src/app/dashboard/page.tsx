@@ -46,20 +46,19 @@ const YEARS = ['1st Year', '2nd Year', '3rd Year', '4th Year+', 'Postgrad']
 const SKILLS = ['Photography', 'Graphic Design', 'Videography', 'Makeup Artistry', 'Catering & Baking', 'DJ & Music Production', 'Tutoring', 'Web Development', 'Fashion & Styling', 'Illustration', 'Other']
 const PRICE_UNITS = ['session', 'hour', 'project', 'event', 'day', 'order']
 
+type Screen = 'loading' | 'not-approved' | 'register' | 'dashboard'
+
 export default function DashboardPage() {
   const router = useRouter()
+  const [screen, setScreen] = useState<Screen>('loading')
   const [tab, setTab] = useState<'profile' | 'bookings' | 'verification'>('profile')
   const [student, setStudent] = useState<Student | null>(null)
   const [bookings, setBookings] = useState<Booking[]>([])
-  const [loading, setLoading] = useState(true)
   const [cardFile, setCardFile] = useState<File | null>(null)
   const [uploading, setUploading] = useState(false)
   const [uploadDone, setUploadDone] = useState(false)
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
-
-  // Registration state
-  const [showReg, setShowReg] = useState(false)
   const [regForm, setRegForm] = useState<RegForm>({
     name: '', university: '', degree: '', year: '', skill: '',
     bio: '', city: '', starting_price: '', price_unit: 'session',
@@ -72,14 +71,16 @@ export default function DashboardPage() {
   useEffect(() => {
     supabase.auth.getSession().then(async ({ data: { session } }) => {
       if (!session) { router.push('/login'); return }
-      const userId = session.user.id
-      setAuthUserId(userId)
-      setAuthEmail(session.user.email ?? null)
 
-      // Pre-fill name from Google profile
+      const userId = session.user.id
+      const email = session.user.email ?? ''
+      setAuthUserId(userId)
+      setAuthEmail(email)
+
       const googleName = session.user.user_metadata?.full_name || session.user.user_metadata?.name || ''
       setRegForm(f => ({ ...f, name: googleName }))
 
+      // 1. Check if they already have a profile
       const { data: studentData } = await (supabase as any)
         .from('students')
         .select('*')
@@ -94,11 +95,22 @@ export default function DashboardPage() {
           .eq('student_id', studentData.id)
           .order('created_at', { ascending: false })
         setBookings((bookingData as Booking[]) || [])
-      } else {
-        // No profile found — show registration
-        setShowReg(true)
+        setScreen('dashboard')
+        return
       }
-      setLoading(false)
+
+      // 2. No profile — check if their email is approved
+      const { data: approvedData } = await (supabase as any)
+        .from('approved_emails')
+        .select('email')
+        .eq('email', email.toLowerCase())
+        .single()
+
+      if (approvedData) {
+        setScreen('register')
+      } else {
+        setScreen('not-approved')
+      }
     })
   }, [])
 
@@ -111,10 +123,9 @@ export default function DashboardPage() {
     }
     setRegSaving(true)
 
-    // Derive short_name (e.g. "Avi M.")
     const parts = name.trim().split(' ')
     const short_name = parts.length > 1
-      ? `${parts[0]} ${parts[parts.length - 1][0]}.`
+      ? parts[0] + ' ' + parts[parts.length - 1][0] + '.'
       : parts[0]
 
     const { data, error } = await (supabase as any)
@@ -143,7 +154,7 @@ export default function DashboardPage() {
     }
 
     setStudent(data as Student)
-    setShowReg(false)
+    setScreen('dashboard')
     setRegSaving(false)
   }
 
@@ -165,7 +176,7 @@ export default function DashboardPage() {
     if (!cardFile || !student) return
     setUploading(true)
     const ext = cardFile.name.split('.').pop()
-    const path = `student-cards/${student.id}.${ext}`
+    const path = 'student-cards/' + student.id + '.' + ext
     const { data, error } = await supabase.storage.from('verification').upload(path, cardFile, { upsert: true })
     if (!error && data) {
       const { data: urlData } = supabase.storage.from('verification').getPublicUrl(path)
@@ -186,30 +197,48 @@ export default function DashboardPage() {
   }
 
   const tabStyle = (t: string): React.CSSProperties => ({
-    padding: '10px 20px',
-    borderRadius: 8,
-    border: 'none',
-    cursor: 'pointer',
-    fontFamily: 'Bebas Neue, sans-serif',
-    letterSpacing: 1,
-    fontSize: 15,
+    padding: '10px 20px', borderRadius: 8, border: 'none', cursor: 'pointer',
+    fontFamily: 'Bebas Neue, sans-serif', letterSpacing: 1, fontSize: 15,
     background: tab === t ? 'var(--orange)' : 'transparent',
     color: tab === t ? '#fff' : 'var(--muted)',
     transition: 'all .2s',
   })
 
-  // ── Loading ──
-  if (loading) return (
+  if (screen === 'loading') return (
     <main style={{ minHeight: '100vh', background: 'var(--black)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <p style={{ color: 'var(--muted)', fontFamily: 'Bebas Neue, sans-serif', fontSize: 20, letterSpacing: 2 }}>Loading...</p>
     </main>
   )
 
-  // ── Registration flow ──
-  if (showReg) return (
+  if (screen === 'not-approved') return (
+    <main style={{ minHeight: '100vh', background: 'var(--black)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
+      <div style={{ textAlign: 'center', maxWidth: 420 }}>
+        <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 32, letterSpacing: 2, color: 'var(--cream)', marginBottom: 8 }}>
+          Not on the list yet
+        </div>
+        <p style={{ color: 'var(--muted)', fontSize: 14, lineHeight: 1.8, marginBottom: 8 }}>
+          <span style={{ color: 'var(--cream)' }}>{authEmail}</span> has not been approved for Skillza yet.
+        </p>
+        <p style={{ color: 'var(--muted)', fontSize: 14, lineHeight: 1.8, marginBottom: 32 }}>
+          We manually approve all students before they can create a profile. Reach out and we will get you set up.
+        </p>
+        <a
+          href="mailto:hello@skillza.co.za?subject=Student profile request"
+          style={{ display: 'inline-block', background: 'var(--orange)', color: '#fff', borderRadius: 10, padding: '13px 28px', fontSize: 15, fontWeight: 700, fontFamily: 'Bebas Neue, sans-serif', letterSpacing: 1.5, textDecoration: 'none', marginBottom: 16 }}
+        >
+          Contact hello@skillza.co.za
+        </a>
+        <br />
+        <button onClick={handleSignOut} style={{ background: 'transparent', border: 'none', color: 'var(--muted)', fontSize: 12, cursor: 'pointer', textDecoration: 'underline', marginTop: 8 }}>
+          Sign out
+        </button>
+      </div>
+    </main>
+  )
+
+  if (screen === 'register') return (
     <main style={{ minHeight: '100vh', background: 'var(--black)', padding: '80px 24px 64px' }}>
       <div style={{ maxWidth: 560, margin: '0 auto' }}>
-
         <div style={{ marginBottom: 32 }}>
           <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 32, letterSpacing: 2, color: 'var(--cream)', marginBottom: 6 }}>
             Create your profile
@@ -220,53 +249,61 @@ export default function DashboardPage() {
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-
-          <RegField label="Full Name *" placeholder="e.g. Sipho Dlamini">
+          <div>
+            <label style={labelStyle}>Full Name *</label>
             <input value={regForm.name} onChange={e => setRegForm({ ...regForm, name: e.target.value })} placeholder="e.g. Sipho Dlamini" style={inputStyle} />
-          </RegField>
+          </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-            <RegField label="University *">
+            <div>
+              <label style={labelStyle}>University *</label>
               <select value={regForm.university} onChange={e => setRegForm({ ...regForm, university: e.target.value })} style={inputStyle}>
                 <option value="">Select...</option>
                 {UNIVERSITIES.map(u => <option key={u}>{u}</option>)}
               </select>
-            </RegField>
-            <RegField label="Year *">
+            </div>
+            <div>
+              <label style={labelStyle}>Year *</label>
               <select value={regForm.year} onChange={e => setRegForm({ ...regForm, year: e.target.value })} style={inputStyle}>
                 <option value="">Select...</option>
                 {YEARS.map(y => <option key={y}>{y}</option>)}
               </select>
-            </RegField>
+            </div>
           </div>
 
-          <RegField label="Degree / Programme *" placeholder="e.g. BA Visual Communication">
+          <div>
+            <label style={labelStyle}>Degree / Programme *</label>
             <input value={regForm.degree} onChange={e => setRegForm({ ...regForm, degree: e.target.value })} placeholder="e.g. BA Visual Communication" style={inputStyle} />
-          </RegField>
+          </div>
 
-          <RegField label="Primary Skill *">
+          <div>
+            <label style={labelStyle}>Primary Skill *</label>
             <select value={regForm.skill} onChange={e => setRegForm({ ...regForm, skill: e.target.value })} style={inputStyle}>
               <option value="">Select...</option>
               {SKILLS.map(s => <option key={s}>{s}</option>)}
             </select>
-          </RegField>
+          </div>
 
-          <RegField label="City *" placeholder="e.g. Cape Town">
+          <div>
+            <label style={labelStyle}>City *</label>
             <input value={regForm.city} onChange={e => setRegForm({ ...regForm, city: e.target.value })} placeholder="e.g. Cape Town" style={inputStyle} />
-          </RegField>
+          </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-            <RegField label="Starting Price (R) *" placeholder="e.g. 550">
+            <div>
+              <label style={labelStyle}>Starting Price (R) *</label>
               <input value={regForm.starting_price} onChange={e => setRegForm({ ...regForm, starting_price: e.target.value })} placeholder="e.g. 550" style={inputStyle} />
-            </RegField>
-            <RegField label="Per *">
+            </div>
+            <div>
+              <label style={labelStyle}>Per *</label>
               <select value={regForm.price_unit} onChange={e => setRegForm({ ...regForm, price_unit: e.target.value })} style={inputStyle}>
                 {PRICE_UNITS.map(u => <option key={u}>{u}</option>)}
               </select>
-            </RegField>
+            </div>
           </div>
 
-          <RegField label="Bio" placeholder="Tell clients about yourself, your experience, and what makes you great...">
+          <div>
+            <label style={labelStyle}>Bio</label>
             <textarea
               value={regForm.bio}
               onChange={e => setRegForm({ ...regForm, bio: e.target.value })}
@@ -274,7 +311,7 @@ export default function DashboardPage() {
               rows={4}
               style={{ ...inputStyle, resize: 'vertical' }}
             />
-          </RegField>
+          </div>
 
           {regError && (
             <p style={{ color: '#ff6b6b', fontSize: 13, background: 'rgba(255,107,107,.08)', border: '1px solid rgba(255,107,107,.2)', borderRadius: 8, padding: '10px 14px' }}>
@@ -287,11 +324,11 @@ export default function DashboardPage() {
             disabled={regSaving}
             style={{ background: 'var(--orange)', color: '#fff', border: 'none', borderRadius: 10, padding: '15px', fontSize: 16, fontWeight: 700, fontFamily: 'Bebas Neue, sans-serif', letterSpacing: 1.5, cursor: regSaving ? 'not-allowed' : 'pointer', opacity: regSaving ? .7 : 1, marginTop: 4 }}
           >
-            {regSaving ? 'Creating profile...' : 'Create My Profile →'}
+            {regSaving ? 'Creating profile...' : 'Create My Profile'}
           </button>
 
           <p style={{ color: 'var(--muted)', fontSize: 12, textAlign: 'center', lineHeight: 1.6 }}>
-            Your profile won't go live until your Student Card is verified. You can upload it after registration.
+            Your profile will not go live until your Student Card is verified. You can upload it after registration.
           </p>
 
           <button onClick={handleSignOut} style={{ background: 'transparent', border: 'none', color: 'var(--muted)', fontSize: 12, cursor: 'pointer', textDecoration: 'underline' }}>
@@ -302,7 +339,6 @@ export default function DashboardPage() {
     </main>
   )
 
-  // ── Dashboard ──
   return (
     <main style={{ minHeight: '100vh', background: 'var(--black)', padding: '80px 24px 48px' }}>
       <div style={{ maxWidth: 680, margin: '0 auto' }}>
@@ -334,12 +370,7 @@ export default function DashboardPage() {
             <Field label="Skill" value={student!.skill} disabled />
             <div>
               <label style={labelStyle}>Bio</label>
-              <textarea
-                value={student!.bio}
-                onChange={e => setStudent({ ...student!, bio: e.target.value })}
-                rows={4}
-                style={{ ...inputStyle, resize: 'vertical' }}
-              />
+              <textarea value={student!.bio} onChange={e => setStudent({ ...student!, bio: e.target.value })} rows={4} style={{ ...inputStyle, resize: 'vertical' }} />
             </div>
             <Field label="City" value={student!.city} onChange={v => setStudent({ ...student!, city: v })} />
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
@@ -347,7 +378,7 @@ export default function DashboardPage() {
               <Field label="Price Unit" value={student!.price_unit} onChange={v => setStudent({ ...student!, price_unit: v })} />
             </div>
             <button onClick={handleSaveProfile} style={{ background: 'var(--orange)', color: '#fff', border: 'none', borderRadius: 10, padding: '14px', fontSize: 15, fontWeight: 600, fontFamily: 'Bebas Neue, sans-serif', letterSpacing: 1.5, cursor: 'pointer', marginTop: 4 }}>
-              {saving ? 'Saving...' : saved ? '✓ Saved' : 'Save Changes'}
+              {saving ? 'Saving...' : saved ? 'Saved' : 'Save Changes'}
             </button>
           </div>
         )}
@@ -376,9 +407,9 @@ export default function DashboardPage() {
 
         {tab === 'verification' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-            <div style={{ background: student!.verified ? '#16a34a22' : '#f9731622', border: `1px solid ${student!.verified ? '#4ade8044' : '#f9731644'}`, borderRadius: 12, padding: '20px' }}>
+            <div style={{ background: student!.verified ? '#16a34a22' : '#f9731622', border: '1px solid ' + (student!.verified ? '#4ade8044' : '#f9731644'), borderRadius: 12, padding: '20px' }}>
               <p style={{ color: student!.verified ? '#4ade80' : 'var(--orange)', fontWeight: 600, fontSize: 15, marginBottom: 4 }}>
-                {student!.verified ? '✓ Verified' : '⏳ Not yet verified'}
+                {student!.verified ? 'Verified' : 'Not yet verified'}
               </p>
               <p style={{ color: 'var(--muted)', fontSize: 13, lineHeight: 1.6 }}>
                 {student!.verified ? 'Your student card has been verified. Your profile is live.' : 'Upload your student card below to get verified. We review within 24 hours.'}
@@ -387,15 +418,10 @@ export default function DashboardPage() {
             {!student!.verified && (
               <div style={{ border: '1px solid var(--border)', borderRadius: 12, padding: '24px' }}>
                 <p style={{ color: 'var(--cream)', fontSize: 14, fontWeight: 600, marginBottom: 16 }}>Upload Student Card</p>
-                <input
-                  type="file"
-                  accept="image/*,.pdf"
-                  onChange={e => setCardFile(e.target.files?.[0] || null)}
-                  style={{ color: 'var(--muted)', fontSize: 13, marginBottom: 16, display: 'block' }}
-                />
+                <input type="file" accept="image/*,.pdf" onChange={e => setCardFile(e.target.files?.[0] || null)} style={{ color: 'var(--muted)', fontSize: 13, marginBottom: 16, display: 'block' }} />
                 {cardFile && (
                   <button onClick={handleCardUpload} style={{ background: 'var(--orange)', color: '#fff', border: 'none', borderRadius: 10, padding: '12px 24px', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
-                    {uploading ? 'Uploading...' : uploadDone ? '✓ Submitted' : 'Submit for Verification'}
+                    {uploading ? 'Uploading...' : uploadDone ? 'Submitted' : 'Submit for Verification'}
                   </button>
                 )}
               </div>
@@ -405,17 +431,6 @@ export default function DashboardPage() {
 
       </div>
     </main>
-  )
-}
-
-// ── Helpers ──
-
-function RegField({ label, children, placeholder }: { label: string; children: React.ReactNode; placeholder?: string }) {
-  return (
-    <div>
-      <label style={labelStyle}>{label}</label>
-      {children}
-    </div>
   )
 }
 
@@ -431,10 +446,7 @@ const inputStyle: React.CSSProperties = {
 }
 
 function Field({ label, value, onChange, disabled }: {
-  label: string
-  value: string
-  onChange?: (v: string) => void
-  disabled?: boolean
+  label: string; value: string; onChange?: (v: string) => void; disabled?: boolean
 }) {
   return (
     <div>
