@@ -1,4 +1,9 @@
 import { createClient } from "@supabase/supabase-js"
+import { cookies } from "next/headers"
+import { redirect } from "next/navigation"
+import { createServerClient } from "@supabase/ssr"
+
+const ADMIN_EMAIL = "avi.moodley23@gmail.com"
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -21,6 +26,24 @@ async function getAdminData() {
 }
 
 export default async function AdminPage() {
+  // ── Admin auth check ──
+const cookieStore = await cookies()
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() { return cookieStore.getAll() },
+        setAll() {},
+      },
+    }
+  )
+  const { data: { user } } = await supabase.auth.getUser()
+
+  if (!user || user.email !== ADMIN_EMAIL) {
+    redirect("/")
+  }
+
   const { students, bookings, waitlist, pendingVerifications } = await getAdminData()
   const verified = students.filter((s: any) => s.verified)
   const pendingBookings = bookings.filter((b: any) => b.status === "pending")
