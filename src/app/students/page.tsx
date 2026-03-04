@@ -17,7 +17,7 @@ async function getStudent(id: string): Promise<StudentFull | null> {
     .single()
 
   if (error || !data) return null
-  return data as StudentFull
+  return data as unknown as StudentFull
 }
 
 export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
