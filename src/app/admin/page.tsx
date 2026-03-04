@@ -53,8 +53,12 @@ export default function AdminPage() {
 
   const handleReject = async (w: any) => {
     setActionLoading(w.id + '_reject')
-    const { error } = await supabase.from('waitlist').update({ status: 'rejected' }).eq('id', w.id)
-    if (!error) {
+    const res = await fetch('/api/waitlist/reject', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: w.id }),
+    })
+    if (res.ok) {
       setData(prev => prev ? {
         ...prev,
         waitlist: prev.waitlist.map(item => item.id === w.id ? { ...item, status: 'rejected' } : item)
@@ -190,7 +194,7 @@ export default function AdminPage() {
                       <button
                         onClick={() => handleReject(w)}
                         disabled={!!actionLoading}
-                        style={{ fontSize: 11, fontWeight: 700, padding: '4px 10px', borderRadius: 6, border: 'none', background: '#94a3b822', color: 'var(--muted)', cursor: 'pointer', opacity: isLoadingReject ? 0.6 : 1 }}>
+                        style={{ fontSize: 11, fontWeight: 700, padding: '4px 10px', borderRadius: 6, border: 'none', background: '#7f1d1d44', color: '#f87171', cursor: 'pointer', opacity: isLoadingReject ? 0.6 : 1 }}>
                         {isLoadingReject ? '...' : 'Reject'}
                       </button>
                     </div>
@@ -199,7 +203,7 @@ export default function AdminPage() {
                     <span style={{ fontSize: 10, fontWeight: 700, padding: '3px 9px', borderRadius: 20, background: '#16a34a22', color: '#4ade80' }}>APPROVED</span>
                   )}
                   {isRejected && (
-                    <span style={{ fontSize: 10, fontWeight: 700, padding: '3px 9px', borderRadius: 20, background: '#94a3b822', color: 'var(--muted)' }}>REJECTED</span>
+                    <span style={{ fontSize: 10, fontWeight: 700, padding: '3px 9px', borderRadius: 20, background: '#7f1d1d44', color: '#f87171' }}>REJECTED</span>
                   )}
                 </Cell>
               </Row>
