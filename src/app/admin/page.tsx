@@ -17,6 +17,7 @@ export default function AdminPage() {
   const [data, setData] = useState<AdminData | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [actionLoading, setActionLoading] = useState<string | null>(null)
 
   useEffect(() => {
     const init = async () => {
@@ -25,7 +26,6 @@ export default function AdminPage() {
       if (!session) { router.push('/login'); return }
       if (session.user.email !== ADMIN_EMAIL) { router.push('/'); return }
 
-      // Fetch all data via API route (uses service role key server-side)
       const res = await fetch('/api/admin/data')
       if (!res.ok) { setError('Failed to load admin data'); setLoading(false); return }
       const json = await res.json()
@@ -34,6 +34,34 @@ export default function AdminPage() {
     }
     init()
   }, [])
+
+  const handleApprove = async (w: any) => {
+    setActionLoading(w.id)
+    const res = await fetch('/api/waitlist/approve', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: w.id, name: w.name, email: w.email }),
+    })
+    if (res.ok) {
+      setData(prev => prev ? {
+        ...prev,
+        waitlist: prev.waitlist.map(item => item.id === w.id ? { ...item, status: 'approved' } : item)
+      } : prev)
+    }
+    setActionLoading(null)
+  }
+
+  const handleReject = async (w: any) => {
+    setActionLoading(w.id + '_reject')
+    const { error } = await supabase.from('waitlist').update({ status: 'rejected' }).eq('id', w.id)
+    if (!error) {
+      setData(prev => prev ? {
+        ...prev,
+        waitlist: prev.waitlist.map(item => item.id === w.id ? { ...item, status: 'rejected' } : item)
+      } : prev)
+    }
+    setActionLoading(null)
+  }
 
   if (loading) return (
     <main style={{ minHeight: '100svh', background: 'var(--black)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -52,6 +80,7 @@ export default function AdminPage() {
   const { students, bookings, waitlist, pendingVerifications } = data
   const verified = students.filter((s: any) => s.verified)
   const pendingBookings = bookings.filter((b: any) => b.status === 'pending')
+  const pendingWaitlist = waitlist.filter((w: any) => !w.status || w.status === 'pending')
 
   return (
     <main style={{ minHeight: '100svh', background: 'var(--black)', padding: '40px 24px', fontFamily: 'Instrument Sans, sans-serif', color: 'var(--cream)' }}>
@@ -67,7 +96,7 @@ export default function AdminPage() {
             { label: 'Active Students',      value: verified.length,              color: 'var(--green)'  },
             { label: 'Pending Verification', value: pendingVerifications.length,  color: 'var(--orange)' },
             { label: 'New Bookings',         value: pendingBookings.length,       color: '#60a5fa'       },
-            { label: 'Waitlist',             value: waitlist.length,              color: 'var(--gold)'   },
+            { label: 'Waitlist',             value: pendingWaitlist.length,       color: 'var(--gold)'   },
             { label: 'Total Bookings',       value: bookings.length,              color: 'var(--cream)'  },
           ].map(stat => (
             <div key={stat.label} style={{ background: 'var(--black-2)', border: '1px solid var(--border)', borderRadius: 12, padding: '18px 20px' }}>
@@ -135,14 +164,47 @@ export default function AdminPage() {
         {/* Waitlist */}
         <AdminSection title="Waitlist" count={waitlist.length} accent="var(--gold)">
           {waitlist.length === 0 && <EmptyRow text="No waitlist signups yet" />}
-          {waitlist.map((w: any) => (
-            <Row key={w.id}>
-              <Cell><strong>{w.name}</strong></Cell>
-              <Cell style={{ color: 'var(--muted)', fontSize: 12 }}>{w.email}</Cell>
-              <Cell>{w.university}</Cell>
-              <Cell style={{ color: 'var(--orange)', fontSize: 12 }}>{w.skill}</Cell>
-            </Row>
-          ))}
+          {waitlist.map((w: any) => {
+            const isPending = !w.status || w.status === 'pending'
+            const isApproved = w.status === 'approved'
+            const isRejected = w.status === 'rejected'
+            const isLoadingApprove = actionLoading === w.id
+            const isLoadingReject = actionLoading === w.id + '_reject'
+
+            return (
+              <Row key={w.id}>
+                <Cell><strong>{w.name}</strong></Cell>
+                <Cell style={{ color: 'var(--muted)', fontSize: 12 }}>{w.email}</Cell>
+                <Cell>{w.university}{w.year ? ` · ${w.year}` : ''}</Cell>
+                <Cell style={{ color: 'var(--orange)', fontSize: 12 }}>{w.skill}</Cell>
+                <Cell style={{ fontSize: 11, color: 'var(--muted)' }}>{new Date(w.created_at).toLocaleDateString('en-ZA')}</Cell>
+                <Cell>
+                  {isPending && (
+                    <div style={{ display: 'flex', gap: 6 }}>
+                      <button
+                        onClick={() => handleApprove(w)}
+                        disabled={!!actionLoading}
+                        style={{ fontSize: 11, fontWeight: 700, padding: '4px 10px', borderRadius: 6, border: 'none', background: '#16a34a', color: '#fff', cursor: 'pointer', opacity: isLoadingApprove ? 0.6 : 1 }}>
+                        {isLoadingApprove ? '...' : 'Approve'}
+                      </button>
+                      <button
+                        onClick={() => handleReject(w)}
+                        disabled={!!actionLoading}
+                        style={{ fontSize: 11, fontWeight: 700, padding: '4px 10px', borderRadius: 6, border: 'none', background: '#94a3b822', color: 'var(--muted)', cursor: 'pointer', opacity: isLoadingReject ? 0.6 : 1 }}>
+                        {isLoadingReject ? '...' : 'Reject'}
+                      </button>
+                    </div>
+                  )}
+                  {isApproved && (
+                    <span style={{ fontSize: 10, fontWeight: 700, padding: '3px 9px', borderRadius: 20, background: '#16a34a22', color: '#4ade80' }}>APPROVED</span>
+                  )}
+                  {isRejected && (
+                    <span style={{ fontSize: 10, fontWeight: 700, padding: '3px 9px', borderRadius: 20, background: '#94a3b822', color: 'var(--muted)' }}>REJECTED</span>
+                  )}
+                </Cell>
+              </Row>
+            )
+          })}
         </AdminSection>
       </div>
     </main>
