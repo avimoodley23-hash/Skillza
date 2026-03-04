@@ -17,7 +17,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
-    // 1. Create the student row
+    // 1. Create the student row with defaults for all required fields
     const { error: studentError } = await supabase.from('students').insert({
       name,
       email,
@@ -29,6 +29,13 @@ export async function POST(req: Request) {
         : name,
       verified: false,
       active: false,
+      emoji: '🎓',
+      city: 'South Africa',
+      starting_price: 'TBC',
+      price_unit: 'session',
+      rating: 5.0,
+      review_count: 0,
+      category: skill?.toLowerCase().replace(/ /g, '_') || 'other',
     })
 
     if (studentError) {
