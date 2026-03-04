@@ -35,11 +35,11 @@ export default function BookPage() {
 
     const data = await res.json()
 
-    if (!res.ok || data.error) {
-      setError('Something went wrong. Please try again.')
-      setLoading(false)
-      return
-    }
+if (!res.ok || data?.error) {
+  setError(data?.error || `Request failed (${res.status})`)
+  setLoading(false)
+  return
+}
 
     setReference(data.reference)
     setLoading(false)
