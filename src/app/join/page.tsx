@@ -47,35 +47,41 @@ export default function JoinPage() {
     setLoading(false)
   }
 
-  if (done) {
-    return (
-      <>
-        <Nav />
-        <main style={{ paddingTop: 'calc(60px + env(safe-area-inset-top, 0px))', minHeight: '100svh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '100px 20px 40px' }}>
-          <div style={{ maxWidth: 480, width: '100%', textAlign: 'center' }}>
-            <div style={{ fontSize: 64, marginBottom: 24 }}>🎉</div>
-            <h1 style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 40, letterSpacing: 1, marginBottom: 12 }}>
-              You're on the list, {form.name.split(' ')[0]}
-            </h1>
-            <p style={{ fontSize: 15, color: 'var(--cream-dim)', lineHeight: 1.7, marginBottom: 28 }}>
-              We'll reach out when Skillza launches at your campus. In the meantime, fill in your full profile so you're first to go live.
-            </p>
-            <a
-              href="https://docs.google.com/forms/d/e/1FAIpQLSdkrxtBM37Bm01SmTRfqcbBOEPIMx8HnZ6r646zVPNnxT3tiw/viewform"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-primary"
-              style={{ display: 'inline-flex', marginBottom: 16 }}
-            >
-              Fill in your full profile →
-            </a>
-            <br />
-            <Link href="/" className="btn-outline" style={{ display: 'inline-flex', marginTop: 8 }}>Back to Skillza</Link>
+if (done) {
+  return (
+    <>
+      <Nav />
+      <main style={{ paddingTop: 'calc(60px + env(safe-area-inset-top, 0px))', minHeight: '100svh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '100px 20px 40px' }}>
+        <div style={{ maxWidth: 480, width: '100%', textAlign: 'center' }}>
+          <div style={{ fontSize: 64, marginBottom: 24 }}>🎉</div>
+          <h1 style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 40, letterSpacing: 1, marginBottom: 12 }}>
+            You're on the list, {form.name.split(' ')[0]}
+          </h1>
+          <p style={{ fontSize: 15, color: 'var(--cream-dim)', lineHeight: 1.7, marginBottom: 28 }}>
+            We'll review your application and reach out within 48 hours with next steps on setting up your profile.
+          </p>
+          <div style={{ background: 'rgba(255,255,255,.04)', border: '1px solid var(--border)', borderRadius: 14, padding: '20px 24px', marginBottom: 28, textAlign: 'left' }}>
+            <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: 'var(--muted)', marginBottom: 14 }}>What happens next</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              {[
+                { n: '01', t: 'We review your application' },
+                { n: '02', t: 'You get an email with your profile link' },
+                { n: '03', t: 'Fill in your full profile and upload your student card' },
+                { n: '04', t: 'We verify you and your profile goes live' },
+              ].map(step => (
+                <div key={step.n} style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+                  <span style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 16, color: 'var(--orange)', letterSpacing: 1, flexShrink: 0, marginTop: 1 }}>{step.n}</span>
+                  <span style={{ fontSize: 14, color: 'var(--cream-dim)', lineHeight: 1.5 }}>{step.t}</span>
+                </div>
+              ))}
+            </div>
           </div>
-        </main>
-      </>
-    )
-  }
+          <Link href="/" className="btn-outline" style={{ display: 'inline-flex' }}>Back to Skillza</Link>
+        </div>
+      </main>
+    </>
+  )
+}
 
   return (
     <>
