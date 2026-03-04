@@ -26,6 +26,11 @@ export interface Database {
           photo_url: string | null
           auth_user_id: string | null
           created_at: string
+          availability: string[] | null
+          portfolio_links: string | null
+          extra_info: string | null
+          secondary_skill: string | null
+          whatsapp: string | null
         }
         Insert: Omit<Database['public']['Tables']['students']['Row'], 'id' | 'created_at'>
         Update: Partial<Database['public']['Tables']['students']['Insert']>

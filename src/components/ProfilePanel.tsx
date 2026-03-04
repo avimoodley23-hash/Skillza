@@ -14,9 +14,26 @@ interface Student {
   emoji: string
   photo_url?: string | null
   verified: boolean
+  availability?: string[] | null
+  portfolio_links?: string | null
   student_pricing: { name: string; description: string; price: string; unit: string; featured: boolean }[]
   student_portfolio: { emoji: string; label: string }[]
   student_reviews: { reviewer_name: string; stars: number; text: string; date: string }[]
+}
+
+function detectPlatform(url: string): { label: string; icon: string } {
+  const u = url.toLowerCase()
+  if (u.includes('instagram.com')) return { label: 'Instagram', icon: '📸' }
+  if (u.includes('tiktok.com')) return { label: 'TikTok', icon: '🎵' }
+  if (u.includes('linkedin.com')) return { label: 'LinkedIn', icon: '💼' }
+  if (u.includes('behance.net')) return { label: 'Behance', icon: '🎨' }
+  if (u.includes('dribbble.com')) return { label: 'Dribbble', icon: '🏀' }
+  if (u.includes('youtube.com') || u.includes('youtu.be')) return { label: 'YouTube', icon: '🎬' }
+  if (u.includes('github.com')) return { label: 'GitHub', icon: '💻' }
+  if (u.includes('drive.google.com')) return { label: 'Google Drive', icon: '📁' }
+  if (u.includes('pinterest.com')) return { label: 'Pinterest', icon: '📌' }
+  if (u.includes('twitter.com') || u.includes('x.com')) return { label: 'X / Twitter', icon: '🐦' }
+  return { label: 'Portfolio', icon: '🔗' }
 }
 
 interface Props {
@@ -124,6 +141,16 @@ export function ProfilePanel({ student, onClose, onBook }: Props) {
           <div style={{ padding: '0 22px 22px', borderBottom: '1px solid var(--border)' }}>
             <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: 'var(--muted)', marginBottom: 13 }}>About</div>
             <p style={{ fontSize: 14, lineHeight: 1.75, color: 'rgba(245,239,227,.65)' }}>{student.bio}</p>
+            {student.availability && student.availability.length > 0 && (
+              <div style={{ marginTop: 14 }}>
+                <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: 'var(--muted)', marginBottom: 8 }}>Availability</div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                  {student.availability.map(a => (
+                    <span key={a} style={{ fontSize: 11, fontWeight: 600, padding: '4px 10px', borderRadius: 100, background: 'rgba(52,213,142,.08)', color: 'var(--green)', border: '1px solid rgba(52,213,142,.25)' }}>{a}</span>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Portfolio */}
@@ -145,6 +172,42 @@ export function ProfilePanel({ student, onClose, onBook }: Props) {
               </div>
             </div>
           )}
+
+          {/* Portfolio Links / Socials */}
+          {student.portfolio_links && student.portfolio_links.trim() && (() => {
+            const links = student.portfolio_links!.split('\n').map(l => l.trim()).filter(Boolean)
+            if (!links.length) return null
+            return (
+              <div style={{ padding: '22px 22px', borderBottom: '1px solid var(--border)' }}>
+                <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: 'var(--muted)', marginBottom: 13 }}>Portfolio & Socials</div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  {links.map((url, i) => {
+                    const { label, icon } = detectPlatform(url)
+                    const display = url.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '')
+                    return (
+                      <a key={i} href={url} target="_blank" rel="noreferrer noopener"
+                        style={{
+                          display: 'flex', alignItems: 'center', gap: 10,
+                          background: 'var(--card)', border: '1px solid var(--border)',
+                          borderRadius: 10, padding: '12px 14px', textDecoration: 'none',
+                          transition: 'border-color .15s',
+                        }}
+                        onMouseEnter={e => (e.currentTarget.style.borderColor = 'rgba(255,75,31,.4)')}
+                        onMouseLeave={e => (e.currentTarget.style.borderColor = 'var(--border)')}
+                      >
+                        <span style={{ fontSize: 18, flexShrink: 0 }}>{icon}</span>
+                        <div style={{ minWidth: 0 }}>
+                          <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--cream)' }}>{label}</div>
+                          <div style={{ fontSize: 11, color: 'var(--muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{display}</div>
+                        </div>
+                        <span style={{ marginLeft: 'auto', color: 'var(--muted)', fontSize: 12, flexShrink: 0 }}>↗</span>
+                      </a>
+                    )
+                  })}
+                </div>
+              </div>
+            )
+          })()}
 
           {/* Pricing */}
           {student.student_pricing?.length > 0 && (
