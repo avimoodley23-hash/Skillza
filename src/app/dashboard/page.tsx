@@ -25,6 +25,7 @@ interface Student {
   extra_info?: string
   tags?: string[]
   emoji?: string
+  photo_url?: string
 }
 
 interface Booking {
@@ -93,6 +94,7 @@ export default function DashboardPage() {
   const [cardFile, setCardFile] = useState<File | null>(null)
   const [uploading, setUploading] = useState(false)
   const [uploadDone, setUploadDone] = useState(false)
+  const [uploadingPhoto, setUploadingPhoto] = useState(false)
   const [updatingBooking, setUpdatingBooking] = useState<number | null>(null)
 
   // Registration form — mirrors Google Form exactly
@@ -232,6 +234,20 @@ export default function DashboardPage() {
       if (res.ok) setBookings(prev => prev.map(b => b.id === bookingId ? { ...b, status: newStatus } : b))
     } catch (err) { console.error(err) }
     setUpdatingBooking(null)
+  }
+
+  const handlePhotoUpload = async (file: File) => {
+    if (!student) return
+    setUploadingPhoto(true)
+    const ext = file.name.split('.').pop()
+    const path = `${student.id}/avatar.${ext}`
+    const { data, error } = await supabase.storage.from('avatars').upload(path, file, { upsert: true })
+    if (!error && data) {
+      const { data: urlData } = supabase.storage.from('avatars').getPublicUrl(path)
+      await (supabase as any).from('students').update({ photo_url: urlData.publicUrl }).eq('id', student.id)
+      setStudent({ ...student, photo_url: urlData.publicUrl })
+    }
+    setUploadingPhoto(false)
   }
 
   const handleCardUpload = async () => {
@@ -494,6 +510,27 @@ export default function DashboardPage() {
         {/* PROFILE TAB */}
         {tab === 'profile' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+
+            {/* Profile Photo */}
+            <div>
+              <label style={labelStyle}>Profile Photo</label>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginTop: 4 }}>
+                <div style={{ width: 72, height: 72, borderRadius: 14, overflow: 'hidden', background: '#1a1a1a', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  {student!.photo_url
+                    ? <img src={student!.photo_url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }} />
+                    : <span style={{ fontSize: 32 }}>{student!.emoji}</span>
+                  }
+                </div>
+                <div>
+                  <p style={{ color: 'var(--muted)', fontSize: 12, lineHeight: 1.5, marginBottom: 10 }}>Square crops work best. Max 5MB.</p>
+                  <label style={{ display: 'inline-block', background: 'transparent', border: '1px solid var(--border)', color: uploadingPhoto ? 'var(--muted)' : 'var(--cream)', borderRadius: 8, padding: '8px 16px', fontSize: 12, fontWeight: 600, cursor: uploadingPhoto ? 'not-allowed' : 'pointer' }}>
+                    {uploadingPhoto ? 'Uploading...' : student!.photo_url ? 'Change Photo' : 'Upload Photo'}
+                    <input type="file" accept="image/*" style={{ display: 'none' }} disabled={uploadingPhoto} onChange={e => { const f = e.target.files?.[0]; if (f) handlePhotoUpload(f) }} />
+                  </label>
+                </div>
+              </div>
+            </div>
+
             <Field label="Name" value={student!.name} disabled />
             <Field label="University" value={student!.university} disabled />
             <Field label="Degree" value={student!.degree} disabled />

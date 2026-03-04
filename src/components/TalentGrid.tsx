@@ -129,7 +129,7 @@ export default function TalentGrid({ students }: { students: Student[] }) {
           @keyframes fup { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
           @media (min-width: 700px) { .talent-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)) !important; gap: 16px !important; } }
           @media (min-width: 900px) { .talent-grid { gap: 20px !important; } }
-          @media (max-width: 559px) { .tc-img { display: none !important; } }
+          @media (max-width: 559px) { .tc-img { display: none !important; } .tc-bio { display: none !important; } .tc-tags { display: none !important; } }
           @media (min-width: 560px) { .tc-mob-bar { display: none !important; } .tc-body { padding: 14px 15px 15px !important; } }
         `}</style>
       </section>
@@ -194,16 +194,22 @@ function StudentCard({ student, index, onOpen, onBook }: {
     >
       {/* Mobile compact bar */}
       <div className="tc-mob-bar" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '11px 12px 0', gap: 6 }}>
-        <span style={{ fontSize: 22 }}>{student.emoji}</span>
-        <span style={{ fontSize: 9, fontWeight: 700, color: 'var(--muted)', background: 'rgba(245,239,227,.06)', padding: '3px 7px', borderRadius: 100, border: '1px solid var(--border)' }}>{student.university}</span>
+        {student.photo_url
+          ? <img src={student.photo_url} alt="" style={{ width: 28, height: 28, borderRadius: '50%', objectFit: 'cover', objectPosition: 'center top', flexShrink: 0 }} />
+          : <span style={{ fontSize: 22 }}>{student.emoji}</span>
+        }
+        <span style={{ fontSize: 9, fontWeight: 700, color: 'var(--muted)', background: 'rgba(245,239,227,.06)', padding: '3px 7px', borderRadius: 100, border: '1px solid var(--border)' }}>{student.university} · {student.year}</span>
         <span style={{ fontSize: 9, fontWeight: 700, color: 'var(--green)', background: 'rgba(52,213,142,.1)', border: '1px solid rgba(52,213,142,.25)', padding: '3px 7px', borderRadius: 100 }}>✓ Verified</span>
       </div>
 
       {/* Desktop image area */}
       <div className="tc-img" style={{ position: 'relative', aspectRatio: '4/3', background: 'linear-gradient(135deg, #1e1c19, #141210)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 48, overflow: 'hidden' }}>
-        {student.emoji}
+        {student.photo_url
+          ? <img src={student.photo_url} alt={student.name} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }} />
+          : student.emoji
+        }
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(16,15,13,.85) 0, transparent 50%)' }} />
-        <div style={{ position: 'absolute', top: 10, left: 10, background: 'rgba(16,15,13,.8)', border: '1px solid rgba(245,239,227,.1)', color: 'rgba(245,239,227,.7)', fontSize: 9, fontWeight: 700, padding: '3px 8px', borderRadius: 100 }}>{student.university}</div>
+        <div style={{ position: 'absolute', top: 10, left: 10, background: 'rgba(16,15,13,.8)', border: '1px solid rgba(245,239,227,.1)', color: 'rgba(245,239,227,.7)', fontSize: 9, fontWeight: 700, padding: '3px 8px', borderRadius: 100 }}>{student.university} · {student.year}</div>
         <div style={{ position: 'absolute', top: 10, right: 10, background: 'rgba(52,213,142,.12)', border: '1px solid rgba(52,213,142,.3)', color: 'var(--green)', fontSize: 9, fontWeight: 700, padding: '3px 8px', borderRadius: 100 }}>✓ Verified</div>
       </div>
 
@@ -213,7 +219,23 @@ function StudentCard({ student, index, onOpen, onBook }: {
           <div style={{ fontWeight: 700, fontSize: 14, color: 'var(--cream)', lineHeight: 1.2 }}>{student.short_name}</div>
           <div style={{ fontSize: 12, color: 'var(--gold)', fontWeight: 600, whiteSpace: 'nowrap' }}>★ {student.rating}</div>
         </div>
-        <div style={{ fontSize: 11, color: 'var(--muted)', marginBottom: 10 }}>{student.skill}</div>
+        <div style={{ fontSize: 11, color: 'var(--muted)', marginBottom: 8, lineHeight: 1.3 }}>{student.skill}</div>
+
+        {student.bio && (
+          <div className="tc-bio" style={{ fontSize: 11, color: 'rgba(245,239,227,.45)', lineHeight: 1.5, marginBottom: 8, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+            {student.bio}
+          </div>
+        )}
+
+        {student.tags && student.tags.length > 0 && (
+          <div className="tc-tags" style={{ display: 'flex', gap: 4, flexWrap: 'wrap', marginBottom: 10 }}>
+            {student.tags.slice(0, 3).map(tag => (
+              <span key={tag} style={{ fontSize: 10, padding: '3px 7px', borderRadius: 100, background: 'rgba(245,239,227,.04)', color: 'rgba(245,239,227,.45)', border: '1px solid rgba(245,239,227,.07)' }}>
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
 
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 10, borderTop: '1px solid var(--border)', gap: 6 }}>
           <div>

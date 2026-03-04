@@ -12,6 +12,7 @@ interface Student {
   category: string
   bio: string
   emoji: string
+  photo_url?: string | null
   verified: boolean
   student_pricing: { name: string; description: string; price: string; unit: string; featured: boolean }[]
   student_portfolio: { emoji: string; label: string }[]
@@ -101,8 +102,13 @@ export function ProfilePanel({ student, onClose, onBook }: Props) {
               width: 68, height: 68, borderRadius: 14,
               background: '#1a1a1a', display: 'flex', alignItems: 'center',
               justifyContent: 'center', fontSize: 34, flexShrink: 0,
-              border: '1px solid var(--border)',
-            }}>{student.emoji}</div>
+              border: '1px solid var(--border)', overflow: 'hidden',
+            }}>
+              {student.photo_url
+                ? <img src={student.photo_url} alt={student.name} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }} />
+                : student.emoji
+              }
+            </div>
             <div>
               <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 28, letterSpacing: 1, lineHeight: 1 }}>{student.name}</div>
               <div style={{ fontSize: 12, color: 'var(--muted)', marginTop: 3 }}>{student.skill} · {student.degree}</div>

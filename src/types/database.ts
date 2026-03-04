@@ -23,6 +23,7 @@ export interface Database {
           tags: string[]
           verified: boolean
           active: boolean
+          photo_url: string | null
           auth_user_id: string | null
           created_at: string
         }
