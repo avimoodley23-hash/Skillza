@@ -143,6 +143,7 @@ export default function DashboardPage() {
         price_unit,
         verified: false,
         auth_user_id: authUserId,
+        email: authEmail,
       })
       .select()
       .single()
