@@ -107,16 +107,34 @@ export default function DashboardPage() {
   })
   const [regError, setRegError] = useState('')
   const [regSaving, setRegSaving] = useState(false)
-  const [regStep, setRegStep] = useState(1) // multi-step form
+  const [regStep, setRegStep] = useState(1)
 
   useEffect(() => {
     supabase.auth.getSession().then(async ({ data: { session } }) => {
       if (!session) { router.push('/login'); return }
-      setAuthUserId(session.user.id)
-      setAuthEmail(session.user.email ?? '')
 
-      const { data: studentData } = await (supabase as any)
+      setAuthUserId(session.user.id)
+      const email = session.user.email ?? ''
+      setAuthEmail(email)
+
+      // Primary lookup: by auth_user_id
+      let { data: studentData } = await (supabase as any)
         .from('students').select('*').eq('auth_user_id', session.user.id).single()
+
+      // Fallback: by email (first login after admin approval)
+      if (!studentData) {
+        const { data: byEmail } = await (supabase as any)
+          .from('students').select('*').eq('email', email.toLowerCase()).single()
+
+        if (byEmail) {
+          // Link the auth account to the student row
+          await (supabase as any)
+            .from('students')
+            .update({ auth_user_id: session.user.id })
+            .eq('id', byEmail.id)
+          studentData = { ...byEmail, auth_user_id: session.user.id }
+        }
+      }
 
       if (studentData) {
         setStudent(studentData as Student)
@@ -127,7 +145,6 @@ export default function DashboardPage() {
         return
       }
 
-      const email = session.user.email ?? ''
       const { data: approvedData } = await (supabase as any)
         .from('approved_emails').select('email').eq('email', email.toLowerCase()).single()
       setScreen(approvedData ? 'register' : 'not-approved')
