@@ -29,6 +29,23 @@ type Booking = {
   created_at: string
 }
 
+type RegForm = {
+  name: string
+  university: string
+  degree: string
+  year: string
+  skill: string
+  bio: string
+  city: string
+  starting_price: string
+  price_unit: string
+}
+
+const UNIVERSITIES = ['UCT', 'Wits', 'AFDA', 'Red & Yellow', 'ICA', 'Stellenbosch', 'UJ', 'UKZN', 'Other']
+const YEARS = ['1st Year', '2nd Year', '3rd Year', '4th Year+', 'Postgrad']
+const SKILLS = ['Photography', 'Graphic Design', 'Videography', 'Makeup Artistry', 'Catering & Baking', 'DJ & Music Production', 'Tutoring', 'Web Development', 'Fashion & Styling', 'Illustration', 'Other']
+const PRICE_UNITS = ['session', 'hour', 'project', 'event', 'day', 'order']
+
 export default function DashboardPage() {
   const router = useRouter()
   const [tab, setTab] = useState<'profile' | 'bookings' | 'verification'>('profile')
@@ -41,10 +58,27 @@ export default function DashboardPage() {
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
 
+  // Registration state
+  const [showReg, setShowReg] = useState(false)
+  const [regForm, setRegForm] = useState<RegForm>({
+    name: '', university: '', degree: '', year: '', skill: '',
+    bio: '', city: '', starting_price: '', price_unit: 'session',
+  })
+  const [regSaving, setRegSaving] = useState(false)
+  const [regError, setRegError] = useState('')
+  const [authUserId, setAuthUserId] = useState<string | null>(null)
+  const [authEmail, setAuthEmail] = useState<string | null>(null)
+
   useEffect(() => {
     supabase.auth.getSession().then(async ({ data: { session } }) => {
       if (!session) { router.push('/login'); return }
       const userId = session.user.id
+      setAuthUserId(userId)
+      setAuthEmail(session.user.email ?? null)
+
+      // Pre-fill name from Google profile
+      const googleName = session.user.user_metadata?.full_name || session.user.user_metadata?.name || ''
+      setRegForm(f => ({ ...f, name: googleName }))
 
       const { data: studentData } = await (supabase as any)
         .from('students')
@@ -60,10 +94,58 @@ export default function DashboardPage() {
           .eq('student_id', studentData.id)
           .order('created_at', { ascending: false })
         setBookings((bookingData as Booking[]) || [])
+      } else {
+        // No profile found — show registration
+        setShowReg(true)
       }
       setLoading(false)
     })
   }, [])
+
+  const handleRegister = async () => {
+    setRegError('')
+    const { name, university, degree, year, skill, bio, city, starting_price, price_unit } = regForm
+    if (!name || !university || !degree || !year || !skill || !city || !starting_price) {
+      setRegError('Please fill in all required fields.')
+      return
+    }
+    setRegSaving(true)
+
+    // Derive short_name (e.g. "Avi M.")
+    const parts = name.trim().split(' ')
+    const short_name = parts.length > 1
+      ? `${parts[0]} ${parts[parts.length - 1][0]}.`
+      : parts[0]
+
+    const { data, error } = await (supabase as any)
+      .from('students')
+      .insert({
+        name: name.trim(),
+        short_name,
+        university,
+        degree: degree.trim(),
+        year,
+        skill,
+        bio: bio.trim(),
+        city: city.trim(),
+        starting_price: starting_price.trim(),
+        price_unit,
+        verified: false,
+        auth_user_id: authUserId,
+      })
+      .select()
+      .single()
+
+    if (error) {
+      setRegError('Something went wrong. Please try again or contact hello@skillza.co.za')
+      setRegSaving(false)
+      return
+    }
+
+    setStudent(data as Student)
+    setShowReg(false)
+    setRegSaving(false)
+  }
 
   const handleSaveProfile = async () => {
     if (!student) return
@@ -116,22 +198,111 @@ export default function DashboardPage() {
     transition: 'all .2s',
   })
 
+  // ── Loading ──
   if (loading) return (
     <main style={{ minHeight: '100vh', background: 'var(--black)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <p style={{ color: 'var(--muted)', fontFamily: 'Bebas Neue, sans-serif', fontSize: 20, letterSpacing: 2 }}>Loading...</p>
     </main>
   )
 
-  if (!student) return (
-    <main style={{ minHeight: '100vh', background: 'var(--black)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
-      <div style={{ textAlign: 'center', maxWidth: 400 }}>
-        <p style={{ color: 'var(--cream)', fontFamily: 'Bebas Neue, sans-serif', fontSize: 24, letterSpacing: 2, marginBottom: 12 }}>No profile found</p>
-        <p style={{ color: 'var(--muted)', fontSize: 14, lineHeight: 1.6, marginBottom: 24 }}>Your Google account is not linked to a student profile yet. Contact hello@skillza.co.za to get set up.</p>
-        <button onClick={handleSignOut} style={{ background: 'var(--orange)', color: '#fff', border: 'none', borderRadius: 8, padding: '12px 24px', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>Sign Out</button>
+  // ── Registration flow ──
+  if (showReg) return (
+    <main style={{ minHeight: '100vh', background: 'var(--black)', padding: '80px 24px 64px' }}>
+      <div style={{ maxWidth: 560, margin: '0 auto' }}>
+
+        <div style={{ marginBottom: 32 }}>
+          <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 32, letterSpacing: 2, color: 'var(--cream)', marginBottom: 6 }}>
+            Create your profile
+          </div>
+          <p style={{ color: 'var(--muted)', fontSize: 14, lineHeight: 1.6 }}>
+            Signed in as <span style={{ color: 'var(--cream)' }}>{authEmail}</span>. Fill in your details to go live on Skillza.
+          </p>
+        </div>
+
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+
+          <RegField label="Full Name *" placeholder="e.g. Sipho Dlamini">
+            <input value={regForm.name} onChange={e => setRegForm({ ...regForm, name: e.target.value })} placeholder="e.g. Sipho Dlamini" style={inputStyle} />
+          </RegField>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+            <RegField label="University *">
+              <select value={regForm.university} onChange={e => setRegForm({ ...regForm, university: e.target.value })} style={inputStyle}>
+                <option value="">Select...</option>
+                {UNIVERSITIES.map(u => <option key={u}>{u}</option>)}
+              </select>
+            </RegField>
+            <RegField label="Year *">
+              <select value={regForm.year} onChange={e => setRegForm({ ...regForm, year: e.target.value })} style={inputStyle}>
+                <option value="">Select...</option>
+                {YEARS.map(y => <option key={y}>{y}</option>)}
+              </select>
+            </RegField>
+          </div>
+
+          <RegField label="Degree / Programme *" placeholder="e.g. BA Visual Communication">
+            <input value={regForm.degree} onChange={e => setRegForm({ ...regForm, degree: e.target.value })} placeholder="e.g. BA Visual Communication" style={inputStyle} />
+          </RegField>
+
+          <RegField label="Primary Skill *">
+            <select value={regForm.skill} onChange={e => setRegForm({ ...regForm, skill: e.target.value })} style={inputStyle}>
+              <option value="">Select...</option>
+              {SKILLS.map(s => <option key={s}>{s}</option>)}
+            </select>
+          </RegField>
+
+          <RegField label="City *" placeholder="e.g. Cape Town">
+            <input value={regForm.city} onChange={e => setRegForm({ ...regForm, city: e.target.value })} placeholder="e.g. Cape Town" style={inputStyle} />
+          </RegField>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+            <RegField label="Starting Price (R) *" placeholder="e.g. 550">
+              <input value={regForm.starting_price} onChange={e => setRegForm({ ...regForm, starting_price: e.target.value })} placeholder="e.g. 550" style={inputStyle} />
+            </RegField>
+            <RegField label="Per *">
+              <select value={regForm.price_unit} onChange={e => setRegForm({ ...regForm, price_unit: e.target.value })} style={inputStyle}>
+                {PRICE_UNITS.map(u => <option key={u}>{u}</option>)}
+              </select>
+            </RegField>
+          </div>
+
+          <RegField label="Bio" placeholder="Tell clients about yourself, your experience, and what makes you great...">
+            <textarea
+              value={regForm.bio}
+              onChange={e => setRegForm({ ...regForm, bio: e.target.value })}
+              placeholder="Tell clients about yourself, your experience, and what makes you great..."
+              rows={4}
+              style={{ ...inputStyle, resize: 'vertical' }}
+            />
+          </RegField>
+
+          {regError && (
+            <p style={{ color: '#ff6b6b', fontSize: 13, background: 'rgba(255,107,107,.08)', border: '1px solid rgba(255,107,107,.2)', borderRadius: 8, padding: '10px 14px' }}>
+              {regError}
+            </p>
+          )}
+
+          <button
+            onClick={handleRegister}
+            disabled={regSaving}
+            style={{ background: 'var(--orange)', color: '#fff', border: 'none', borderRadius: 10, padding: '15px', fontSize: 16, fontWeight: 700, fontFamily: 'Bebas Neue, sans-serif', letterSpacing: 1.5, cursor: regSaving ? 'not-allowed' : 'pointer', opacity: regSaving ? .7 : 1, marginTop: 4 }}
+          >
+            {regSaving ? 'Creating profile...' : 'Create My Profile →'}
+          </button>
+
+          <p style={{ color: 'var(--muted)', fontSize: 12, textAlign: 'center', lineHeight: 1.6 }}>
+            Your profile won't go live until your Student Card is verified. You can upload it after registration.
+          </p>
+
+          <button onClick={handleSignOut} style={{ background: 'transparent', border: 'none', color: 'var(--muted)', fontSize: 12, cursor: 'pointer', textDecoration: 'underline' }}>
+            Sign out
+          </button>
+        </div>
       </div>
     </main>
   )
 
+  // ── Dashboard ──
   return (
     <main style={{ minHeight: '100vh', background: 'var(--black)', padding: '80px 24px 48px' }}>
       <div style={{ maxWidth: 680, margin: '0 auto' }}>
@@ -139,9 +310,9 @@ export default function DashboardPage() {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 32 }}>
           <div>
             <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 28, letterSpacing: 2, color: 'var(--cream)' }}>
-              Hey, {student.short_name} 👋
+              Hey, {student!.short_name} 👋
             </div>
-            <p style={{ color: 'var(--muted)', fontSize: 13, marginTop: 2 }}>{student.university} · {student.skill}</p>
+            <p style={{ color: 'var(--muted)', fontSize: 13, marginTop: 2 }}>{student!.university} · {student!.skill}</p>
           </div>
           <button onClick={handleSignOut} style={{ background: 'transparent', border: '1px solid var(--border)', color: 'var(--muted)', borderRadius: 8, padding: '8px 16px', fontSize: 12, cursor: 'pointer' }}>
             Sign out
@@ -156,24 +327,24 @@ export default function DashboardPage() {
 
         {tab === 'profile' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-            <Field label="Name" value={student.name} disabled />
-            <Field label="University" value={student.university} disabled />
-            <Field label="Degree" value={student.degree} disabled />
-            <Field label="Year" value={student.year} disabled />
-            <Field label="Skill" value={student.skill} disabled />
+            <Field label="Name" value={student!.name} disabled />
+            <Field label="University" value={student!.university} disabled />
+            <Field label="Degree" value={student!.degree} disabled />
+            <Field label="Year" value={student!.year} disabled />
+            <Field label="Skill" value={student!.skill} disabled />
             <div>
               <label style={labelStyle}>Bio</label>
               <textarea
-                value={student.bio}
-                onChange={e => setStudent({ ...student, bio: e.target.value })}
+                value={student!.bio}
+                onChange={e => setStudent({ ...student!, bio: e.target.value })}
                 rows={4}
                 style={{ ...inputStyle, resize: 'vertical' }}
               />
             </div>
-            <Field label="City" value={student.city} onChange={v => setStudent({ ...student, city: v })} />
+            <Field label="City" value={student!.city} onChange={v => setStudent({ ...student!, city: v })} />
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-              <Field label="Starting Price (R)" value={student.starting_price} onChange={v => setStudent({ ...student, starting_price: v })} />
-              <Field label="Price Unit" value={student.price_unit} onChange={v => setStudent({ ...student, price_unit: v })} />
+              <Field label="Starting Price (R)" value={student!.starting_price} onChange={v => setStudent({ ...student!, starting_price: v })} />
+              <Field label="Price Unit" value={student!.price_unit} onChange={v => setStudent({ ...student!, price_unit: v })} />
             </div>
             <button onClick={handleSaveProfile} style={{ background: 'var(--orange)', color: '#fff', border: 'none', borderRadius: 10, padding: '14px', fontSize: 15, fontWeight: 600, fontFamily: 'Bebas Neue, sans-serif', letterSpacing: 1.5, cursor: 'pointer', marginTop: 4 }}>
               {saving ? 'Saving...' : saved ? '✓ Saved' : 'Save Changes'}
@@ -205,15 +376,15 @@ export default function DashboardPage() {
 
         {tab === 'verification' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-            <div style={{ background: student.verified ? '#16a34a22' : '#f9731622', border: `1px solid ${student.verified ? '#4ade8044' : '#f9731644'}`, borderRadius: 12, padding: '20px' }}>
-              <p style={{ color: student.verified ? '#4ade80' : 'var(--orange)', fontWeight: 600, fontSize: 15, marginBottom: 4 }}>
-                {student.verified ? '✓ Verified' : '⏳ Not yet verified'}
+            <div style={{ background: student!.verified ? '#16a34a22' : '#f9731622', border: `1px solid ${student!.verified ? '#4ade8044' : '#f9731644'}`, borderRadius: 12, padding: '20px' }}>
+              <p style={{ color: student!.verified ? '#4ade80' : 'var(--orange)', fontWeight: 600, fontSize: 15, marginBottom: 4 }}>
+                {student!.verified ? '✓ Verified' : '⏳ Not yet verified'}
               </p>
               <p style={{ color: 'var(--muted)', fontSize: 13, lineHeight: 1.6 }}>
-                {student.verified ? 'Your student card has been verified. Your profile is live.' : 'Upload your student card below to get verified. We review within 24 hours.'}
+                {student!.verified ? 'Your student card has been verified. Your profile is live.' : 'Upload your student card below to get verified. We review within 24 hours.'}
               </p>
             </div>
-            {!student.verified && (
+            {!student!.verified && (
               <div style={{ border: '1px solid var(--border)', borderRadius: 12, padding: '24px' }}>
                 <p style={{ color: 'var(--cream)', fontSize: 14, fontWeight: 600, marginBottom: 16 }}>Upload Student Card</p>
                 <input
@@ -237,15 +408,26 @@ export default function DashboardPage() {
   )
 }
 
+// ── Helpers ──
+
+function RegField({ label, children, placeholder }: { label: string; children: React.ReactNode; placeholder?: string }) {
+  return (
+    <div>
+      <label style={labelStyle}>{label}</label>
+      {children}
+    </div>
+  )
+}
+
 const labelStyle: React.CSSProperties = {
   display: 'block', color: 'var(--muted)', fontSize: 12, fontWeight: 600,
-  letterSpacing: '.5px', marginBottom: 6, textTransform: 'uppercase'
+  letterSpacing: '.5px', marginBottom: 6, textTransform: 'uppercase',
 }
 
 const inputStyle: React.CSSProperties = {
   width: '100%', background: 'var(--surface)', border: '1px solid var(--border)',
   borderRadius: 8, padding: '11px 14px', fontSize: 14, color: 'var(--cream)',
-  outline: 'none', boxSizing: 'border-box'
+  outline: 'none', boxSizing: 'border-box',
 }
 
 function Field({ label, value, onChange, disabled }: {
