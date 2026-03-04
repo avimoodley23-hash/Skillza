@@ -86,7 +86,7 @@ export async function POST(req: Request) {
 
       // Email 1 — Student
       student.email ? resend.emails.send({
-        from: 'Skillza <onboarding@resend.dev>',
+        from: 'Skillza <hello@skillza.co.za>',
         to: student.email,
         subject: `New booking request — ${booking.reference}`,
         html: `<div style="${base}">
@@ -109,7 +109,7 @@ export async function POST(req: Request) {
 
       // Email 2 — Admin (you)
       resend.emails.send({
-        from: 'Skillza <onboarding@resend.dev>',
+        from: 'Skillza <hello@skillza.co.za>',
         to: 'avi.moodley23@gmail.com',
         subject: `New booking — ${booking.reference} · ${clientName} booked ${student.name}`,
         html: `<div style="${base}">
@@ -129,7 +129,7 @@ export async function POST(req: Request) {
 
       // Email 3 — Client confirmation
       resend.emails.send({
-        from: 'Skillza <onboarding@resend.dev>',
+        from: 'Skillza <hello@skillza.co.za>',
         to: clientEmail,
         subject: `Booking confirmed — ${booking.reference}`,
         html: `<div style="${base}">
