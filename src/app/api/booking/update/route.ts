@@ -104,7 +104,7 @@ export async function POST(req: Request) {
             <p style="font-size: 14px; line-height: 1.7; color: rgba(245,239,227,.8); margin-bottom: 24px;">${info.clientBody}</p>
             ${refBadge}
             ${status === 'rejected' || status === 'unavailable' ? `
-              <a href="https://skillza-app.vercel.app/#find-talent" style="display: inline-block; margin-top: 8px; background: #FF4B1F; color: #fff; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px;">
+              <a href="https://skillza.co.za/#find-talent" style="display: inline-block; margin-top: 8px; background: #FF4B1F; color: #fff; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px;">
                 Find Another Student →
               </a>` : ''}
             ${status === 'completed' ? `
@@ -139,7 +139,7 @@ export async function POST(req: Request) {
               <div style="font-size: 15px; font-weight: 700; color: #FF4B1F;">${info.adminLabel}</div>
             </div>
             ${refBadge}
-            <a href="https://skillza-app.vercel.app/admin" style="display: inline-block; margin-top: 8px; background: #FF4B1F; color: #fff; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px;">
+            <a href="https://skillza.co.za/admin" style="display: inline-block; margin-top: 8px; background: #FF4B1F; color: #fff; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px;">
               View in Admin →
             </a>
             ${footer}

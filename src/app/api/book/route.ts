@@ -100,7 +100,7 @@ export async function POST(req: Request) {
           <p style="font-size: 13px; color: rgba(245,239,227,.5); line-height: 1.6;">
             Message the client on WhatsApp to confirm availability, agree on scope, and arrange the 30% deposit.
           </p>
-          <a href="https://skillza-app.vercel.app/dashboard" style="display: inline-block; margin-top: 24px; background: #FF4B1F; color: #fff; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px;">
+          <a href="https://skillza.co.za/dashboard" style="display: inline-block; margin-top: 24px; background: #FF4B1F; color: #fff; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px;">
             View in Dashboard
           </a>
           ${footer}
@@ -120,7 +120,7 @@ export async function POST(req: Request) {
           </p>
           ${detailsCard}
           ${refBadge}
-          <a href="https://skillza-app.vercel.app/admin" style="display: inline-block; margin-top: 8px; background: #FF4B1F; color: #fff; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px;">
+          <a href="https://skillza.co.za/admin" style="display: inline-block; margin-top: 8px; background: #FF4B1F; color: #fff; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px;">
             View in Admin
           </a>
           ${footer}
