@@ -1,5 +1,5 @@
 'use client'
-import { createClient } from '@/lib/supabase'
+import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
@@ -30,7 +30,6 @@ type Booking = {
 }
 
 export default function DashboardPage() {
-  const supabase = createClient()
   const router = useRouter()
   const [tab, setTab] = useState<'profile' | 'bookings' | 'verification'>('profile')
   const [student, setStudent] = useState<Student | null>(null)
@@ -46,19 +45,21 @@ export default function DashboardPage() {
     supabase.auth.getSession().then(async ({ data: { session } }) => {
       if (!session) { router.push('/login'); return }
       const userId = session.user.id
-      const { data: studentData } = await supabase
+
+      const { data: studentData } = await (supabase as any)
         .from('students')
         .select('*')
         .eq('auth_user_id', userId)
         .single()
+
       if (studentData) {
-        setStudent(studentData)
-        const { data: bookingData } = await supabase
+        setStudent(studentData as Student)
+        const { data: bookingData } = await (supabase as any)
           .from('bookings')
           .select('*')
           .eq('student_id', studentData.id)
           .order('created_at', { ascending: false })
-        setBookings(bookingData || [])
+        setBookings((bookingData as Booking[]) || [])
       }
       setLoading(false)
     })
@@ -67,7 +68,7 @@ export default function DashboardPage() {
   const handleSaveProfile = async () => {
     if (!student) return
     setSaving(true)
-    await supabase.from('students').update({
+    await (supabase as any).from('students').update({
       bio: student.bio,
       city: student.city,
       starting_price: student.starting_price,
@@ -86,7 +87,7 @@ export default function DashboardPage() {
     const { data, error } = await supabase.storage.from('verification').upload(path, cardFile, { upsert: true })
     if (!error && data) {
       const { data: urlData } = supabase.storage.from('verification').getPublicUrl(path)
-      await supabase.from('verification_requests').upsert({
+      await (supabase as any).from('verification_requests').upsert({
         student_id: student.id,
         card_image_url: urlData.publicUrl,
         status: 'pending',
@@ -134,6 +135,7 @@ export default function DashboardPage() {
   return (
     <main style={{ minHeight: '100vh', background: 'var(--black)', padding: '80px 24px 48px' }}>
       <div style={{ maxWidth: 680, margin: '0 auto' }}>
+
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 32 }}>
           <div>
             <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 28, letterSpacing: 2, color: 'var(--cream)' }}>
@@ -161,7 +163,12 @@ export default function DashboardPage() {
             <Field label="Skill" value={student.skill} disabled />
             <div>
               <label style={labelStyle}>Bio</label>
-              <textarea value={student.bio} onChange={e => setStudent({ ...student, bio: e.target.value })} rows={4} style={{ ...inputStyle, resize: 'vertical' }} />
+              <textarea
+                value={student.bio}
+                onChange={e => setStudent({ ...student, bio: e.target.value })}
+                rows={4}
+                style={{ ...inputStyle, resize: 'vertical' }}
+              />
             </div>
             <Field label="City" value={student.city} onChange={v => setStudent({ ...student, city: v })} />
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
@@ -209,7 +216,12 @@ export default function DashboardPage() {
             {!student.verified && (
               <div style={{ border: '1px solid var(--border)', borderRadius: 12, padding: '24px' }}>
                 <p style={{ color: 'var(--cream)', fontSize: 14, fontWeight: 600, marginBottom: 16 }}>Upload Student Card</p>
-                <input type="file" accept="image/*,.pdf" onChange={e => setCardFile(e.target.files?.[0] || null)} style={{ color: 'var(--muted)', fontSize: 13, marginBottom: 16, display: 'block' }} />
+                <input
+                  type="file"
+                  accept="image/*,.pdf"
+                  onChange={e => setCardFile(e.target.files?.[0] || null)}
+                  style={{ color: 'var(--muted)', fontSize: 13, marginBottom: 16, display: 'block' }}
+                />
                 {cardFile && (
                   <button onClick={handleCardUpload} style={{ background: 'var(--orange)', color: '#fff', border: 'none', borderRadius: 10, padding: '12px 24px', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
                     {uploading ? 'Uploading...' : uploadDone ? '✓ Submitted' : 'Submit for Verification'}
@@ -219,19 +231,38 @@ export default function DashboardPage() {
             )}
           </div>
         )}
+
       </div>
     </main>
   )
 }
 
-const labelStyle: React.CSSProperties = { display: 'block', color: 'var(--muted)', fontSize: 12, fontWeight: 600, letterSpacing: '.5px', marginBottom: 6, textTransform: 'uppercase' }
-const inputStyle: React.CSSProperties = { width: '100%', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 8, padding: '11px 14px', fontSize: 14, color: 'var(--cream)', outline: 'none', boxSizing: 'border-box' }
+const labelStyle: React.CSSProperties = {
+  display: 'block', color: 'var(--muted)', fontSize: 12, fontWeight: 600,
+  letterSpacing: '.5px', marginBottom: 6, textTransform: 'uppercase'
+}
 
-function Field({ label, value, onChange, disabled }: { label: string, value: string, onChange?: (v: string) => void, disabled?: boolean }) {
+const inputStyle: React.CSSProperties = {
+  width: '100%', background: 'var(--surface)', border: '1px solid var(--border)',
+  borderRadius: 8, padding: '11px 14px', fontSize: 14, color: 'var(--cream)',
+  outline: 'none', boxSizing: 'border-box'
+}
+
+function Field({ label, value, onChange, disabled }: {
+  label: string
+  value: string
+  onChange?: (v: string) => void
+  disabled?: boolean
+}) {
   return (
     <div>
       <label style={labelStyle}>{label}</label>
-      <input value={value || ''} onChange={e => onChange?.(e.target.value)} disabled={disabled} style={{ ...inputStyle, opacity: disabled ? .5 : 1, cursor: disabled ? 'not-allowed' : 'text' }} />
+      <input
+        value={value || ''}
+        onChange={e => onChange?.(e.target.value)}
+        disabled={disabled}
+        style={{ ...inputStyle, opacity: disabled ? .5 : 1, cursor: disabled ? 'not-allowed' : 'text' }}
+      />
     </div>
   )
 }
