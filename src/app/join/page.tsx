@@ -1,6 +1,5 @@
 'use client'
 import { useState } from 'react'
-import { supabase } from '@/lib/supabase'
 import Nav from '@/components/Nav'
 import Link from 'next/link'
 
@@ -25,16 +24,16 @@ export default function JoinPage() {
     setLoading(true)
     setError('')
 
-    const { error: dbError } = await supabase.from('waitlist').insert({
-      name: form.name,
-      email: form.email,
-      university: form.university,
-      year: form.year,
-      skill: form.skill,
+    const res = await fetch('/api/waitlist', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(form),
     })
 
-    if (dbError) {
-      if (dbError.code === '23505') {
+    const data = await res.json()
+
+    if (!res.ok) {
+      if (data.error === 'already_on_waitlist') {
         setError("You're already on the waitlist with that email.")
       } else {
         setError('Something went wrong. Please try again.')
