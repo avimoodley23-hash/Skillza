@@ -36,6 +36,7 @@ export async function POST(req: Request) {
       rating: 5.0,
       review_count: 0,
       category: skill?.toLowerCase().replace(/ /g, '_') || 'other',
+degree: 'Student',
     })
 
     if (studentError) {
