@@ -7,15 +7,14 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 )
 
-const resend = new Resend(process.env.RESEND_API_KEY)
-
 export async function POST(req: Request) {
+  const resend = new Resend(process.env.RESEND_API_KEY)
   const { studentId, clientName, clientEmail, clientWhatsapp, description } = await req.json()
 
-  // 1. Get student details (name + email)
+  // 1. Get student + email
   const { data: student, error: studentError } = await supabase
     .from('students')
-    .select('id, name, auth_user_id')
+    .select('id, name, email')
     .eq('id', studentId)
     .single()
 
@@ -23,19 +22,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Student not found' }, { status: 404 })
   }
 
-  // 2. Get student's email from auth.users via their auth_user_id
-  let studentEmail: string | null = null
-  if (student.auth_user_id) {
-    const { data: userData } = await supabase
-      .from('approved_emails')
-      .select('email')
-      .eq('email', student.auth_user_id)
-      .single()
-    // Fall back — get from auth directly isn't possible client-side
-    // We store email in approved_emails so we query by matching logic
-  }
-
-  // 3. Insert booking
+  // 2. Insert booking
   const { data: booking, error: bookingError } = await supabase
     .from('bookings')
     .insert({
@@ -53,18 +40,11 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Booking failed' }, { status: 500 })
   }
 
-  // 4. Send email to student if we have their email
-  // We need to get student email — stored in students table as a separate column
-  const { data: studentWithEmail } = await supabase
-    .from('students')
-    .select('email')
-    .eq('id', studentId)
-    .single()
-
-  if (studentWithEmail?.email) {
+  // 3. Send email to student
+  if (student.email) {
     await resend.emails.send({
       from: 'Skillza <onboarding@resend.dev>',
-      to: studentWithEmail.email,
+      to: student.email,
       subject: `New booking request from ${clientName}`,
       html: `
         <div style="font-family: sans-serif; max-width: 560px; margin: 0 auto; padding: 32px 24px; background: #100F0D; color: #F5EFE3;">
