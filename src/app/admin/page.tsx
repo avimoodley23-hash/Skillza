@@ -5,15 +5,16 @@ import { createServerClient } from "@supabase/ssr"
 
 const ADMIN_EMAIL = "avi.moodley23@gmail.com"
 
+// ✅ FIX: Use service role key so admin can read all data without RLS blocking
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
 
 async function getAdminData() {
   const [studentsRes, bookingsRes, waitlistRes, verifyRes] = await Promise.all([
     supabaseAdmin.from("students").select("*").order("created_at", { ascending: false }),
-    supabaseAdmin.from("bookings").select("*, students(name, skill)").order("created_at", { ascending: false }).limit(20),
+    supabaseAdmin.from("bookings").select("*, students(name, skill)").order("created_at", { ascending: false }).limit(50),
     supabaseAdmin.from("waitlist").select("*").order("created_at", { ascending: false }),
     supabaseAdmin.from("verification_requests").select("*, students(name, university)").eq("status", "pending").order("submitted_at", { ascending: true }),
   ])
@@ -27,7 +28,7 @@ async function getAdminData() {
 
 export default async function AdminPage() {
   // ── Admin auth check ──
-const cookieStore = await cookies()
+  const cookieStore = await cookies()
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -55,12 +56,15 @@ const cookieStore = await cookies()
           SKILL<span style={{ color: "var(--orange)" }}>ZA</span> ADMIN
         </div>
         <p style={{ fontSize: 13, color: "var(--muted)", marginBottom: 40 }}>Internal dashboard</p>
+
+        {/* Stats */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))", gap: 12, marginBottom: 40 }}>
           {[
             { label: "Active Students", value: verified.length, color: "var(--green)" },
             { label: "Pending Verification", value: pendingVerifications.length, color: "var(--orange)" },
             { label: "New Bookings", value: pendingBookings.length, color: "var(--blue)" },
             { label: "Waitlist", value: waitlist.length, color: "var(--gold)" },
+            { label: "Total Bookings", value: bookings.length, color: "var(--cream)" },
           ].map(stat => (
             <div key={stat.label} style={{ background: "var(--black-2)", border: "1px solid var(--border)", borderRadius: 12, padding: "18px 20px" }}>
               <div style={{ fontFamily: "Bebas Neue, sans-serif", fontSize: 36, color: stat.color, lineHeight: 1 }}>{stat.value}</div>
@@ -68,20 +72,73 @@ const cookieStore = await cookies()
             </div>
           ))}
         </div>
+
+        {/* Pending Verifications */}
+        {pendingVerifications.length > 0 && (
+          <AdminSection title="Pending Verifications" count={pendingVerifications.length} accent="var(--orange)">
+            {pendingVerifications.map((v: any) => (
+              <Row key={v.id}>
+                <Cell><strong>{v.students?.name}</strong></Cell>
+                <Cell style={{ color: "var(--muted)", fontSize: 12 }}>{v.students?.university}</Cell>
+                <Cell>
+                  <a href={v.card_image_url} target="_blank" rel="noreferrer" style={{ color: "var(--orange)", fontSize: 12, textDecoration: "underline" }}>
+                    View Card
+                  </a>
+                </Cell>
+                <Cell style={{ fontSize: 11, color: "var(--muted)" }}>{new Date(v.submitted_at).toLocaleDateString("en-ZA")}</Cell>
+              </Row>
+            ))}
+          </AdminSection>
+        )}
+
+        {/* Bookings */}
         <AdminSection title="Recent Bookings" count={bookings.length} accent="var(--blue)">
           {bookings.length === 0 && <EmptyRow text="No bookings yet" />}
-          {bookings.slice(0, 10).map((b: any) => (
+          {bookings.map((b: any) => (
             <Row key={b.id}>
               <Cell><strong>{b.client_name}</strong></Cell>
-              <Cell style={{ color: "var(--muted)", fontSize: 12 }}>{b.students?.name}</Cell>
-              <Cell style={{ fontFamily: "Bebas Neue, sans-serif", color: "var(--orange)" }}>{b.reference}</Cell>
+              <Cell style={{ color: "var(--muted)", fontSize: 12 }}>{b.students?.name ?? "—"}</Cell>
+              <Cell style={{ fontFamily: "Bebas Neue, sans-serif", color: "var(--orange)", fontSize: 13 }}>{b.reference}</Cell>
+              <Cell>
+                <span style={{
+                  fontSize: 10, fontWeight: 700, padding: "3px 9px", borderRadius: 20,
+                  background: b.status === "confirmed" ? "#16a34a22" : b.status === "pending" ? "#f9731622" : "#94a3b822",
+                  color: b.status === "confirmed" ? "#4ade80" : b.status === "pending" ? "var(--orange)" : "var(--muted)"
+                }}>
+                  {b.status?.toUpperCase()}
+                </span>
+              </Cell>
               <Cell style={{ fontSize: 11, color: "var(--muted)" }}>{new Date(b.created_at).toLocaleDateString("en-ZA")}</Cell>
             </Row>
           ))}
         </AdminSection>
+
+        {/* Students */}
+        <AdminSection title="All Students" count={students.length} accent="var(--green)">
+          {students.length === 0 && <EmptyRow text="No students yet" />}
+          {students.map((s: any) => (
+            <Row key={s.id}>
+              <Cell><strong>{s.name}</strong></Cell>
+              <Cell style={{ color: "var(--muted)", fontSize: 12 }}>{s.university}</Cell>
+              <Cell style={{ color: "var(--muted)", fontSize: 12 }}>{s.skill}</Cell>
+              <Cell>
+                <span style={{
+                  fontSize: 10, fontWeight: 700, padding: "3px 9px", borderRadius: 20,
+                  background: s.verified ? "#16a34a22" : "#f9731622",
+                  color: s.verified ? "#4ade80" : "var(--orange)"
+                }}>
+                  {s.verified ? "VERIFIED" : "PENDING"}
+                </span>
+              </Cell>
+              <Cell style={{ fontSize: 11, color: "var(--muted)" }}>{new Date(s.created_at).toLocaleDateString("en-ZA")}</Cell>
+            </Row>
+          ))}
+        </AdminSection>
+
+        {/* Waitlist */}
         <AdminSection title="Waitlist" count={waitlist.length} accent="var(--gold)">
           {waitlist.length === 0 && <EmptyRow text="No waitlist signups yet" />}
-          {waitlist.slice(0, 20).map((w: any) => (
+          {waitlist.map((w: any) => (
             <Row key={w.id}>
               <Cell><strong>{w.name}</strong></Cell>
               <Cell style={{ color: "var(--muted)", fontSize: 12 }}>{w.email}</Cell>

@@ -15,15 +15,6 @@ interface Props {
   onClose: () => void
 }
 
-const FS_BOOKING = 'xgoljwld'
-
-function genRef() {
-  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
-  let r = 'SKZ-'
-  for (let i = 0; i < 4; i++) r += chars[Math.floor(Math.random() * chars.length)]
-  return r
-}
-
 export function BookingModal({ student, onClose }: Props) {
   const [name, setName] = useState('')
   const [whatsapp, setWhatsapp] = useState('')
@@ -58,38 +49,46 @@ export function BookingModal({ student, onClose }: Props) {
     setTimeout(() => setToast(''), 4000)
   }
 
+  // ✅ FIX: Now calls /api/book instead of Formspree
   const submit = async () => {
     if (!name || !whatsapp || !email) {
       showToast('Please fill in your name, WhatsApp number and email.')
       return
     }
     setLoading(true)
-    const bookingRef = genRef()
-    const payload = {
-      name, whatsapp, email, description,
-      student: student!.name,
-      studentSkill: student!.skill,
-      studentUni: student!.university,
-      reference: bookingRef,
-      _subject: `New Skillza Booking Request — ${bookingRef}`,
-    }
+
     try {
-      await fetch(`https://formspree.io/f/${FS_BOOKING}`, {
+      const res = await fetch('/api/book', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify(payload),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          studentId: student!.id,
+          clientName: name,
+          clientEmail: email,
+          clientWhatsapp: whatsapp,
+          description,
+        }),
       })
+
+      const data = await res.json()
+
+      if (!res.ok || data?.error) {
+        showToast(data?.error || 'Something went wrong. Please try again.')
+        setLoading(false)
+        return
+      }
+
+      setRef(data.reference)
+      setConfirmed(true)
     } catch (err) {
-      console.warn('Formspree error:', err)
+      console.error('Booking error:', err)
+      showToast('Network error. Please try again.')
     }
-    setRef(bookingRef)
+
     setLoading(false)
-    setConfirmed(true)
   }
 
   if (!student) return null
-
-  const minPrice = student.student_pricing?.[0]?.price ?? ''
 
   return (
     <>
