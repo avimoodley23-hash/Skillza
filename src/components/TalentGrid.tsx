@@ -108,7 +108,7 @@ export default function TalentGrid({ students }: { students: Student[] }) {
         </div>
 
         {/* Grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 10, marginTop: 16 }} className="talent-grid">
+        <div className="talent-grid" style={{ marginTop: 16 }}>
           {filtered.map((student, i) => (
             <StudentCard
               key={student.id}
@@ -119,7 +119,7 @@ export default function TalentGrid({ students }: { students: Student[] }) {
             />
           ))}
           {filtered.length === 0 && (
-            <div style={{ gridColumn: '1/-1', textAlign: 'center', padding: '60px 20px', color: 'var(--muted)' }}>
+            <div style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--muted)' }}>
               No students in this category yet.
             </div>
           )}
@@ -127,14 +127,76 @@ export default function TalentGrid({ students }: { students: Student[] }) {
 
         <style>{`
           @keyframes fup { from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)} }
-          @media (min-width: 700px) { .talent-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)) !important; gap: 16px !important; } }
-          @media (min-width: 900px) { .talent-grid { gap: 20px !important; } }
-          @media (max-width: 559px) { .tc-img { display: none !important; } .tc-bio { display: none !important; } .tc-tags { display: none !important; } }
-          @media (min-width: 560px) { .tc-mob-bar { display: none !important; } .tc-body { padding: 14px 15px 15px !important; } }
+
+          /* Mobile: single column */
+          .talent-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+          }
+
+          /* Tablet: 2 columns */
+          @media (min-width: 600px) {
+            .talent-grid {
+              grid-template-columns: repeat(2, 1fr);
+              gap: 16px;
+            }
+          }
+
+          /* Desktop: 3-4 columns */
+          @media (min-width: 900px) {
+            .talent-grid {
+              grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+              gap: 20px;
+            }
+          }
+
+          /* Mobile card: horizontal layout */
+          .student-card-inner {
+            display: flex;
+            flex-direction: row;
+            align-items: stretch;
+          }
+          .student-card-image {
+            width: 110px;
+            flex-shrink: 0;
+            position: relative;
+            background: linear-gradient(135deg, #1e1c19, #141210);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            overflow: hidden;
+            border-radius: 12px 0 0 12px;
+          }
+          .student-card-body {
+            flex: 1;
+            padding: 14px 14px 14px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-width: 0;
+          }
+          .student-card-tags { display: flex; }
+          .student-card-bio { display: block; }
+
+          /* Tablet+: vertical card layout */
+          @media (min-width: 600px) {
+            .student-card-inner {
+              flex-direction: column;
+            }
+            .student-card-image {
+              width: 100%;
+              aspect-ratio: 4/3;
+              border-radius: 12px 12px 0 0;
+            }
+            .student-card-body {
+              padding: 14px 15px 15px;
+            }
+          }
         `}</style>
       </section>
 
-      {/* Profile panel */}
       {activeStudent && (
         <ProfilePanel
           student={activeStudent as any}
@@ -143,7 +205,6 @@ export default function TalentGrid({ students }: { students: Student[] }) {
         />
       )}
 
-      {/* Booking modal */}
       {bookingStudent && (
         <BookingModal
           student={bookingStudent as any}
@@ -192,75 +253,116 @@ function StudentCard({ student, index, onOpen, onBook }: {
         el.style.boxShadow = 'none'
       }}
     >
-      {/* Mobile compact bar */}
-      <div className="tc-mob-bar" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '11px 12px 0', gap: 6 }}>
-        {student.photo_url
-          ? <img src={student.photo_url} alt="" style={{ width: 28, height: 28, borderRadius: '50%', objectFit: 'cover', objectPosition: 'center top', flexShrink: 0 }} />
-          : <span style={{ fontSize: 22 }}>{student.emoji}</span>
-        }
-        <span style={{ fontSize: 9, fontWeight: 700, color: 'var(--muted)', background: 'rgba(245,239,227,.06)', padding: '3px 7px', borderRadius: 100, border: '1px solid var(--border)' }}>{student.university} · {student.year}</span>
-        <span style={{ fontSize: 9, fontWeight: 700, color: 'var(--green)', background: 'rgba(52,213,142,.1)', border: '1px solid rgba(52,213,142,.25)', padding: '3px 7px', borderRadius: 100 }}>✓ Verified</span>
-      </div>
+      <div className="student-card-inner">
 
-      {/* Desktop image area */}
-      <div className="tc-img" style={{ position: 'relative', aspectRatio: '4/3', background: 'linear-gradient(135deg, #1e1c19, #141210)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 48, overflow: 'hidden' }}>
-        {student.photo_url
-          ? <img src={student.photo_url} alt={student.name} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }} />
-          : student.emoji
-        }
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(16,15,13,.85) 0, transparent 50%)' }} />
-        <div style={{ position: 'absolute', top: 10, left: 10, background: 'rgba(16,15,13,.8)', border: '1px solid rgba(245,239,227,.1)', color: 'rgba(245,239,227,.7)', fontSize: 9, fontWeight: 700, padding: '3px 8px', borderRadius: 100 }}>{student.university} · {student.year}</div>
-        <div style={{ position: 'absolute', top: 10, right: 10, background: 'rgba(52,213,142,.12)', border: '1px solid rgba(52,213,142,.3)', color: 'var(--green)', fontSize: 9, fontWeight: 700, padding: '3px 8px', borderRadius: 100 }}>✓ Verified</div>
-      </div>
-
-      {/* Card body */}
-      <div style={{ padding: '11px 12px 12px' }} className="tc-body">
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 2 }}>
-          <div style={{ fontWeight: 700, fontSize: 14, color: 'var(--cream)', lineHeight: 1.2 }}>{student.short_name}</div>
-          <div style={{ fontSize: 12, color: 'var(--gold)', fontWeight: 600, whiteSpace: 'nowrap' }}>★ {student.rating}</div>
+        {/* Image */}
+        <div className="student-card-image">
+          {student.photo_url
+            ? <img
+                src={student.photo_url}
+                alt={student.name}
+                style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }}
+              />
+            : student.emoji
+          }
+          {/* Gradient overlay */}
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(16,15,13,.7) 0, transparent 50%)' }} />
+          {/* Verified badge — shown on image for tablet+ */}
+          <div style={{
+            position: 'absolute', top: 10, right: 10,
+            background: 'rgba(52,213,142,.12)', border: '1px solid rgba(52,213,142,.3)',
+            color: 'var(--green)', fontSize: 9, fontWeight: 700,
+            padding: '3px 8px', borderRadius: 100,
+          }}>✓ Verified</div>
         </div>
-        <div style={{ fontSize: 11, color: 'var(--muted)', marginBottom: 8, lineHeight: 1.3 }}>{student.skill}</div>
 
-        {student.bio && (
-          <div className="tc-bio" style={{ fontSize: 11, color: 'rgba(245,239,227,.45)', lineHeight: 1.5, marginBottom: 8, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-            {student.bio}
-          </div>
-        )}
-
-        {student.tags && student.tags.length > 0 && (
-          <div className="tc-tags" style={{ display: 'flex', gap: 4, flexWrap: 'wrap', marginBottom: 10 }}>
-            {student.tags.slice(0, 3).map(tag => (
-              <span key={tag} style={{ fontSize: 10, padding: '3px 7px', borderRadius: 100, background: 'rgba(245,239,227,.04)', color: 'rgba(245,239,227,.45)', border: '1px solid rgba(245,239,227,.07)' }}>
-                {tag}
-              </span>
-            ))}
-          </div>
-        )}
-
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 10, borderTop: '1px solid var(--border)', gap: 6 }}>
+        {/* Body */}
+        <div className="student-card-body">
+          {/* Top row: uni + verified (mobile only shows uni here) */}
           <div>
-            <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 20, letterSpacing: 1, color: 'var(--cream)', lineHeight: 1 }}>
-              from {student.starting_price}
-              <small style={{ fontFamily: 'Instrument Sans, sans-serif', fontSize: 10, fontWeight: 400, color: 'var(--muted)', display: 'block' }}>/ {student.price_unit}</small>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 6, marginBottom: 6 }}>
+              <span style={{
+                fontSize: 10, fontWeight: 700, color: 'var(--muted)',
+                background: 'rgba(245,239,227,.06)', padding: '3px 8px',
+                borderRadius: 100, border: '1px solid var(--border)',
+                whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+              }}>
+                {student.university} · {student.year}
+              </span>
+              <span style={{
+                fontSize: 10, fontWeight: 700, color: 'var(--green)',
+                background: 'rgba(52,213,142,.1)', border: '1px solid rgba(52,213,142,.25)',
+                padding: '3px 8px', borderRadius: 100, whiteSpace: 'nowrap',
+                // hide on tablet+ since verified badge is on image
+              }} className="mob-verified">✓ Verified</span>
             </div>
-            <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 2 }}>Tap to view profile</div>
+
+            {/* Name + rating */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 2 }}>
+              <div style={{ fontWeight: 700, fontSize: 15, color: 'var(--cream)', lineHeight: 1.2 }}>{student.short_name}</div>
+              <div style={{ fontSize: 12, color: 'var(--gold)', fontWeight: 600, whiteSpace: 'nowrap' }}>★ {student.rating}</div>
+            </div>
+
+            {/* Skill */}
+            <div style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 8 }}>{student.skill}</div>
+
+            {/* Bio — visible on mobile too now */}
+            {student.bio && (
+              <div className="student-card-bio" style={{
+                fontSize: 11, color: 'rgba(245,239,227,.45)', lineHeight: 1.5,
+                marginBottom: 8,
+                display: '-webkit-box', WebkitLineClamp: 2,
+                WebkitBoxOrient: 'vertical', overflow: 'hidden',
+              }}>
+                {student.bio}
+              </div>
+            )}
+
+            {/* Tags */}
+            {student.tags && student.tags.length > 0 && (
+              <div className="student-card-tags" style={{ gap: 4, flexWrap: 'wrap', marginBottom: 8 }}>
+                {student.tags.slice(0, 3).map(tag => (
+                  <span key={tag} style={{
+                    fontSize: 10, padding: '3px 7px', borderRadius: 100,
+                    background: 'rgba(245,239,227,.04)', color: 'rgba(245,239,227,.45)',
+                    border: '1px solid rgba(245,239,227,.07)',
+                  }}>
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
-          <button
-            onClick={e => { e.stopPropagation(); onBook() }}
-            style={{
-              background: 'transparent', color: 'var(--orange)',
-              border: '1.5px solid rgba(255,75,31,.4)',
-              padding: '9px 12px', borderRadius: 7,
-              fontSize: 11, fontWeight: 700,
-              cursor: 'pointer', minHeight: 36, whiteSpace: 'nowrap',
-              transition: 'all .2s', flexShrink: 0,
-            }}
-            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'var(--orange)'; (e.currentTarget as HTMLElement).style.color = '#fff' }}
-            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'transparent'; (e.currentTarget as HTMLElement).style.color = 'var(--orange)' }}
-            aria-label={`Book ${student.name}`}
-          >
-            Book
-          </button>
+
+          {/* Bottom: price + book */}
+          <div style={{
+            display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+            paddingTop: 10, borderTop: '1px solid var(--border)', gap: 8, marginTop: 4,
+          }}>
+            <div>
+              <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 20, letterSpacing: 1, color: 'var(--cream)', lineHeight: 1 }}>
+                from {student.starting_price}
+                <small style={{ fontFamily: 'Instrument Sans, sans-serif', fontSize: 10, fontWeight: 400, color: 'var(--muted)', display: 'block' }}>/ {student.price_unit}</small>
+              </div>
+            </div>
+            <button
+              onClick={e => { e.stopPropagation(); onBook() }}
+              style={{
+                background: 'var(--orange)', color: '#fff',
+                border: 'none',
+                padding: '10px 18px', borderRadius: 8,
+                fontSize: 12, fontWeight: 700,
+                cursor: 'pointer', minHeight: 38, whiteSpace: 'nowrap',
+                transition: 'all .2s', flexShrink: 0,
+                boxShadow: '0 2px 12px rgba(255,75,31,.35)',
+              }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.opacity = '0.85' }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.opacity = '1' }}
+              aria-label={`Book ${student.name}`}
+            >
+              Book
+            </button>
+          </div>
         </div>
       </div>
     </div>
