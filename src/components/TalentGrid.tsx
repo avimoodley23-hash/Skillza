@@ -194,6 +194,7 @@ export default function TalentGrid({ students }: { students: Student[] }) {
               padding: 14px 15px 15px;
             }
           }
+@media (min-width: 600px) { .mob-verified { display: none !important; } }
         `}</style>
       </section>
 
@@ -267,13 +268,6 @@ function StudentCard({ student, index, onOpen, onBook }: {
           }
           {/* Gradient overlay */}
           <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(16,15,13,.7) 0, transparent 50%)' }} />
-          {/* Verified badge — shown on image for tablet+ */}
-          <div style={{
-            position: 'absolute', top: 10, right: 10,
-            background: 'rgba(52,213,142,.12)', border: '1px solid rgba(52,213,142,.3)',
-            color: 'var(--green)', fontSize: 9, fontWeight: 700,
-            padding: '3px 8px', borderRadius: 100,
-          }}>✓ Verified</div>
         </div>
 
         {/* Body */}
