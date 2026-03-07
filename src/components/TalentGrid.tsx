@@ -7,13 +7,13 @@ import { BookingModal } from '@/components/BookingModal'
 const CATEGORIES = [
   { id: 'all', label: 'All' },
   { id: 'photography', label: '📸 Photography' },
-  { id: 'design', label: '🎨 Design' },
-  { id: 'video', label: '🎬 Video' },
-  { id: 'mua', label: '💄 MUA' },
-  { id: 'catering', label: '🍰 Catering' },
-  { id: 'tutoring', label: '📚 Tutoring' },
-  { id: 'dj', label: '🎵 DJ' },
-  { id: 'webdev', label: '💻 Web Dev' },
+  { id: 'videography', label: '🎬 Videography' },
+  { id: 'graphic-design', label: '🎨 Graphic Design' },
+  { id: 'art-direction', label: '🎯 Art Direction' },
+  { id: 'digital-design', label: '💻 Digital Design' },
+  { id: 'ai-design', label: '🤖 AI Design' },
+  { id: 'illustration', label: '🖌️ Illustration' },
+  { id: 'fine-art', label: '🖼️ Fine Art' },
 ]
 
 const SORT_OPTIONS = [

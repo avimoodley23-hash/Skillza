@@ -53,36 +53,25 @@ interface PricingPackage {
 const UNIVERSITIES = ['UCT', 'Wits', 'AFDA', 'Red & Yellow', 'ICA', 'Stellenbosch', 'UJ', 'CPUT', 'Other']
 const YEARS = ['1st Year', '2nd Year', '3rd Year', '4th Year', 'Postgrad']
 const SKILLS = [
-  'Photography', 'Graphic Design', 'Videography', 'Makeup Artistry',
-  'Catering & Baking', 'DJ & Music Production', 'Tutoring', 'Web Development',
-  'Fashion & Styling', 'Performing Arts', 'AI & Automation', 'Social Media Management',
-  'Copywriting & Content', 'Animation & Motion Graphics', 'Illustration',
-  'Event Planning', 'Music Production', 'Voice Acting', 'Other'
+  'Photography', 'Videography', 'Graphic Design', 'Art Direction',
+  'Digital Design', 'AI Design', 'Illustration', 'Fine Art', 'Other'
 ]
-const PRICE_UNITS = ['session', 'hour', 'project', 'event', 'day', 'order', 'package', 'piece', 'block']
-const CITIES = ['Cape Town', 'Johannesburg', 'Pretoria', 'Durban', 'Other']
-const AVAILABILITY_OPTIONS = ['Weekdays', 'Weekday evenings', 'Saturdays', 'Sundays', 'Flexible']
 
 const SKILL_EMOJIS: Record<string, string> = {
-  'Photography': '📸', 'Graphic Design': '🎨', 'Videography': '🎬',
-  'Makeup Artistry': '💄', 'Catering & Baking': '🍰', 'DJ & Music Production': '🎵',
-  'Tutoring': '📚', 'Web Development': '💻', 'Fashion & Styling': '👗',
-  'Performing Arts': '🎭', 'AI & Automation': '🤖', 'Social Media Management': '📱',
-  'Copywriting & Content': '✍️', 'Animation & Motion Graphics': '🎞️',
-  'Illustration': '🖌️', 'Event Planning': '🎪', 'Music Production': '🎹',
-  'Voice Acting': '🎙️', 'Other': '⭐'
+  'Photography': '📸', 'Videography': '🎬', 'Graphic Design': '🎨',
+  'Art Direction': '🎯', 'Digital Design': '💻', 'AI Design': '🤖',
+  'Illustration': '🖌️', 'Fine Art': '🖼️', 'Other': '⭐'
 }
 
 const SKILL_CATEGORIES: Record<string, string> = {
-  'Photography': 'photography', 'Graphic Design': 'design', 'Videography': 'video',
-  'Makeup Artistry': 'mua', 'Catering & Baking': 'catering', 'DJ & Music Production': 'dj',
-  'Tutoring': 'tutoring', 'Web Development': 'webdev', 'Fashion & Styling': 'other',
-  'Performing Arts': 'other', 'AI & Automation': 'other', 'Social Media Management': 'other',
-  'Copywriting & Content': 'other', 'Animation & Motion Graphics': 'video',
-  'Illustration': 'design', 'Event Planning': 'other', 'Music Production': 'dj',
-  'Voice Acting': 'other', 'Other': 'other'
+  'Photography': 'photography', 'Videography': 'videography',
+  'Graphic Design': 'graphic-design', 'Art Direction': 'art-direction',
+  'Digital Design': 'digital-design', 'AI Design': 'ai-design',
+  'Illustration': 'illustration', 'Fine Art': 'fine-art', 'Other': 'other'
 }
-
+const PRICE_UNITS = ['session', 'hour', 'project', 'event', 'day', 'order', 'package', 'piece', 'block']
+const CITIES = ['Cape Town', 'Johannesburg', 'Pretoria', 'Durban', 'Other']
+const AVAILABILITY_OPTIONS = ['Weekdays', 'Weekday evenings', 'Saturdays', 'Sundays', 'Flexible']
 const STATUS_CONFIG: Record<string, { label: string; color: string; bg: string }> = {
   pending:     { label: 'PENDING',     color: 'var(--orange)', bg: '#f9731622' },
   confirmed:   { label: 'CONFIRMED',   color: '#4ade80',       bg: '#16a34a22' },
