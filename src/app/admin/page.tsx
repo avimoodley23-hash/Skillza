@@ -3,7 +3,10 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 
-const ADMIN_EMAIL = 'avi.moodley23@gmail.com'
+const ADMIN_EMAILS = [
+  'avi.moodley23@gmail.com',
+  'gareth.rasmussen@icloud.com'
+]
 
 interface AdminData {
   students: any[]
@@ -24,7 +27,10 @@ export default function AdminPage() {
       const { data: { session } } = await supabase.auth.getSession()
 
       if (!session) { router.push('/login'); return }
-      if (session.user.email !== ADMIN_EMAIL) { router.push('/'); return }
+      if (!ADMIN_EMAILS.includes(session.user.email || '')) {
+  router.push('/')
+  return
+}
 
       const res = await fetch('/api/admin/data')
       if (!res.ok) { setError('Failed to load admin data'); setLoading(false); return }
