@@ -288,7 +288,7 @@ function StudentCard({ student, index, onOpen, onBook }: {
                 background: 'rgba(52,213,142,.1)', border: '1px solid rgba(52,213,142,.25)',
                 padding: '3px 8px', borderRadius: 100, whiteSpace: 'nowrap',
                 // hide on tablet+ since verified badge is on image
-              }} className="mob-verified">✓ Verified</span>
+              }}>✓ Verified</span>
             </div>
 
             {/* Name + rating */}
