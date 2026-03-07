@@ -36,12 +36,21 @@ export async function POST(req: Request) {
       rating: 5.0,
       review_count: 0,
       category: skill?.toLowerCase().replace(/ /g, '_') || 'other',
-degree: 'Student',
+      degree: 'Student',
     })
 
     if (studentError) {
       console.error('Student insert error:', studentError)
       return NextResponse.json({ error: studentError.message }, { status: 500 })
+    }
+
+    // 1b. Add to approved_emails so auth works
+    const { error: approvedEmailError } = await supabase
+      .from('approved_emails')
+      .insert({ email })
+
+    if (approvedEmailError && approvedEmailError.code !== '23505') {
+      console.error('Approved email insert error:', approvedEmailError)
     }
 
     // 2. Generate a magic link via Supabase admin

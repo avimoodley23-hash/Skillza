@@ -92,7 +92,7 @@ export async function POST(req: Request) {
 
         // Email to client
         resend.emails.send({
-          from: 'Skillza <onboarding@resend.dev>',
+          from: 'Skillza <hello@skillza.co.za>',
           to: booking.client_email,
           subject: `${info.subject} — ${booking.reference}`,
           html: `<div style="${base}">
@@ -121,7 +121,7 @@ export async function POST(req: Request) {
 
         // Email to admin (you)
         resend.emails.send({
-          from: 'Skillza <onboarding@resend.dev>',
+          from: 'Skillza <hello@skillza.co.za>',
           to: 'avi.moodley23@gmail.com',
           subject: `Booking ${info.adminLabel} — ${booking.reference} · ${studentName} → ${booking.client_name}`,
           html: `<div style="${base}">
