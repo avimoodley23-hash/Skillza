@@ -26,6 +26,7 @@ interface Student {
   tags?: string[]
   emoji?: string
   photo_url?: string
+  category?: string
 }
 
 interface Booking {
@@ -51,15 +52,35 @@ interface PricingPackage {
 
 const UNIVERSITIES = ['UCT', 'Wits', 'AFDA', 'Red & Yellow', 'ICA', 'Stellenbosch', 'UJ', 'CPUT', 'Other']
 const YEARS = ['1st Year', '2nd Year', '3rd Year', '4th Year', 'Postgrad']
-const SKILLS = ['Photography', 'Graphic Design', 'Videography', 'Makeup Artistry', 'Catering & Baking', 'DJ & Music Production', 'Tutoring', 'Web Development', 'Fashion & Styling', 'Performing Arts', 'Other']
+const SKILLS = [
+  'Photography', 'Graphic Design', 'Videography', 'Makeup Artistry',
+  'Catering & Baking', 'DJ & Music Production', 'Tutoring', 'Web Development',
+  'Fashion & Styling', 'Performing Arts', 'AI & Automation', 'Social Media Management',
+  'Copywriting & Content', 'Animation & Motion Graphics', 'Illustration',
+  'Event Planning', 'Music Production', 'Voice Acting', 'Other'
+]
 const PRICE_UNITS = ['session', 'hour', 'project', 'event', 'day', 'order', 'package', 'piece', 'block']
 const CITIES = ['Cape Town', 'Johannesburg', 'Pretoria', 'Durban', 'Other']
 const AVAILABILITY_OPTIONS = ['Weekdays', 'Weekday evenings', 'Saturdays', 'Sundays', 'Flexible']
+
 const SKILL_EMOJIS: Record<string, string> = {
   'Photography': '📸', 'Graphic Design': '🎨', 'Videography': '🎬',
   'Makeup Artistry': '💄', 'Catering & Baking': '🍰', 'DJ & Music Production': '🎵',
   'Tutoring': '📚', 'Web Development': '💻', 'Fashion & Styling': '👗',
-  'Performing Arts': '🎭', 'Other': '⭐'
+  'Performing Arts': '🎭', 'AI & Automation': '🤖', 'Social Media Management': '📱',
+  'Copywriting & Content': '✍️', 'Animation & Motion Graphics': '🎞️',
+  'Illustration': '🖌️', 'Event Planning': '🎪', 'Music Production': '🎹',
+  'Voice Acting': '🎙️', 'Other': '⭐'
+}
+
+const SKILL_CATEGORIES: Record<string, string> = {
+  'Photography': 'photography', 'Graphic Design': 'design', 'Videography': 'video',
+  'Makeup Artistry': 'mua', 'Catering & Baking': 'catering', 'DJ & Music Production': 'dj',
+  'Tutoring': 'tutoring', 'Web Development': 'webdev', 'Fashion & Styling': 'other',
+  'Performing Arts': 'other', 'AI & Automation': 'other', 'Social Media Management': 'other',
+  'Copywriting & Content': 'other', 'Animation & Motion Graphics': 'video',
+  'Illustration': 'design', 'Event Planning': 'other', 'Music Production': 'dj',
+  'Voice Acting': 'other', 'Other': 'other'
 }
 
 const STATUS_CONFIG: Record<string, { label: string; color: string; bg: string }> = {
@@ -100,8 +121,8 @@ export default function DashboardPage() {
   const [uploadingPhoto, setUploadingPhoto] = useState(false)
   const [updatingBooking, setUpdatingBooking] = useState<number | null>(null)
   const [packages, setPackages] = useState<PricingPackage[]>([])
+  const [customSkill, setCustomSkill] = useState('')
 
-  // Registration form — mirrors Google Form exactly
   const [reg, setReg] = useState({
     name: '', whatsapp: '', university: '', year: '', student_number: '',
     skill: '', secondary_skill: '', bio: '', starting_price: '', price_unit: 'session',
@@ -123,17 +144,14 @@ export default function DashboardPage() {
       const email = session.user.email ?? ''
       setAuthEmail(email)
 
-      // Primary lookup: by auth_user_id
       let { data: studentData } = await (supabase as any)
         .from('students').select('*').eq('auth_user_id', session.user.id).single()
 
-      // Fallback: by email (first login after admin approval)
       if (!studentData) {
         const { data: byEmail } = await (supabase as any)
           .from('students').select('*').eq('email', email.toLowerCase()).single()
 
         if (byEmail) {
-          // Link the auth account to the student row
           await (supabase as any)
             .from('students')
             .update({ auth_user_id: session.user.id })
@@ -169,6 +187,14 @@ export default function DashboardPage() {
     }))
   }
 
+  // When skill changes, auto-update emoji and category
+  const handleSkillChange = (newSkill: string) => {
+    const emoji = SKILL_EMOJIS[newSkill] || '⭐'
+    const category = SKILL_CATEGORIES[newSkill] || 'other'
+    setStudent(s => s ? { ...s, skill: newSkill, emoji, category } : s)
+    if (newSkill !== 'Other') setCustomSkill('')
+  }
+
   const handleRegister = async () => {
     setRegError('')
     const { name, whatsapp, university, year, student_number, skill, bio, starting_price, price_unit, city, pkg1, pkg2, agreed, degree } = reg
@@ -184,18 +210,20 @@ export default function DashboardPage() {
 
     const parts = name.trim().split(' ')
     const short_name = parts.length > 1 ? parts[0] + ' ' + parts[parts.length - 1][0] + '.' : parts[0]
+    const finalSkill = skill === 'Other' && customSkill ? customSkill : skill
     const emoji = SKILL_EMOJIS[skill] || '⭐'
+    const category = SKILL_CATEGORIES[skill] || 'other'
 
     const { data, error } = await (supabase as any)
       .from('students')
       .insert({
-        name: name.trim(), short_name, university, degree: degree.trim(), year, skill,
-        secondary_skill: reg.secondary_skill || null,
+        name: name.trim(), short_name, university, degree: degree.trim(), year,
+        skill: finalSkill, secondary_skill: reg.secondary_skill || null,
         bio: bio.trim(), city, starting_price: starting_price.trim(), price_unit,
         whatsapp, student_number, portfolio_links: reg.portfolio_links,
         student_card_link: reg.student_card_link,
         availability: reg.availability, extra_info: reg.extra_info,
-        emoji, verified: false, auth_user_id: authUserId, email: authEmail,
+        emoji, category, verified: false, auth_user_id: authUserId, email: authEmail,
         rating: 0, review_count: 0,
       })
       .select().single()
@@ -205,7 +233,6 @@ export default function DashboardPage() {
       setRegSaving(false); return
     }
 
-    // Insert pricing packages
     const packages = [
       { ...pkg1, student_id: data.id, sort_order: 1, featured: false, unit: price_unit },
       { ...pkg2, student_id: data.id, sort_order: 2, featured: true, unit: price_unit },
@@ -221,13 +248,26 @@ export default function DashboardPage() {
   const handleSaveProfile = async () => {
     if (!student) return
     setSaving(true)
+
+    const finalSkill = student.skill === 'Other' && customSkill ? customSkill : student.skill
+    const emoji = SKILL_EMOJIS[student.skill] || student.emoji || '⭐'
+    const category = SKILL_CATEGORIES[student.skill] || 'other'
+
     await (supabase as any).from('students').update({
-      bio: student.bio, city: student.city, starting_price: student.starting_price,
-      price_unit: student.price_unit, whatsapp: student.whatsapp,
-      portfolio_links: student.portfolio_links, extra_info: student.extra_info,
+      bio: student.bio,
+      city: student.city,
+      starting_price: student.starting_price,
+      price_unit: student.price_unit,
+      whatsapp: student.whatsapp,
+      portfolio_links: student.portfolio_links,
+      extra_info: student.extra_info,
       secondary_skill: student.secondary_skill || null,
       availability: student.availability || [],
+      skill: finalSkill,
+      emoji,
+      category,
     }).eq('id', student.id)
+
     for (const pkg of packages) {
       if (pkg.id) {
         await (supabase as any).from('student_pricing').update({
@@ -321,13 +361,11 @@ export default function DashboardPage() {
       <main style={{ minHeight: '100vh', background: 'var(--black)', padding: '60px 24px 80px' }}>
         <div style={{ maxWidth: 580, margin: '0 auto' }}>
 
-          {/* Header */}
           <div style={{ marginBottom: 32 }}>
             <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 32, letterSpacing: 2, color: 'var(--cream)', marginBottom: 4 }}>Create your profile</div>
             <p style={{ color: 'var(--muted)', fontSize: 13, lineHeight: 1.6 }}>Signed in as <span style={{ color: 'var(--cream)' }}>{authEmail}</span></p>
           </div>
 
-          {/* Step indicator */}
           <div style={{ display: 'flex', gap: 6, marginBottom: 32 }}>
             {stepTitles.map((title, i) => (
               <div key={i} style={{ flex: 1, height: 3, borderRadius: 2, background: i + 1 <= regStep ? 'var(--orange)' : 'var(--border)', transition: 'background .3s' }} />
@@ -337,7 +375,6 @@ export default function DashboardPage() {
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
 
-            {/* STEP 1 — About You */}
             {regStep === 1 && <>
               <FormField label="Full Name *" hint="As it appears on your student card">
                 <input value={reg.name} onChange={e => setReg(r => ({ ...r, name: e.target.value }))} placeholder="e.g. Sipho Dlamini" style={inputStyle} />
@@ -373,7 +410,6 @@ export default function DashboardPage() {
               </FormField>
             </>}
 
-            {/* STEP 2 — Your Skill */}
             {regStep === 2 && <>
               <FormField label="Primary Skill *" hint="The main service you want to offer on Skillza">
                 <select value={reg.skill} onChange={e => setReg(r => ({ ...r, skill: e.target.value }))} style={inputStyle}>
@@ -381,6 +417,11 @@ export default function DashboardPage() {
                   {SKILLS.map(s => <option key={s}>{s}</option>)}
                 </select>
               </FormField>
+              {reg.skill === 'Other' && (
+                <FormField label="Describe your skill *" hint="Tell us what you do — we'll add it to the platform">
+                  <input value={customSkill} onChange={e => setCustomSkill(e.target.value)} placeholder="e.g. 3D Modelling, Podcast Production..." style={inputStyle} />
+                </FormField>
+              )}
               <FormField label="Secondary Skill (optional)">
                 <select value={reg.secondary_skill} onChange={e => setReg(r => ({ ...r, secondary_skill: e.target.value }))} style={inputStyle}>
                   <option value="">None</option>
@@ -404,7 +445,6 @@ export default function DashboardPage() {
               </FormField>
             </>}
 
-            {/* STEP 3 — Packages & Portfolio */}
             {regStep === 3 && <>
               <div style={{ background: 'rgba(255,74,28,.06)', border: '1px solid rgba(255,74,28,.15)', borderRadius: 10, padding: '12px 16px', marginBottom: 4 }}>
                 <p style={{ fontSize: 13, color: 'rgba(245,239,227,.7)', lineHeight: 1.6 }}>
@@ -422,24 +462,9 @@ export default function DashboardPage() {
               {([['pkg1', 'Package 1 *', false], ['pkg2', 'Package 2 * (Popular)', true], ['pkg3', 'Package 3 (optional)', false]] as [keyof typeof reg, string, boolean][]).map(([key, label, isFeatured]) => (
                 <FormField key={key as string} label={label}>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 8, background: isFeatured ? 'rgba(255,74,28,.04)' : 'transparent', border: isFeatured ? '1px solid rgba(255,74,28,.15)' : '1px solid var(--border)', borderRadius: 10, padding: 14 }}>
-                    <input
-                      value={(reg[key] as PricingPackage).name}
-                      onChange={e => setReg(r => ({ ...r, [key]: { ...(r[key] as PricingPackage), name: e.target.value } }))}
-                      placeholder="Package name e.g. Basic / Standard / Premium"
-                      style={inputStyle}
-                    />
-                    <input
-                      value={(reg[key] as PricingPackage).description}
-                      onChange={e => setReg(r => ({ ...r, [key]: { ...(r[key] as PricingPackage), description: e.target.value } }))}
-                      placeholder="Description e.g. 2-hr shoot, 30 edited photos"
-                      style={inputStyle}
-                    />
-                    <input
-                      value={(reg[key] as PricingPackage).price}
-                      onChange={e => setReg(r => ({ ...r, [key]: { ...(r[key] as PricingPackage), price: e.target.value } }))}
-                      placeholder="Price e.g. R550"
-                      style={inputStyle}
-                    />
+                    <input value={(reg[key] as PricingPackage).name} onChange={e => setReg(r => ({ ...r, [key]: { ...(r[key] as PricingPackage), name: e.target.value } }))} placeholder="Package name e.g. Basic / Standard / Premium" style={inputStyle} />
+                    <input value={(reg[key] as PricingPackage).description} onChange={e => setReg(r => ({ ...r, [key]: { ...(r[key] as PricingPackage), description: e.target.value } }))} placeholder="Description e.g. 2-hr shoot, 30 edited photos" style={inputStyle} />
+                    <input value={(reg[key] as PricingPackage).price} onChange={e => setReg(r => ({ ...r, [key]: { ...(r[key] as PricingPackage), price: e.target.value } }))} placeholder="Price e.g. R550" style={inputStyle} />
                   </div>
                 </FormField>
               ))}
@@ -448,7 +473,6 @@ export default function DashboardPage() {
               </FormField>
             </>}
 
-            {/* STEP 4 — Final Details */}
             {regStep === 4 && <>
               <FormField label="Student Card — Google Drive Link" hint="Upload to Drive, make viewable by anyone with the link, paste here. Required before your profile goes live.">
                 <input value={reg.student_card_link} onChange={e => setReg(r => ({ ...r, student_card_link: e.target.value }))} placeholder="https://drive.google.com/..." style={inputStyle} />
@@ -469,12 +493,10 @@ export default function DashboardPage() {
               </div>
             </>}
 
-            {/* Error */}
             {regError && (
               <p style={{ color: '#ff6b6b', fontSize: 13, background: 'rgba(255,107,107,.08)', border: '1px solid rgba(255,107,107,.2)', borderRadius: 8, padding: '10px 14px' }}>{regError}</p>
             )}
 
-            {/* Navigation */}
             <div style={{ display: 'flex', gap: 10, marginTop: 4 }}>
               {regStep > 1 && (
                 <button onClick={() => { setRegStep(s => s - 1); setRegError('') }} style={{ flex: 1, background: 'transparent', border: '1px solid var(--border)', color: 'var(--muted)', borderRadius: 10, padding: '14px', fontSize: 15, fontWeight: 600, cursor: 'pointer' }}>
@@ -551,7 +573,37 @@ export default function DashboardPage() {
             <Field label="University" value={student!.university} disabled />
             <Field label="Degree" value={student!.degree} disabled />
             <Field label="Year" value={student!.year} disabled />
-            <Field label="Skill" value={student!.skill} disabled />
+
+            {/* Editable Primary Skill */}
+            <div>
+              <label style={labelStyle}>Primary Skill</label>
+              <p style={{ color: 'var(--muted)', fontSize: 11, marginBottom: 8, lineHeight: 1.5 }}>
+                Update this if you've developed new skills or want to change your main offering.
+              </p>
+              <select
+                value={student!.skill}
+                onChange={e => handleSkillChange(e.target.value)}
+                style={inputStyle}
+              >
+                {SKILLS.map(s => <option key={s}>{s}</option>)}
+              </select>
+              {student!.skill === 'Other' && (
+                <input
+                  value={customSkill}
+                  onChange={e => setCustomSkill(e.target.value)}
+                  placeholder="Describe your skill e.g. 3D Modelling, Podcast Production..."
+                  style={{ ...inputStyle, marginTop: 8 }}
+                />
+              )}
+              {/* Show what category this maps to */}
+              <p style={{ color: 'var(--muted)', fontSize: 11, marginTop: 6 }}>
+                Appears in: <span style={{ color: 'var(--orange)', fontWeight: 600 }}>
+                  {SKILL_CATEGORIES[student!.skill] || 'other'}
+                </span> filter on the browse page
+              </p>
+            </div>
+
+            {/* Secondary Skill */}
             <div>
               <label style={labelStyle}>Secondary Skill</label>
               <select value={student!.secondary_skill || ''} onChange={e => setStudent({ ...student!, secondary_skill: e.target.value })} style={inputStyle}>
@@ -559,6 +611,7 @@ export default function DashboardPage() {
                 {SKILLS.filter(s => s !== student!.skill).map(s => <option key={s}>{s}</option>)}
               </select>
             </div>
+
             <Field label="WhatsApp" value={student!.whatsapp || ''} onChange={v => setStudent({ ...student!, whatsapp: v })} />
             <div>
               <label style={labelStyle}>Bio</label>

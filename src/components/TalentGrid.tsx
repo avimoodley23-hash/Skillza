@@ -194,7 +194,7 @@ export default function TalentGrid({ students }: { students: Student[] }) {
               padding: 14px 15px 15px;
             }
           }
-@media (min-width: 600px) { .mob-verified { display: none !important; } }
+
         `}</style>
       </section>
 
