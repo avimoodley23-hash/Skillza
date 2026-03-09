@@ -71,6 +71,38 @@ export default function AdminPage() {
     setActionLoading(null)
   }
 
+  const handleVerifyApprove = async (v: any) => {
+    setActionLoading(v.id + '_vapprove')
+    const res = await fetch('/api/admin/verify', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: v.id, action: 'approve' }),
+    })
+    if (res.ok) {
+      setData(prev => prev ? {
+        ...prev,
+        pendingVerifications: prev.pendingVerifications.filter(item => item.id !== v.id)
+      } : prev)
+    }
+    setActionLoading(null)
+  }
+
+  const handleVerifyReject = async (v: any) => {
+    setActionLoading(v.id + '_vreject')
+    const res = await fetch('/api/admin/verify', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: v.id, action: 'reject' }),
+    })
+    if (res.ok) {
+      setData(prev => prev ? {
+        ...prev,
+        pendingVerifications: prev.pendingVerifications.filter(item => item.id !== v.id)
+      } : prev)
+    }
+    setActionLoading(null)
+  }
+
   if (loading) return (
     <main style={{ minHeight: '100svh', background: 'var(--black)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <p style={{ color: 'var(--muted)', fontFamily: 'Bebas Neue, sans-serif', fontSize: 20, letterSpacing: 2 }}>Loading...</p>
@@ -117,14 +149,34 @@ export default function AdminPage() {
         {/* Pending Verifications */}
         {pendingVerifications.length > 0 && (
           <AdminSection title="Pending Verifications" count={pendingVerifications.length} accent="var(--orange)">
-            {pendingVerifications.map((v: any) => (
-              <Row key={v.id}>
-                <Cell><strong>{v.students?.name}</strong></Cell>
-                <Cell style={{ color: 'var(--muted)', fontSize: 12 }}>{v.students?.university}</Cell>
-                <Cell><a href={v.card_image_url} target="_blank" rel="noreferrer" style={{ color: 'var(--orange)', fontSize: 12, textDecoration: 'underline' }}>View Card</a></Cell>
-                <Cell style={{ fontSize: 11, color: 'var(--muted)' }}>{new Date(v.submitted_at).toLocaleDateString('en-ZA')}</Cell>
-              </Row>
-            ))}
+            {pendingVerifications.map((v: any) => {
+              const isLoadingApprove = actionLoading === v.id + '_vapprove'
+              const isLoadingReject = actionLoading === v.id + '_vreject'
+              return (
+                <Row key={v.id}>
+                  <Cell><strong>{v.students?.name}</strong></Cell>
+                  <Cell style={{ color: 'var(--muted)', fontSize: 12 }}>{v.students?.university}</Cell>
+                  <Cell><a href={v.card_image_url} target="_blank" rel="noreferrer" style={{ color: 'var(--orange)', fontSize: 12, textDecoration: 'underline' }}>View Card</a></Cell>
+                  <Cell style={{ fontSize: 11, color: 'var(--muted)' }}>{new Date(v.submitted_at).toLocaleDateString('en-ZA')}</Cell>
+                  <Cell>
+                    <div style={{ display: 'flex', gap: 6 }}>
+                      <button
+                        onClick={() => handleVerifyApprove(v)}
+                        disabled={!!actionLoading}
+                        style={{ fontSize: 11, fontWeight: 700, padding: '4px 10px', borderRadius: 6, border: 'none', background: '#16a34a', color: '#fff', cursor: 'pointer', opacity: isLoadingApprove ? 0.6 : 1 }}>
+                        {isLoadingApprove ? '...' : '✓ Approve'}
+                      </button>
+                      <button
+                        onClick={() => handleVerifyReject(v)}
+                        disabled={!!actionLoading}
+                        style={{ fontSize: 11, fontWeight: 700, padding: '4px 10px', borderRadius: 6, border: 'none', background: '#7f1d1d44', color: '#f87171', cursor: 'pointer', opacity: isLoadingReject ? 0.6 : 1 }}>
+                        {isLoadingReject ? '...' : '✗ Reject'}
+                      </button>
+                    </div>
+                  </Cell>
+                </Row>
+              )
+            })}
           </AdminSection>
         )}
 

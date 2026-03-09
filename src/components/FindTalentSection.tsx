@@ -1,4 +1,5 @@
 'use client'
+import { AnimateIn } from '@/components/AnimateIn'
 
 export function FindTalentSection() {
   const features = [
@@ -11,7 +12,7 @@ export function FindTalentSection() {
   return (
     <section style={{ borderBottom: '1px solid var(--border)' }}>
       <div style={{ padding: 'clamp(48px, 8vw, 80px) 24px', background: 'var(--black-2)' }} className="find-talent-inner">
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <AnimateIn style={{ display: 'flex', flexDirection: 'column' }}>
           <div className="tag-pill tag-blue">🎯 Find Talent</div>
           <h2 style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 'clamp(34px, 6vw, 60px)', lineHeight: .93, letterSpacing: 1, marginBottom: 14 }}>
             Local talent.<br />Affordable prices.<br />
@@ -26,9 +27,9 @@ export function FindTalentSection() {
             </p>
             <p style={{ fontSize: 12, fontWeight: 600, color: 'var(--muted)' }}>Why Skillza Works for Clients</p>
           </div>
-        </div>
+        </AnimateIn>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+        <AnimateIn delay={1} style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
           {features.map(f => (
             <div key={f.title} style={{ display: 'flex', gap: 13, alignItems: 'flex-start' }}>
               <div style={{ width: 36, height: 36, flexShrink: 0, borderRadius: 9, background: 'var(--b-dim)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16 }}>{f.icon}</div>
@@ -38,7 +39,7 @@ export function FindTalentSection() {
               </div>
             </div>
           ))}
-        </div>
+        </AnimateIn>
       </div>
 
       <style>{`

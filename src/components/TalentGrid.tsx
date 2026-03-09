@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import Image from 'next/image'
 import type { StudentFull as Student } from '@/types/database'
 import { ProfilePanel } from '@/components/ProfilePanel'
@@ -23,6 +23,11 @@ export default function TalentGrid({ students }: { students: Student[] }) {
   const [search, setSearch] = useState('')
   const [activeStudent, setActiveStudent] = useState<Student | null>(null)
   const [bookingStudent, setBookingStudent] = useState<Student | null>(null)
+  const hasAnimated = useRef<boolean>(false)
+
+  useEffect(() => {
+    hasAnimated.current = true
+  }, [])
 
   const filtered = students
     .filter(s => {
@@ -137,6 +142,7 @@ export default function TalentGrid({ students }: { students: Student[] }) {
               key={student.id}
               student={student}
               index={i}
+              isInitialLoad={!hasAnimated.current}
               onOpen={() => openProfile(student)}
               onBook={() => openBooking(student)}
             />
@@ -247,14 +253,46 @@ export default function TalentGrid({ students }: { students: Student[] }) {
   )
 }
 
-function StudentCard({ student, index, onOpen, onBook }: {
+function StudentCard({ student, index, isInitialLoad, onOpen, onBook }: {
   student: Student
   index: number
+  isInitialLoad: boolean
   onOpen: () => void
   onBook: () => void
 }) {
+  const cardRef = useRef<HTMLDivElement>(null)
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const el = cardRef.current
+    if (!el) return
+    const rect = el.getBoundingClientRect()
+    const cx = rect.left + rect.width / 2
+    const cy = rect.top + rect.height / 2
+    const dx = (e.clientX - cx) / (rect.width / 2)
+    const dy = (e.clientY - cy) / (rect.height / 2)
+    const rotateX = -dy * 6
+    const rotateY = dx * 6
+    el.style.transform = `perspective(800px) translateY(-4px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`
+  }
+
+  const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
+    const el = e.currentTarget as HTMLElement
+    el.style.background = 'var(--black-3)'
+    el.style.borderColor = 'rgba(255,75,31,.3)'
+    el.style.boxShadow = '0 20px 50px rgba(0,0,0,.5), 0 0 0 1px rgba(255,75,31,.1)'
+  }
+
+  const handleMouseLeave = (e: React.MouseEvent<HTMLDivElement>) => {
+    const el = e.currentTarget as HTMLElement
+    el.style.background = 'var(--black-2)'
+    el.style.borderColor = 'var(--border)'
+    el.style.transform = 'translateY(0)'
+    el.style.boxShadow = 'none'
+  }
+
   return (
     <div
+      ref={cardRef}
       onClick={onOpen}
       role="button"
       tabIndex={0}
@@ -267,23 +305,17 @@ function StudentCard({ student, index, onOpen, onBook }: {
         overflow: 'hidden',
         transition: 'all .3s',
         cursor: 'pointer',
-        animation: `fup .4s ease both`,
-        animationDelay: `${index * 0.04}s`,
+        willChange: 'transform',
+        ...(isInitialLoad
+          ? {
+              animation: `fup .4s ease both`,
+              animationDelay: `${index * 0.04}s`,
+            }
+          : {}),
       }}
-      onMouseEnter={e => {
-        const el = e.currentTarget as HTMLElement
-        el.style.background = 'var(--black-3)'
-        el.style.borderColor = 'rgba(255,75,31,.3)'
-        el.style.transform = 'translateY(-4px)'
-        el.style.boxShadow = '0 20px 50px rgba(0,0,0,.5), 0 0 0 1px rgba(255,75,31,.1)'
-      }}
-      onMouseLeave={e => {
-        const el = e.currentTarget as HTMLElement
-        el.style.background = 'var(--black-2)'
-        el.style.borderColor = 'var(--border)'
-        el.style.transform = 'translateY(0)'
-        el.style.boxShadow = 'none'
-      }}
+      onMouseEnter={handleMouseEnter}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
     >
       <div className="student-card-inner">
 

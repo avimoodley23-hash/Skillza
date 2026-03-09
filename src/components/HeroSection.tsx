@@ -1,13 +1,39 @@
 'use client'
 import Link from 'next/link'
+import type { StudentFull } from '@/types/database'
 
-const floatingCards = [
-  { name: 'Amahle K.', uni: 'UCT · Visual Comm', skill: 'Photography · Events', emoji: '📸', price: 'from R550', badge: '✓ Verified', badgeType: 'v', rotate: '-4deg', top: 0, left: 0, zIndex: 1, animClass: 'hcf1' },
-  { name: 'Luca M.', uni: 'Red & Yellow · Brand', skill: 'Graphic Design · Brand', emoji: '🎨', price: 'from R650', badge: '★ 5.0', badgeType: 'r', rotate: '0deg', top: 28, left: 90, zIndex: 2, animClass: 'hcf2' },
-  { name: 'Sipho D.', uni: 'AFDA · Film & TV', skill: 'Videography · Events', emoji: '🎬', price: 'from R1,200', badge: '✓ Verified', badgeType: 'v', rotate: '3deg', top: 12, left: 185, zIndex: 1, animClass: 'hcf3' },
+const FALLBACK_CARDS = [
+  { name: 'Amahle K.', uni: 'UCT · Visual Comm', skill: 'Photography · Events', emoji: '📸', price: 'from R550', badge: '✓ Verified', badgeType: 'v', rotate: '-4deg', top: 0, left: 0, zIndex: 1 },
+  { name: 'Luca M.', uni: 'Red & Yellow · Brand', skill: 'Graphic Design · Brand', emoji: '🎨', price: 'from R650', badge: '★ 5.0', badgeType: 'r', rotate: '0deg', top: 28, left: 90, zIndex: 2 },
+  { name: 'Sipho D.', uni: 'AFDA · Film & TV', skill: 'Videography · Events', emoji: '🎬', price: 'from R1,200', badge: '✓ Verified', badgeType: 'v', rotate: '3deg', top: 12, left: 185, zIndex: 1 },
 ]
 
-export default function HeroSection() {
+const ROTATIONS = ['-4deg', '0deg', '3deg']
+const OFFSETS = [{ top: 0, left: 0 }, { top: 28, left: 90 }, { top: 12, left: 185 }]
+const ZINDEXES = [1, 2, 1]
+const BORDERS = ['rgba(255,75,31,.15)', 'rgba(91,156,246,.2)', 'rgba(52,213,142,.15)']
+const TOPS = ['var(--orange)', 'var(--blue)', 'var(--green)']
+
+export default function HeroSection({ students = [] }: { students?: StudentFull[] }) {
+  const heroStudents = students.slice(0, 3)
+  const useReal = heroStudents.length >= 2
+
+  const cards = useReal
+    ? heroStudents.map((s, i) => ({
+        name: s.short_name ?? s.name,
+        uni: `${s.university ?? ''} · ${s.skill}`,
+        skill: `${s.skill} · ${s.city ?? 'SA'}`,
+        emoji: s.emoji ?? '🎓',
+        price: `from ${s.starting_price}`,
+        badge: s.review_count > 0 ? `★ ${s.rating}` : '✓ Verified',
+        badgeType: s.review_count > 0 ? 'r' : 'v',
+        rotate: ROTATIONS[i],
+        top: OFFSETS[i].top,
+        left: OFFSETS[i].left,
+        zIndex: ZINDEXES[i],
+      }))
+    : FALLBACK_CARDS
+
   return (
     <section style={{
       minHeight: '100svh',
@@ -28,8 +54,8 @@ export default function HeroSection() {
             South Africa's Student Talent Marketplace
           </div>
           <h1 style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 'clamp(60px, 10vw, 108px)', lineHeight: .9, letterSpacing: 1 }}>
-            Agency quality.<br />
-            Student prices.<br />
+            <span style={{ background: 'linear-gradient(135deg, #F5EFE3 0%, #c8b99a 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Agency quality.</span><br />
+            <span style={{ background: 'linear-gradient(135deg, #F5EFE3 20%, #a89880 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Student prices.</span><br />
             <span style={{ fontFamily: 'Instrument Serif, serif', fontStyle: 'italic', color: 'var(--orange)' }}>SA verified.</span>
           </h1>
         </div>
@@ -38,21 +64,21 @@ export default function HeroSection() {
         <div className="hero-right">
           {/* Floating cards — desktop only */}
           <div className="hero-cards" aria-hidden="true">
-            {floatingCards.map((card, i) => (
-              <div key={i} className={`hc hc-${card.badgeType === 'v' && i === 0 ? '1' : i === 1 ? '2' : '3'}`} style={{
+            {cards.map((card, i) => (
+              <div key={i} className={`hc hc-${i + 1}`} style={{
                 position: 'absolute',
                 top: card.top,
                 left: card.left,
                 transform: `rotate(${card.rotate})`,
                 zIndex: card.zIndex,
                 background: 'var(--black-3)',
-                border: `1px solid ${i === 0 ? 'rgba(255,75,31,.15)' : i === 1 ? 'rgba(91,156,246,.2)' : 'rgba(52,213,142,.15)'}`,
+                border: `1px solid ${BORDERS[i]}`,
                 borderRadius: 16,
                 padding: '16px 18px',
                 width: 220,
                 boxShadow: '0 24px 48px rgba(0,0,0,.5)',
               }}>
-                <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, borderRadius: '16px 16px 0 0', background: i === 0 ? 'var(--orange)' : i === 1 ? 'var(--blue)' : 'var(--green)' }} />
+                <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, borderRadius: '16px 16px 0 0', background: TOPS[i] }} />
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
                   <div style={{ width: 36, height: 36, borderRadius: 8, background: 'rgba(245,239,227,.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, flexShrink: 0 }}>{card.emoji}</div>
                   <div>
@@ -77,7 +103,7 @@ export default function HeroSection() {
           {/* Two side pills */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 28 }} className="hero-pills">
             {[
-              { icon: '🎯', label: 'Find Talent', labelColor: 'var(--blue)', body: "Photographers, designers, videographers, chefs, DJs. Trained at SA's top creative schools. Student Card verified so you know exactly who you're booking." },
+              { icon: '🎯', label: 'Find Talent', labelColor: 'var(--blue)', body: "Photographers, designers, videographers and more. Trained at SA's top creative schools. Student Card verified so you know exactly who you're booking." },
               { icon: '🎓', label: "I'm a Student", labelColor: 'var(--orange)', body: "Turn your skills into income, starting now. Real clients, real portfolio pieces, and a track record that follows you past graduation." },
             ].map(({ icon, label, labelColor, body }) => (
               <div key={label} style={{ display: 'flex', alignItems: 'flex-start', gap: 12, background: 'rgba(245,239,227,.03)', border: '1px solid var(--border)', borderRadius: 12, padding: '14px 16px', transition: 'border-color .2s, background .2s' }}
@@ -101,7 +127,7 @@ export default function HeroSection() {
           {/* Proof stats */}
           <div style={{ display: 'flex', gap: 'clamp(20px, 5vw, 48px)', paddingTop: 24, borderTop: '1px solid rgba(255,255,255,.07)' }}>
             {[
-              { num: '12', sup: '+', label: 'Skills available' },
+              { num: '9', sup: '+', label: 'Skills available' },
               { num: 'R', sup: '0', label: 'No fees to book' },
               { num: '100', sup: '%', label: 'Student verified' },
             ].map(({ num, sup, label }) => (

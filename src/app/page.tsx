@@ -40,7 +40,7 @@ export default async function HomePage() {
     <>
       <Nav />
       <div style={{ scrollBehavior: 'smooth' }}>
-        <HeroSection />
+        <HeroSection students={students} />
         <FindTalentSection />
         <TickerSection />
         <TalentGrid students={students} />

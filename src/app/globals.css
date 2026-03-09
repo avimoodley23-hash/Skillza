@@ -176,3 +176,66 @@ body::after {
 }
 .tag-orange { background: var(--o-dim); color: var(--orange); border: 1px solid rgba(255,75,31,.2); }
 .tag-blue { background: var(--b-dim); color: var(--blue); border: 1px solid rgba(91,156,246,.2); }
+
+/* ── Scroll-entrance animations ───────────────────────────────── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeInLeft {
+  from { opacity: 0; transform: translateX(-20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes fadeInRight {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.animate-hidden {
+  opacity: 0;
+  transform: translateY(28px);
+}
+.animate-visible {
+  animation: fadeInUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.animate-visible.delay-1 { animation-delay: 0.08s; }
+.animate-visible.delay-2 { animation-delay: 0.16s; }
+.animate-visible.delay-3 { animation-delay: 0.24s; }
+.animate-visible.delay-4 { animation-delay: 0.32s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-hidden { opacity: 1; transform: none; }
+  .animate-visible { animation: none; }
+}
+
+/* ── Section glow accents ──────────────────────────────────────── */
+.section-glow-orange::before {
+  content: '';
+  position: absolute;
+  top: -120px; left: 50%;
+  transform: translateX(-50%);
+  width: 600px; height: 400px;
+  background: radial-gradient(ellipse at center, rgba(255,75,31,.06) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+.section-glow-green::before {
+  content: '';
+  position: absolute;
+  top: -80px; left: 50%;
+  transform: translateX(-50%);
+  width: 500px; height: 300px;
+  background: radial-gradient(ellipse at center, rgba(52,213,142,.05) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+.section-glow-blue::before {
+  content: '';
+  position: absolute;
+  top: -80px; left: 50%;
+  transform: translateX(-50%);
+  width: 500px; height: 300px;
+  background: radial-gradient(ellipse at center, rgba(91,156,246,.05) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}

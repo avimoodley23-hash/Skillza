@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import './globals.css'
-import { CustomCursor } from '@/components/CustomCursor'
 import { ScrollBar } from '@/components/ScrollBar'
 
 export const metadata: Metadata = {
@@ -46,7 +45,6 @@ export default function RootLayout({
   return (
     <html lang="en-ZA">
       <body>
-        <CustomCursor />
         <ScrollBar />
         {children}
       </body>

@@ -1,4 +1,5 @@
 'use client'
+import { AnimateIn } from '@/components/AnimateIn'
 
 export function HowItWorksSection() {
   const steps = [
@@ -9,15 +10,17 @@ export function HowItWorksSection() {
 
   return (
     <section id="how-it-works" style={{ padding: 'clamp(56px, 9vw, 96px) 24px', borderBottom: '1px solid var(--border)' }}>
-      <div className="eyebrow">How It Works</div>
-      <h2 style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 'clamp(34px, 6vw, 60px)', lineHeight: .93, letterSpacing: 1, marginBottom: 14 }}>
-        Simple for clients.<br />Fair for students.
-      </h2>
-      <p style={{ fontSize: 'clamp(14px, 1.8vw, 15px)', lineHeight: 1.8, color: 'var(--cream-dim)', maxWidth: 480, marginBottom: 40 }}>
-        Browse and book in minutes with no account needed. The deposit system means students always show up, and you are never paying blind.
-      </p>
+      <AnimateIn>
+        <div className="eyebrow">How It Works</div>
+        <h2 style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 'clamp(34px, 6vw, 60px)', lineHeight: .93, letterSpacing: 1, marginBottom: 14 }}>
+          Simple for clients.<br />Fair for students.
+        </h2>
+        <p style={{ fontSize: 'clamp(14px, 1.8vw, 15px)', lineHeight: 1.8, color: 'var(--cream-dim)', maxWidth: 480, marginBottom: 40 }}>
+          Browse and book in minutes with no account needed. The deposit system means students always show up, and you are never paying blind.
+        </p>
+      </AnimateIn>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 2, borderRadius: 16, overflow: 'hidden', background: 'var(--border)' }} className="steps-grid">
+      <AnimateIn delay={1} style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 2, borderRadius: 16, overflow: 'hidden', background: 'var(--border)' }} className="steps-grid">
         {steps.map(step => (
           <div key={step.num} style={{ background: 'var(--black)', padding: 'clamp(28px, 4vw, 40px) clamp(20px, 3vw, 32px)', transition: 'background .3s' }}
             onMouseEnter={e => (e.currentTarget as HTMLElement).style.background = '#0d0d0d'}
@@ -32,14 +35,14 @@ export function HowItWorksSection() {
             )}
           </div>
         ))}
-      </div>
+      </AnimateIn>
 
-      <div style={{ marginTop: 28, background: 'rgba(255,74,28,.04)', border: '1px solid rgba(255,74,28,.1)', borderLeft: '3px solid var(--orange)', borderRadius: '0 10px 10px 0', padding: '18px 20px' }}>
+      <AnimateIn delay={2} style={{ marginTop: 28, background: 'rgba(255,74,28,.04)', border: '1px solid rgba(255,74,28,.1)', borderLeft: '3px solid var(--orange)', borderRadius: '0 10px 10px 0', padding: '18px 20px' }}>
         <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: 'var(--orange)', marginBottom: 6 }}>Phase 1 — How it works right now</div>
         <p style={{ fontSize: 13.5, color: 'rgba(245,239,227,.5)', lineHeight: 1.7 }}>
           Skillza is launching lean. <strong style={{ color: 'rgba(245,239,227,.8)' }}>No login needed to book.</strong> All communication happens via WhatsApp. Deposits go directly between parties via EFT or SnapScan. <strong style={{ color: 'rgba(245,239,227,.8)' }}>Secure in-platform payments and student dashboards are coming in Phase 2.</strong>
         </p>
-      </div>
+      </AnimateIn>
 
       <style>{`
         @media (min-width: 700px) { .steps-grid { grid-template-columns: repeat(3, 1fr) !important; } }

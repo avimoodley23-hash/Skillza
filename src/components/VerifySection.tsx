@@ -1,9 +1,10 @@
 'use client'
+import { AnimateIn } from '@/components/AnimateIn'
 
 export function VerifySection() {
   return (
     <section id="verify" style={{ padding: 'clamp(48px, 8vw, 80px) 24px', borderBottom: '1px solid var(--border)' }} className="verify-section">
-      <div>
+      <AnimateIn>
         <div className="eyebrow">Trust Infrastructure</div>
         <h2 style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 'clamp(34px, 6vw, 60px)', lineHeight: .93, letterSpacing: 1, marginBottom: 14 }}>
           Student Card<br />Verified.<br />Full stop.
@@ -26,9 +27,9 @@ export function VerifySection() {
             </div>
           ))}
         </div>
-      </div>
+      </AnimateIn>
 
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: 40, minHeight: 340, paddingBottom: 32, position: 'relative' }}>
+      <AnimateIn delay={1} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: 40, minHeight: 340, paddingBottom: 32, position: 'relative' }}>
         <div style={{
           width: 'min(285px, 84vw)',
           background: 'linear-gradient(135deg, #1a1a1a, #111)',
@@ -78,7 +79,7 @@ export function VerifySection() {
           <div style={{ width: 7, height: 7, background: 'var(--green)', borderRadius: '50%', animation: 'pdot 2s infinite' }} />
           <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--green)' }}>Student Card Verified</span>
         </div>
-      </div>
+      </AnimateIn>
 
       <style>{`
         @media (min-width: 900px) {

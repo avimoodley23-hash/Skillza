@@ -107,6 +107,7 @@ export default function DashboardPage() {
     agreed: false,
   })
   const [regError, setRegError] = useState('')
+  const [regStepError, setRegStepError] = useState('')
   const [regSaving, setRegSaving] = useState(false)
   const [regStep, setRegStep] = useState(1)
 
@@ -305,6 +306,30 @@ export default function DashboardPage() {
     }
   }
 
+  const validateStep = (step: number): string => {
+    if (step === 1) {
+      if (!reg.name.trim()) return 'Please enter your full name.'
+      if (!reg.whatsapp.trim()) return 'Please enter your WhatsApp number.'
+      if (!reg.university) return 'Please select your university.'
+      if (!reg.year) return 'Please select your year of study.'
+      if (!reg.student_number.trim()) return 'Please enter your student number.'
+      if (!reg.city) return 'Please select your city.'
+      if (!reg.degree.trim()) return 'Please enter your degree / programme.'
+    }
+    if (step === 2) {
+      if (!reg.skill) return 'Please select your primary skill.'
+      if (!reg.bio.trim()) return 'Please write a short bio.'
+      if (reg.bio.trim().length < 20) return 'Your bio must be at least 20 characters.'
+    }
+    if (step === 3) {
+      if (!reg.starting_price.trim()) return 'Please enter your starting price.'
+      if (!reg.pkg1.name.trim() && !reg.pkg2.name.trim() && !reg.pkg3.name.trim()) {
+        return 'Please fill in at least one package name.'
+      }
+    }
+    return ''
+  }
+
   const handleSignOut = async () => { await supabase.auth.signOut(); router.push('/') }
   const pendingCount = bookings.filter(b => b.status === 'pending').length
 
@@ -482,14 +507,24 @@ export default function DashboardPage() {
               <p style={{ color: '#ff6b6b', fontSize: 13, background: 'rgba(255,107,107,.08)', border: '1px solid rgba(255,107,107,.2)', borderRadius: 8, padding: '10px 14px' }}>{regError}</p>
             )}
 
+            {regStepError && (
+              <p style={{ color: '#ff6b6b', fontSize: 13, background: 'rgba(255,107,107,.08)', border: '1px solid rgba(255,107,107,.2)', borderRadius: 8, padding: '10px 14px' }}>{regStepError}</p>
+            )}
+
             <div style={{ display: 'flex', gap: 10, marginTop: 4 }}>
               {regStep > 1 && (
-                <button onClick={() => { setRegStep(s => s - 1); setRegError('') }} style={{ flex: 1, background: 'transparent', border: '1px solid var(--border)', color: 'var(--muted)', borderRadius: 10, padding: '14px', fontSize: 15, fontWeight: 600, cursor: 'pointer' }}>
+                <button onClick={() => { setRegStep(s => s - 1); setRegError(''); setRegStepError('') }} style={{ flex: 1, background: 'transparent', border: '1px solid var(--border)', color: 'var(--muted)', borderRadius: 10, padding: '14px', fontSize: 15, fontWeight: 600, cursor: 'pointer' }}>
                   ← Back
                 </button>
               )}
               {regStep < 4 ? (
-                <button onClick={() => { setRegError(''); setRegStep(s => s + 1) }} style={{ flex: 2, background: 'var(--orange)', color: '#fff', border: 'none', borderRadius: 10, padding: '14px', fontSize: 15, fontWeight: 700, fontFamily: 'Bebas Neue, sans-serif', letterSpacing: 1.5, cursor: 'pointer' }}>
+                <button onClick={() => {
+                  const err = validateStep(regStep)
+                  if (err) { setRegStepError(err); return }
+                  setRegStepError('')
+                  setRegError('')
+                  setRegStep(s => s + 1)
+                }} style={{ flex: 2, background: 'var(--orange)', color: '#fff', border: 'none', borderRadius: 10, padding: '14px', fontSize: 15, fontWeight: 700, fontFamily: 'Bebas Neue, sans-serif', letterSpacing: 1.5, cursor: 'pointer' }}>
                   Next →
                 </button>
               ) : (
