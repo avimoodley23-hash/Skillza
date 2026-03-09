@@ -1,5 +1,6 @@
 'use client'
 import { AnimateIn } from '@/components/AnimateIn'
+import { SplitText } from '@/components/SplitText'
 
 export function FindTalentSection() {
   const features = [
@@ -15,7 +16,9 @@ export function FindTalentSection() {
         <AnimateIn style={{ display: 'flex', flexDirection: 'column' }}>
           <div className="tag-pill tag-blue">🎯 Find Talent</div>
           <h2 style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 'clamp(34px, 6vw, 60px)', lineHeight: .93, letterSpacing: 1, marginBottom: 14 }}>
-            Local talent.<br />Affordable prices.<br />
+            <SplitText text="Local talent." style={{ display: 'block' }} />
+            <SplitText text="Affordable prices." style={{ display: 'block' }} delay={80} />
+            <br />
             <span style={{ fontFamily: 'Instrument Serif, serif', fontStyle: 'italic', color: 'var(--blue)' }}>Serious quality.</span>
           </h2>
           <p style={{ fontSize: 'clamp(14px, 1.8vw, 15px)', lineHeight: 1.8, color: 'rgba(245,239,227,.6)', maxWidth: 480 }}>

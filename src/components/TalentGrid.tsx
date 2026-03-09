@@ -6,6 +6,54 @@ import { ProfilePanel } from '@/components/ProfilePanel'
 import { BookingModal } from '@/components/BookingModal'
 import { BROWSE_CATEGORIES as CATEGORIES } from '@/lib/skills'
 
+const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+
+function useScramble(original: string) {
+  const [display, setDisplay] = useState(original)
+  const frameRef = useRef<number | null>(null)
+  const iterRef = useRef(0)
+
+  const scramble = () => {
+    iterRef.current = 0
+    const totalFrames = original.length * 3
+
+    const tick = () => {
+      iterRef.current++
+      const progress = iterRef.current / totalFrames
+      const resolved = Math.floor(progress * original.length)
+
+      setDisplay(
+        original
+          .split('')
+          .map((char, idx) => {
+            if (char === ' ') return ' '
+            if (idx < resolved) return char
+            return CHARS[Math.floor(Math.random() * CHARS.length)]
+          })
+          .join('')
+      )
+
+      if (iterRef.current < totalFrames) {
+        frameRef.current = requestAnimationFrame(tick)
+      } else {
+        setDisplay(original)
+      }
+    }
+
+    if (frameRef.current) cancelAnimationFrame(frameRef.current)
+    frameRef.current = requestAnimationFrame(tick)
+  }
+
+  const reset = () => {
+    if (frameRef.current) cancelAnimationFrame(frameRef.current)
+    setDisplay(original)
+  }
+
+  useEffect(() => () => { if (frameRef.current) cancelAnimationFrame(frameRef.current) }, [])
+
+  return { display, scramble, reset }
+}
+
 const SORT_OPTIONS = [
   { id: 'default', label: 'Featured' },
   { id: 'price_asc', label: 'Price: Low to High' },
@@ -265,6 +313,7 @@ function StudentCard({ student, index, isInitialLoad, onOpen, onBook }: {
   onBook: () => void
 }) {
   const cardRef = useRef<HTMLDivElement>(null)
+  const { display: nameDisplay, scramble, reset: resetScramble } = useScramble(student.short_name ?? student.name)
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const el = cardRef.current
@@ -284,6 +333,7 @@ function StudentCard({ student, index, isInitialLoad, onOpen, onBook }: {
     el.style.background = 'var(--black-3)'
     el.style.borderColor = 'rgba(255,75,31,.3)'
     el.style.boxShadow = '0 20px 50px rgba(0,0,0,.5), 0 0 0 1px rgba(255,75,31,.1)'
+    scramble()
   }
 
   const handleMouseLeave = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -292,6 +342,7 @@ function StudentCard({ student, index, isInitialLoad, onOpen, onBook }: {
     el.style.borderColor = 'var(--border)'
     el.style.transform = 'translateY(0)'
     el.style.boxShadow = 'none'
+    resetScramble()
   }
 
   return (
@@ -387,7 +438,7 @@ function StudentCard({ student, index, isInitialLoad, onOpen, onBook }: {
 
             {/* Name + rating */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 2 }}>
-              <div style={{ fontWeight: 700, fontSize: 15, color: 'var(--cream)', lineHeight: 1.2 }}>{student.short_name}</div>
+              <div style={{ fontWeight: 700, fontSize: 15, color: 'var(--cream)', lineHeight: 1.2 }}>{nameDisplay}</div>
               <div style={{ fontSize: 12, color: 'var(--gold)', fontWeight: 600, whiteSpace: 'nowrap' }}>★ {student.rating}</div>
             </div>
 

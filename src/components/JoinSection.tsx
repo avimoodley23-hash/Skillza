@@ -1,10 +1,12 @@
 'use client'
 import Link from 'next/link'
 import { AnimateIn } from '@/components/AnimateIn'
+import { BorderBeam } from '@/components/BorderBeam'
+import { SplitText } from '@/components/SplitText'
 
 export function JoinSection() {
   return (
-    <section id="for-students" style={{ padding: 'clamp(48px, 8vw, 80px) 24px', background: 'linear-gradient(160deg, #1A1510 0%, #16120E 40%, #130F0B 100%)', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)', position: 'relative', overflow: 'hidden' }}>
+    <section id="for-students" className="noise-overlay" style={{ padding: 'clamp(48px, 8vw, 80px) 24px', background: 'linear-gradient(160deg, #1A1510 0%, #16120E 40%, #130F0B 100%)', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)', position: 'relative', overflow: 'hidden' }}>
       <div style={{ position: 'absolute', top: -100, right: -100, width: 500, height: 500, background: 'radial-gradient(ellipse at center, rgba(200,149,108,.07) 0%, transparent 65%)', pointerEvents: 'none' }} />
 
       <AnimateIn>
@@ -13,7 +15,9 @@ export function JoinSection() {
           For Students
         </div>
         <h2 style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 'clamp(34px, 6vw, 60px)', lineHeight: .93, letterSpacing: 1, marginBottom: 48 }}>
-          Turn your skills<br />into income,<br />
+          <SplitText text="Turn your skills" style={{ display: 'block' }} />
+          <SplitText text="into income," style={{ display: 'block' }} delay={80} />
+          <br />
           <span style={{ fontFamily: 'Instrument Serif, serif', fontStyle: 'italic', color: 'var(--orange)' }}>starting now.</span>
         </h2>
       </AnimateIn>
@@ -41,9 +45,12 @@ export function JoinSection() {
           </div>
         </div>
         <div>
-          <Link href="/join" className="btn-primary" style={{ width: '100%', justifyContent: 'center', fontSize: 16, padding: '18px 28px', marginBottom: 16, display: 'flex' }}>
-            Join the Waitlist →
-          </Link>
+          <div style={{ position: 'relative', marginBottom: 16 }}>
+            <Link href="/join" className="btn-primary" style={{ width: '100%', justifyContent: 'center', fontSize: 16, padding: '18px 28px', display: 'flex', position: 'relative', overflow: 'hidden' }}>
+              Join the Waitlist →
+              <BorderBeam colorFrom="rgba(255,74,28,0)" colorTo="rgba(255,200,100,0.9)" duration={2.4} />
+            </Link>
+          </div>
           <p style={{ fontSize: 12, color: 'var(--muted)', textAlign: 'center', lineHeight: 1.6 }}>
             Free to list forever. Student Card verification required before your profile goes live.
           </p>

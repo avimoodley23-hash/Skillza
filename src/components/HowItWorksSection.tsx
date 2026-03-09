@@ -1,5 +1,6 @@
 'use client'
 import { AnimateIn } from '@/components/AnimateIn'
+import { SplitText } from '@/components/SplitText'
 
 export function HowItWorksSection() {
   const steps = [
@@ -9,11 +10,12 @@ export function HowItWorksSection() {
   ]
 
   return (
-    <section id="how-it-works" style={{ padding: 'clamp(56px, 9vw, 96px) 24px', borderBottom: '1px solid var(--border)' }}>
+    <section id="how-it-works" className="noise-overlay" style={{ padding: 'clamp(56px, 9vw, 96px) 24px', borderBottom: '1px solid var(--border)' }}>
       <AnimateIn>
         <div className="eyebrow">How It Works</div>
         <h2 style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 'clamp(34px, 6vw, 60px)', lineHeight: .93, letterSpacing: 1, marginBottom: 14 }}>
-          Simple for clients.<br />Fair for students.
+          <SplitText text="Simple for clients." style={{ display: 'block' }} />
+          <SplitText text="Fair for students." style={{ display: 'block' }} delay={120} />
         </h2>
         <p style={{ fontSize: 'clamp(14px, 1.8vw, 15px)', lineHeight: 1.8, color: 'var(--cream-dim)', maxWidth: 480, marginBottom: 40 }}>
           Browse and book in minutes with no account needed. The deposit system means students always show up, and you are never paying blind.

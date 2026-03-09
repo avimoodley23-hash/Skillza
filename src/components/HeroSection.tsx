@@ -1,6 +1,26 @@
 'use client'
 import Link from 'next/link'
+import { useRef, useState, useEffect } from 'react'
 import type { StudentFull } from '@/types/database'
+import { GooeyText } from '@/components/GooeyText'
+
+// ── Effect 1 helper: count-up hook ────────────────────────────────────────────
+function useCountUp(target: number, duration: number, active: boolean) {
+  const [value, setValue] = useState(0)
+  useEffect(() => {
+    if (!active) return
+    let start: number | null = null
+    const step = (timestamp: number) => {
+      if (!start) start = timestamp
+      const progress = Math.min((timestamp - start) / duration, 1)
+      const eased = 1 - Math.pow(1 - progress, 3) // easeOutCubic
+      setValue(Math.floor(eased * target))
+      if (progress < 1) requestAnimationFrame(step)
+    }
+    requestAnimationFrame(step)
+  }, [active, target, duration])
+  return value
+}
 
 const FALLBACK_CARDS = [
   { name: 'Amahle K.', uni: 'UCT · Visual Comm', skill: 'Photography · Events', emoji: '📸', price: 'from R550', badge: '✓ Verified', badgeType: 'v', rotate: '-4deg', top: 0, left: 0, zIndex: 1 },
@@ -15,6 +35,47 @@ const BORDERS = ['rgba(255,75,31,.15)', 'rgba(91,156,246,.2)', 'rgba(52,213,142,
 const TOPS = ['var(--orange)', 'var(--blue)', 'var(--green)']
 
 export default function HeroSection({ students = [] }: { students?: StudentFull[] }) {
+  // ── Effect 1: count-up state + IntersectionObserver ───────────────────────
+  const statsRef = useRef<HTMLDivElement>(null)
+  const [counted, setCounted] = useState(false)
+  const c1 = useCountUp(9, 1200, counted)
+  const c3 = useCountUp(100, 1500, counted)
+
+  useEffect(() => {
+    const el = statsRef.current
+    if (!el) return
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setCounted(true)
+          observer.disconnect()
+        }
+      },
+      { threshold: 0.4 },
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
+
+  // ── Effect 2: parallax grid ref ───────────────────────────────────────────
+  const gridRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    let ticking = false
+    const onScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          if (gridRef.current) {
+            gridRef.current.style.transform = `translateY(${window.scrollY * 0.18}px)`
+          }
+          ticking = false
+        })
+        ticking = true
+      }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
   const heroStudents = students.slice(0, 3)
   const useReal = heroStudents.length >= 2
 
@@ -41,6 +102,15 @@ export default function HeroSection({ students = [] }: { students?: StudentFull[
       padding: 'calc(60px + env(safe-area-inset-top, 0px) + 48px) 24px 48px',
       position: 'relative', overflow: 'hidden',
     }}>
+      {/* Effect 2: Dithering / Noise Hero Background */}
+      <div className="hero-dither" aria-hidden="true" />
+
+      {/* Effect 1: Retro Perspective Grid */}
+      <div className="retro-grid" aria-hidden="true" ref={gridRef}>
+        <div className="retro-grid-h" />
+        <div className="retro-grid-v" />
+      </div>
+
       {/* Decorative line */}
       <div style={{ position: 'absolute', top: 0, left: 0, width: 3, height: '100%', background: 'linear-gradient(to bottom, transparent 0%, var(--orange) 30%, var(--orange) 70%, transparent 100%)', opacity: .22, zIndex: 0 }} />
       {/* Background text */}
@@ -54,7 +124,7 @@ export default function HeroSection({ students = [] }: { students?: StudentFull[
             South Africa's Student Talent Marketplace
           </div>
           <h1 style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 'clamp(60px, 10vw, 108px)', lineHeight: .9, letterSpacing: 1 }}>
-            <span style={{ background: 'linear-gradient(135deg, #F5EFE3 0%, #c8b99a 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Agency quality.</span><br />
+            <GooeyText /><br />
             <span style={{ background: 'linear-gradient(135deg, #F5EFE3 20%, #a89880 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Student prices.</span><br />
             <span style={{ fontFamily: 'Instrument Serif, serif', fontStyle: 'italic', color: 'var(--orange)' }}>SA verified.</span>
           </h1>
@@ -124,25 +194,82 @@ export default function HeroSection({ students = [] }: { students?: StudentFull[
             <Link href="/join" className="btn-outline">I'm a student ↗</Link>
           </div>
 
-          {/* Proof stats */}
-          <div style={{ display: 'flex', gap: 'clamp(20px, 5vw, 48px)', paddingTop: 24, borderTop: '1px solid rgba(255,255,255,.07)' }}>
-            {[
-              { num: '9', sup: '+', label: 'Skills available' },
-              { num: 'R', sup: '0', label: 'No fees to book' },
-              { num: '100', sup: '%', label: 'Student verified' },
-            ].map(({ num, sup, label }) => (
-              <div key={label}>
-                <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 'clamp(28px, 4.5vw, 38px)', letterSpacing: 1, lineHeight: 1, color: 'var(--cream)' }}>
-                  {num}<span style={{ color: 'var(--orange)' }}>{sup}</span>
-                </div>
-                <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 3, letterSpacing: .3 }}>{label}</div>
+          {/* Proof stats — Effect 1: count-up on scroll into view */}
+          <div ref={statsRef} style={{ display: 'flex', gap: 'clamp(20px, 5vw, 48px)', paddingTop: 24, borderTop: '1px solid rgba(255,255,255,.07)' }}>
+            {/* Stat 1: Skills available — counts 0 → 9 */}
+            <div>
+              <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 'clamp(28px, 4.5vw, 38px)', letterSpacing: 1, lineHeight: 1, color: 'var(--cream)' }}>
+                {c1}<span style={{ color: 'var(--orange)' }}>+</span>
               </div>
-            ))}
+              <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 3, letterSpacing: .3 }}>Skills available</div>
+            </div>
+
+            {/* Stat 2: No fees — static "R0" (zero stays zero, no animation needed) */}
+            <div>
+              <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 'clamp(28px, 4.5vw, 38px)', letterSpacing: 1, lineHeight: 1, color: 'var(--cream)' }}>
+                R<span style={{ color: 'var(--orange)' }}>0</span>
+              </div>
+              <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 3, letterSpacing: .3 }}>No fees to book</div>
+            </div>
+
+            {/* Stat 3: Student verified — counts 0 → 100 */}
+            <div>
+              <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 'clamp(28px, 4.5vw, 38px)', letterSpacing: 1, lineHeight: 1, color: 'var(--cream)' }}>
+                {c3}<span style={{ color: 'var(--orange)' }}>%</span>
+              </div>
+              <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 3, letterSpacing: .3 }}>Student verified</div>
+            </div>
           </div>
         </div>
       </div>
 
       <style>{`
+        /* Effect 2: Dithering / Noise Hero Background */
+        .hero-dither {
+          position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+          opacity: 0.04; mix-blend-mode: overlay; pointer-events: none; z-index: 0;
+          background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+          background-repeat: repeat;
+          background-size: 256px 256px;
+        }
+
+        /* Effect 1: Retro Perspective Grid */
+        .retro-grid {
+          position: absolute;
+          bottom: 0; left: 0; right: 0;
+          height: 60%;
+          pointer-events: none;
+          z-index: 0;
+          -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,0.15) 0%, transparent 90%);
+          mask-image: linear-gradient(to top, rgba(0,0,0,0.15) 0%, transparent 90%);
+          overflow: hidden;
+        }
+        .retro-grid-h,
+        .retro-grid-v {
+          position: absolute;
+          inset: 0;
+          transform: perspective(500px) rotateX(35deg);
+          transform-origin: bottom center;
+        }
+        .retro-grid-h {
+          background-image: repeating-linear-gradient(
+            to bottom,
+            rgba(255,74,28,0.07) 0px,
+            rgba(255,74,28,0.07) 1px,
+            transparent 1px,
+            transparent 40px
+          );
+        }
+        .retro-grid-v {
+          background-image: repeating-linear-gradient(
+            to right,
+            rgba(255,74,28,0.07) 0px,
+            rgba(255,74,28,0.07) 1px,
+            transparent 1px,
+            transparent 40px
+          );
+        }
+
         .hero-inner {
           display: flex;
           flex-direction: column;
