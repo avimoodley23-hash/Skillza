@@ -30,7 +30,11 @@ export default function AdminPage() {
   return
 }
 
-      const res = await fetch('/api/admin/data')
+      const res = await fetch('/api/admin/data', {
+  headers: {
+    Authorization: `Bearer ${session.access_token}`,
+  },
+})
       if (!res.ok) { setError('Failed to load admin data'); setLoading(false); return }
       const json = await res.json()
       setData(json)

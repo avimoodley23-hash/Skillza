@@ -11,18 +11,19 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 )
 
-export async function GET() {
+export async function GET(req: Request) {
   // Verify the caller is an admin
-  const cookieStore = await cookies()
-  const supabaseAuth = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    { cookies: { getAll: () => cookieStore.getAll() } }
-  )
-  const { data: { session } } = await supabaseAuth.auth.getSession()
-  if (!session || !ADMIN_EMAILS.includes(session.user.email ?? '')) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
-  }
+const authHeader = req.headers.get('Authorization')
+const token = authHeader?.replace('Bearer ', '')
+
+if (!token) {
+  return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+}
+
+const { data: { user }, error: authError } = await supabase.auth.getUser(token)
+if (authError || !user || !ADMIN_EMAILS.includes(user.email ?? '')) {
+  return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+}
 
   const [studentsRes, bookingsRes, waitlistRes, verifyRes] = await Promise.all([
     supabase.from('students').select('*').order('created_at', { ascending: false }),
