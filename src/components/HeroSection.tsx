@@ -2,6 +2,26 @@
 import Link from 'next/link'
 import { useRef, useState, useEffect } from 'react'
 import type { StudentFull } from '@/types/database'
+import { Camera, Video, Palette, Layers, PenLine, Globe, Share2, Music, Pen, GraduationCap, ShieldCheck, Star } from 'lucide-react'
+
+const SKILL_ICON_MAP: Record<string, React.ElementType> = {
+  'Photography': Camera,
+  'Videography': Video,
+  'Graphic Design': Palette,
+  'Branding': Layers,
+  'Copywriting': PenLine,
+  'Web Design': Globe,
+  'Social Media': Share2,
+  'Music': Music,
+  'Illustration': Pen,
+}
+
+function getSkillIcon(skill: string): React.ElementType {
+  for (const [key, Icon] of Object.entries(SKILL_ICON_MAP)) {
+    if (skill.toLowerCase().includes(key.toLowerCase())) return Icon
+  }
+  return GraduationCap
+}
 
 // ── Effect 1 helper: count-up hook ────────────────────────────────────────────
 function useCountUp(target: number, duration: number, active: boolean) {
@@ -22,9 +42,9 @@ function useCountUp(target: number, duration: number, active: boolean) {
 }
 
 const FALLBACK_CARDS = [
-  { name: 'Amahle K.', uni: 'UCT · Visual Comm', skill: 'Photography · Events', emoji: '📸', price: 'from R550', badge: '✓ Skillza Verified', badgeType: 'v', rotate: '-4deg', top: 0, left: 0, zIndex: 1 },
-  { name: 'Luca M.', uni: 'Red & Yellow · Brand', skill: 'Graphic Design · Brand', emoji: '🎨', price: 'from R650', badge: '★ 5.0', badgeType: 'r', rotate: '0deg', top: 28, left: 90, zIndex: 2 },
-  { name: 'Sipho D.', uni: 'AFDA · Film & TV', skill: 'Videography · Events', emoji: '🎬', price: 'from R1,200', badge: '✓ Skillza Verified', badgeType: 'v', rotate: '3deg', top: 12, left: 185, zIndex: 1 },
+  { name: 'Amahle K.', uni: 'UCT · Visual Comm', skill: 'Photography · Events', icon: Camera, price: 'from R550', badge: '✓ Skillza Verified', badgeType: 'v', rotate: '-4deg', top: 0, left: 0, zIndex: 1 },
+  { name: 'Luca M.', uni: 'Red & Yellow · Brand', skill: 'Graphic Design · Brand', icon: Palette, price: 'from R650', badge: '★ 5.0', badgeType: 'r', rotate: '0deg', top: 28, left: 90, zIndex: 2 },
+  { name: 'Sipho D.', uni: 'AFDA · Film & TV', skill: 'Videography · Events', icon: Video, price: 'from R1,200', badge: '✓ Skillza Verified', badgeType: 'v', rotate: '3deg', top: 12, left: 185, zIndex: 1 },
 ]
 
 const ROTATIONS = ['-4deg', '0deg', '3deg']
@@ -83,7 +103,7 @@ export default function HeroSection({ students = [] }: { students?: StudentFull[
         name: s.short_name ?? s.name,
         uni: `${s.university ?? ''} · ${s.skill}`,
         skill: `${s.skill} · ${s.city ?? 'SA'}`,
-        emoji: s.emoji ?? '🎓',
+        icon: getSkillIcon(s.skill),
         price: `from ${s.starting_price}`,
         badge: s.review_count > 0 ? `★ ${s.rating}` : '✓ Skillza Verified',
         badgeType: s.review_count > 0 ? 'r' : 'v',
@@ -153,8 +173,8 @@ export default function HeroSection({ students = [] }: { students?: StudentFull[
                 <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, borderRadius: '14px 14px 0 0', background: TOPS[i] }} />
                 {/* Avatar + name */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                  <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'rgba(245,239,227,.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, flexShrink: 0 }}>
-                    {card.emoji}
+                  <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'rgba(245,239,227,.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, color: 'var(--orange)' }}>
+                    {(() => { const Icon = card.icon; return <Icon size={16} strokeWidth={1.5} /> })()}
                   </div>
                   <div style={{ minWidth: 0 }}>
                     <div style={{ fontWeight: 700, fontSize: 12, color: 'var(--cream)', lineHeight: 1.2, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{card.name}</div>
@@ -227,7 +247,9 @@ export default function HeroSection({ students = [] }: { students?: StudentFull[
               }}>
                 <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, borderRadius: '16px 16px 0 0', background: TOPS[i] }} />
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
-                  <div style={{ width: 36, height: 36, borderRadius: 8, background: 'rgba(245,239,227,.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, flexShrink: 0 }}>{card.emoji}</div>
+                  <div style={{ width: 36, height: 36, borderRadius: 8, background: 'rgba(245,239,227,.06)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, color: 'var(--orange)' }}>
+                    {(() => { const Icon = card.icon; return <Icon size={18} strokeWidth={1.5} /> })()}
+                  </div>
                   <div>
                     <div style={{ fontWeight: 700, fontSize: 13, color: 'var(--cream)', lineHeight: 1.2 }}>{card.name}</div>
                     <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 1 }}>{card.uni}</div>

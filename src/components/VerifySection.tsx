@@ -1,5 +1,7 @@
 'use client'
 import { AnimateIn } from '@/components/AnimateIn'
+import { BadgeCheck, GraduationCap, Zap, Camera } from 'lucide-react'
+import type React from 'react'
 
 export function VerifySection() {
   return (
@@ -13,13 +15,17 @@ export function VerifySection() {
           Every creative on Skillza goes through our verification process before their profile goes live. We confirm identity, check credentials, and review their profile — so you always know exactly who you're booking.
         </p>
         <div style={{ marginTop: 32, display: 'flex', flexDirection: 'column', gap: 18 }}>
-          {[
-            { icon: '🪪', title: 'Identity confirmed', body: 'We verify every creative\'s identity before they go live. No anonymous profiles, no fake accounts.' },
-            { icon: '🎓', title: 'Credentials checked', body: 'We confirm qualifications, institution, or relevant training. You know who trained them and where.' },
-            { icon: '⚡', title: 'Priority at launch campuses', body: 'UCT, Wits, AFDA, Red & Yellow, ICA. Verified within 24 hours of submission.' },
-          ].map(vp => (
+          {(
+            [
+              { icon: BadgeCheck, title: 'Identity confirmed', body: 'We verify every creative\'s identity before they go live. No anonymous profiles, no fake accounts.' },
+              { icon: GraduationCap, title: 'Credentials checked', body: 'We confirm qualifications, institution, or relevant training. You know who trained them and where.' },
+              { icon: Zap, title: 'Priority at launch campuses', body: 'UCT, Wits, AFDA, Red & Yellow, ICA. Verified within 24 hours of submission.' },
+            ] as { icon: React.ElementType; title: string; body: string }[]
+          ).map(vp => (
             <div key={vp.title} style={{ display: 'flex', gap: 13, alignItems: 'flex-start' }}>
-              <div style={{ width: 36, height: 36, flexShrink: 0, borderRadius: 8, background: 'var(--o-dim)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 15 }}>{vp.icon}</div>
+              <div style={{ width: 36, height: 36, flexShrink: 0, borderRadius: 8, background: 'var(--o-dim)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--orange)' }}>
+                <vp.icon size={18} strokeWidth={1.5} />
+              </div>
               <div>
                 <h4 style={{ fontSize: 14, fontWeight: 600, marginBottom: 2 }}>{vp.title}</h4>
                 <p style={{ fontSize: 13, color: 'var(--muted)', lineHeight: 1.6 }}>{vp.body}</p>
@@ -42,7 +48,9 @@ export function VerifySection() {
           <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 4, background: 'linear-gradient(90deg, var(--orange), var(--gold))', borderRadius: '18px 18px 0 0' }} />
           <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 10, letterSpacing: 3, color: 'var(--muted)', marginBottom: 16, textTransform: 'uppercase' }}>University of Cape Town — Student Services</div>
           <div style={{ display: 'flex', gap: 13, alignItems: 'center', marginBottom: 16 }}>
-            <div style={{ width: 48, height: 48, borderRadius: 10, background: 'linear-gradient(135deg, #2a2a2a, #1a1a1a)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, border: '1px solid rgba(255,255,255,.07)', flexShrink: 0 }}>📸</div>
+            <div style={{ width: 48, height: 48, borderRadius: 10, background: 'linear-gradient(135deg, #2a2a2a, #1a1a1a)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(255,255,255,.07)', flexShrink: 0, color: 'var(--orange)' }}>
+              <Camera size={22} strokeWidth={1.5} />
+            </div>
             <div>
               <div style={{ fontWeight: 600, fontSize: 14, color: 'var(--cream)' }}>Amahle Khumalo</div>
               <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 1 }}>BA Visual Communication</div>

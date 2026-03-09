@@ -1,13 +1,19 @@
 'use client'
 import Link from 'next/link'
+import {
+  GraduationCap, Banknote, ShieldCheck, Lock,
+  BadgeCheck, Zap, Video, CircleCheck,
+  BriefcaseBusiness, TrendingUp, Star,
+  Target, Smartphone,
+} from 'lucide-react'
 
 // ── FIND TALENT SECTION ──────────────────────────────────────
 export function FindTalentSection() {
   const features = [
-    { icon: '🎓', title: "Trained at SA's best creative institutions", body: "These aren't hobbyists. They spend every day studying and practising the exact skill you need." },
-    { icon: '💰', title: "Honest prices, not agency markups", body: "You pay for the skill, not a layer of account managers and overhead. Rates are set by the students themselves." },
-    { icon: '✅', title: "Skillza Verified. You know who's coming.", body: "Every creative goes through our verification process before their profile goes live. Real people, real credentials, no guesswork." },
-    { icon: '🔒', title: "Protected from the first rand", body: "A 30% deposit locks in the booking. You don't pay in full upfront, and students don't work without commitment." },
+    { icon: GraduationCap, title: "Trained at SA's best creative institutions", body: "These aren't hobbyists. They spend every day studying and practising the exact skill you need." },
+    { icon: Banknote,      title: "Honest prices, not agency markups", body: "You pay for the skill, not a layer of account managers and overhead. Rates are set by the students themselves." },
+    { icon: ShieldCheck,   title: "Skillza Verified. You know who's coming.", body: "Every creative goes through our verification process before their profile goes live. Real people, real credentials, no guesswork." },
+    { icon: Lock,          title: "Protected from the first rand", body: "A 30% deposit locks in the booking. You don't pay in full upfront, and students don't work without commitment." },
   ]
 
   return (
@@ -15,7 +21,10 @@ export function FindTalentSection() {
       <div style={{ padding: 'clamp(48px, 8vw, 80px) 24px', background: 'var(--black-2)' }} className="find-talent-inner">
         {/* Left */}
         <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <div className="tag-pill tag-blue">🎯 Find Talent</div>
+          <div className="tag-pill tag-blue" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+            <Target size={12} strokeWidth={1.5} />
+            Find Talent
+          </div>
           <h2 style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 'clamp(34px, 6vw, 60px)', lineHeight: .93, letterSpacing: 1, marginBottom: 14 }}>
             Local talent.<br />Affordable prices.<br />
             <span style={{ fontFamily: 'Instrument Serif, serif', fontStyle: 'italic', color: 'var(--blue)' }}>Serious quality.</span>
@@ -33,15 +42,20 @@ export function FindTalentSection() {
 
         {/* Right — features */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-          {features.map(f => (
-            <div key={f.title} style={{ display: 'flex', gap: 13, alignItems: 'flex-start' }}>
-              <div style={{ width: 36, height: 36, flexShrink: 0, borderRadius: 9, background: 'var(--b-dim)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 16 }}>{f.icon}</div>
-              <div>
-                <h4 style={{ fontSize: 13, fontWeight: 700, marginBottom: 2 }}>{f.title}</h4>
-                <p style={{ fontSize: 12.5, lineHeight: 1.6, color: 'rgba(245,239,227,.5)' }}>{f.body}</p>
+          {features.map(f => {
+            const Icon = f.icon
+            return (
+              <div key={f.title} style={{ display: 'flex', gap: 13, alignItems: 'flex-start' }}>
+                <div style={{ width: 36, height: 36, flexShrink: 0, borderRadius: 9, background: 'var(--b-dim)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Icon size={16} strokeWidth={1.5} style={{ color: 'var(--cream)' }} />
+                </div>
+                <div>
+                  <h4 style={{ fontSize: 13, fontWeight: 700, marginBottom: 2 }}>{f.title}</h4>
+                  <p style={{ fontSize: 12.5, lineHeight: 1.6, color: 'rgba(245,239,227,.5)' }}>{f.body}</p>
+                </div>
               </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
       </div>
 
@@ -93,7 +107,7 @@ export function TickerSection() {
 export function HowItWorksSection() {
   const steps = [
     { num: '01', title: 'Browse with confidence', body: 'Every profile shows real portfolio work, verified university, transparent pricing tiers, and genuine client reviews. You know exactly who you\'re booking before you send a message.' },
-    { num: '02', title: 'No account, no friction', body: 'Fill in a short form with what you need and when. The student reaches out on WhatsApp within 24 hours to confirm scope. Direct, human, no platform in the way.', badge: '📱 Connected via WhatsApp' },
+    { num: '02', title: 'No account, no friction', body: 'Fill in a short form with what you need and when. The student reaches out on WhatsApp within 24 hours to confirm scope. Direct, human, no platform in the way.', badge: 'Connected via WhatsApp' },
     { num: '03', title: "You're covered the whole way", body: '30% deposit before work starts, via EFT or SnapScan. Balance only on completion. Scope is agreed upfront. Both parties leave verified reviews. No surprises for either side.' },
   ]
 
@@ -117,6 +131,7 @@ export function HowItWorksSection() {
             <p style={{ fontSize: 13, color: 'var(--muted)', lineHeight: 1.7 }}>{step.body}</p>
             {step.badge && (
               <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, marginTop: 12, background: 'rgba(37,211,102,.08)', border: '1px solid rgba(37,211,102,.2)', color: '#25d366', fontSize: 11, fontWeight: 600, padding: '5px 11px', borderRadius: 100 }}>
+                <Smartphone size={12} strokeWidth={1.5} />
                 {step.badge}
               </div>
             )}
@@ -140,6 +155,12 @@ export function HowItWorksSection() {
 
 // ── VERIFICATION ─────────────────────────────────────────────
 export function VerifySection() {
+  const verifyPoints = [
+    { icon: BadgeCheck,    title: 'Identity confirmed', body: 'We verify every creative\'s identity before they go live. No anonymous profiles, no fake accounts.' },
+    { icon: GraduationCap, title: 'Credentials checked', body: 'We confirm qualifications, institution, or relevant training. You know who trained them and where.' },
+    { icon: Zap,           title: 'Priority at launch campuses', body: 'UCT, Wits, AFDA, Red & Yellow, ICA. Verified within 24 hours of submission.' },
+  ]
+
   return (
     <section id="verify" style={{ padding: 'clamp(48px, 8vw, 80px) 24px', borderBottom: '1px solid var(--border)' }} className="verify-section">
       <div>
@@ -151,19 +172,20 @@ export function VerifySection() {
           Every creative on Skillza goes through our verification process before their profile goes live. We confirm identity, check credentials, and review their profile — so you always know exactly who you're booking.
         </p>
         <div style={{ marginTop: 32, display: 'flex', flexDirection: 'column', gap: 18 }}>
-          {[
-            { icon: '🪪', title: 'Identity confirmed', body: 'We verify every creative\'s identity before they go live. No anonymous profiles, no fake accounts.' },
-            { icon: '🎓', title: 'Credentials checked', body: 'We confirm qualifications, institution, or relevant training. You know who trained them and where.' },
-            { icon: '⚡', title: 'Priority at launch campuses', body: 'UCT, Wits, AFDA, Red & Yellow, ICA. Verified within 24 hours of submission.' },
-          ].map(vp => (
-            <div key={vp.title} style={{ display: 'flex', gap: 13, alignItems: 'flex-start' }}>
-              <div style={{ width: 36, height: 36, flexShrink: 0, borderRadius: 8, background: 'var(--o-dim)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 15 }}>{vp.icon}</div>
-              <div>
-                <h4 style={{ fontSize: 14, fontWeight: 600, marginBottom: 2 }}>{vp.title}</h4>
-                <p style={{ fontSize: 13, color: 'var(--muted)', lineHeight: 1.6 }}>{vp.body}</p>
+          {verifyPoints.map(vp => {
+            const Icon = vp.icon
+            return (
+              <div key={vp.title} style={{ display: 'flex', gap: 13, alignItems: 'flex-start' }}>
+                <div style={{ width: 36, height: 36, flexShrink: 0, borderRadius: 8, background: 'var(--o-dim)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Icon size={15} strokeWidth={1.5} style={{ color: 'var(--orange)' }} />
+                </div>
+                <div>
+                  <h4 style={{ fontSize: 14, fontWeight: 600, marginBottom: 2 }}>{vp.title}</h4>
+                  <p style={{ fontSize: 13, color: 'var(--muted)', lineHeight: 1.6 }}>{vp.body}</p>
+                </div>
               </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
       </div>
 
@@ -181,7 +203,9 @@ export function VerifySection() {
           <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 4, background: 'linear-gradient(90deg, var(--orange), var(--gold))', borderRadius: '18px 18px 0 0' }} />
           <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 10, letterSpacing: 3, color: 'var(--muted)', marginBottom: 16, textTransform: 'uppercase' }}>University of Cape Town — Student Services</div>
           <div style={{ display: 'flex', gap: 13, alignItems: 'center', marginBottom: 16 }}>
-            <div style={{ width: 48, height: 48, borderRadius: 10, background: 'linear-gradient(135deg, #2a2a2a, #1a1a1a)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22, border: '1px solid rgba(255,255,255,.07)', flexShrink: 0 }}>🎬</div>
+            <div style={{ width: 48, height: 48, borderRadius: 10, background: 'linear-gradient(135deg, #2a2a2a, #1a1a1a)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(255,255,255,.07)', flexShrink: 0 }}>
+              <Video size={22} strokeWidth={1.5} style={{ color: 'var(--orange)' }} />
+            </div>
             <div>
               <div style={{ fontWeight: 600, fontSize: 14, color: 'var(--cream)' }}>Amahle Khumalo</div>
               <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 1 }}>BA Film & Media Production</div>
@@ -210,8 +234,9 @@ export function VerifySection() {
             transform: 'rotate(15deg)',
             boxShadow: '0 0 0 4px var(--black), 0 0 20px rgba(52,213,142,.2)',
             zIndex: 5,
+            gap: 2,
           }}>
-            <span style={{ fontSize: 20, display: 'block', marginBottom: 2 }}>✓</span>
+            <CircleCheck size={20} strokeWidth={1.5} style={{ color: 'var(--green)', display: 'block', marginBottom: 2 }} />
             Skillza<br />Verified
           </div>
         </div>
@@ -238,6 +263,13 @@ export function VerifySection() {
 
 // ── JOIN SECTION ─────────────────────────────────────────────
 export function JoinSection() {
+  const joinItems = [
+    { icon: Banknote,         title: 'Earn on your own terms', body: 'Pick up jobs when it suits your schedule. A shoot on Saturday, a logo between exams. Real income from skills you\'re already developing.' },
+    { icon: BriefcaseBusiness, title: 'Every job is a real portfolio piece', body: 'Work a paying client briefed, approved and vouched for. That\'s what gets you hired after graduation.' },
+    { icon: TrendingUp,       title: "The experience your degree doesn't teach", body: 'Managing client expectations, delivering under pressure, handling real feedback. Ten jobs teaches you more than a semester of theory.' },
+    { icon: Star,             title: 'A track record that survives graduation', body: 'Your reviews and completed jobs don\'t disappear when you leave. They travel with you into every interview and every pitch.' },
+  ]
+
   return (
     <section id="for-students" style={{ padding: 'clamp(48px, 8vw, 80px) 24px', background: 'linear-gradient(160deg, #1A1510 0%, #16120E 40%, #130F0B 100%)', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)', position: 'relative', overflow: 'hidden' }}>
       <div style={{ position: 'absolute', top: -100, right: -100, width: 500, height: 500, background: 'radial-gradient(ellipse at center, rgba(200,149,108,.07) 0%, transparent 65%)', pointerEvents: 'none' }} />
@@ -256,20 +288,20 @@ export function JoinSection() {
             You're already good at this. People are already asking you to do it. Sometimes for free, sometimes for "exposure". <strong style={{ color: 'var(--cream)' }}>Skillza gets you in front of clients who are ready to pay, and makes sure every job you do now builds a career, not just a favour bank.</strong>
           </p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-            {[
-              { icon: '💸', title: 'Earn on your own terms', body: 'Pick up jobs when it suits your schedule. A shoot on Saturday, a logo between exams. Real income from skills you\'re already developing.' },
-              { icon: '📁', title: 'Every job is a real portfolio piece', body: 'Work a paying client briefed, approved and vouched for. That\'s what gets you hired after graduation.' },
-              { icon: '🔨', title: "The experience your degree doesn't teach", body: 'Managing client expectations, delivering under pressure, handling real feedback. Ten jobs teaches you more than a semester of theory.' },
-              { icon: '⭐', title: 'A track record that survives graduation', body: 'Your reviews and completed jobs don\'t disappear when you leave. They travel with you into every interview and every pitch.' },
-            ].map(item => (
-              <div key={item.title} style={{ display: 'flex', gap: 13, alignItems: 'flex-start' }}>
-                <div style={{ width: 34, height: 34, flexShrink: 0, background: 'var(--o-dim)', borderRadius: 9, fontSize: 15, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{item.icon}</div>
-                <div>
-                  <h4 style={{ fontSize: 13, fontWeight: 700, color: 'var(--cream)', marginBottom: 1 }}>{item.title}</h4>
-                  <p style={{ fontSize: 12, color: 'rgba(245,239,227,.45)', lineHeight: 1.5 }}>{item.body}</p>
+            {joinItems.map(item => {
+              const Icon = item.icon
+              return (
+                <div key={item.title} style={{ display: 'flex', gap: 13, alignItems: 'flex-start' }}>
+                  <div style={{ width: 34, height: 34, flexShrink: 0, background: 'var(--o-dim)', borderRadius: 9, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Icon size={15} strokeWidth={1.5} style={{ color: 'var(--orange)' }} />
+                  </div>
+                  <div>
+                    <h4 style={{ fontSize: 13, fontWeight: 700, color: 'var(--cream)', marginBottom: 1 }}>{item.title}</h4>
+                    <p style={{ fontSize: 12, color: 'rgba(245,239,227,.45)', lineHeight: 1.5 }}>{item.body}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
         </div>
         <div>

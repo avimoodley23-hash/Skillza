@@ -1,10 +1,12 @@
 'use client'
 import { useState, useRef, useEffect } from 'react'
 import Image from 'next/image'
+import { Search, Star, CircleCheck } from 'lucide-react'
 import type { StudentFull as Student } from '@/types/database'
 import { ProfilePanel } from '@/components/ProfilePanel'
 import { BookingModal } from '@/components/BookingModal'
 import { BROWSE_CATEGORIES as CATEGORIES } from '@/lib/skills'
+import { getSkillIcon } from '@/lib/skills'
 
 const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
 
@@ -135,7 +137,9 @@ export default function TalentGrid({ students }: { students: Student[] }) {
 
         {/* Search */}
         <div style={{ position: 'relative', marginBottom: 10 }}>
-          <span style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', fontSize: 15, pointerEvents: 'none', opacity: .4 }}>🔍</span>
+          <span style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', opacity: .4, display: 'flex', alignItems: 'center' }}>
+            <Search size={15} strokeWidth={1.5} style={{ color: 'var(--cream)' }} />
+          </span>
           <input
             type="search"
             value={search}
@@ -162,25 +166,30 @@ export default function TalentGrid({ students }: { students: Student[] }) {
           overflowX: 'auto', display: 'flex', gap: 6,
           scrollbarWidth: 'none',
         }}>
-          {CATEGORIES.map(cat => (
-            <button
-              key={cat.id}
-              onClick={() => setActiveFilter(cat.id)}
-              style={{
-                padding: '8px 16px', borderRadius: 100,
-                fontSize: 12, fontWeight: 600,
-                border: '1px solid',
-                borderColor: activeFilter === cat.id ? 'var(--orange)' : 'var(--border-2)',
-                background: activeFilter === cat.id ? 'var(--orange)' : 'transparent',
-                color: activeFilter === cat.id ? '#fff' : 'var(--muted-2)',
-                cursor: 'pointer', whiteSpace: 'nowrap',
-                transition: 'all .18s', minHeight: 36, flexShrink: 0,
-                boxShadow: activeFilter === cat.id ? '0 2px 12px rgba(255,75,31,.3)' : 'none',
-              }}
-            >
-              {cat.label}
-            </button>
-          ))}
+          {CATEGORIES.map(cat => {
+            const CatIcon = cat.icon
+            return (
+              <button
+                key={cat.id}
+                onClick={() => setActiveFilter(cat.id)}
+                style={{
+                  padding: '8px 16px', borderRadius: 100,
+                  fontSize: 12, fontWeight: 600,
+                  border: '1px solid',
+                  borderColor: activeFilter === cat.id ? 'var(--orange)' : 'var(--border-2)',
+                  background: activeFilter === cat.id ? 'var(--orange)' : 'transparent',
+                  color: activeFilter === cat.id ? '#fff' : 'var(--muted-2)',
+                  cursor: 'pointer', whiteSpace: 'nowrap',
+                  transition: 'all .18s', minHeight: 36, flexShrink: 0,
+                  boxShadow: activeFilter === cat.id ? '0 2px 12px rgba(255,75,31,.3)' : 'none',
+                  display: 'inline-flex', alignItems: 'center', gap: 5,
+                }}
+              >
+                {CatIcon && <CatIcon size={14} strokeWidth={1.5} />}
+                {cat.label}
+              </button>
+            )
+          })}
         </div>
 
         {/* Grid */}
@@ -197,7 +206,9 @@ export default function TalentGrid({ students }: { students: Student[] }) {
           ))}
           {filtered.length === 0 && (
             <div style={{ textAlign: 'center', padding: '60px 20px', gridColumn: '1 / -1' }}>
-              <div style={{ fontSize: 32, marginBottom: 12 }}>🔍</div>
+              <div style={{ marginBottom: 12, display: 'flex', justifyContent: 'center' }}>
+                <Search size={32} strokeWidth={1.5} style={{ color: 'var(--muted)' }} />
+              </div>
               <p style={{ color: 'var(--muted)', fontSize: 14, marginBottom: 8 }}>
                 {search ? `No results for "${search}"` : 'No students in this category yet.'}
               </p>
@@ -345,6 +356,8 @@ function StudentCard({ student, index, isInitialLoad, onOpen, onBook }: {
     resetScramble()
   }
 
+  const SkillIcon = getSkillIcon(student.skill)
+
   return (
     <div
       ref={cardRef}
@@ -384,7 +397,7 @@ function StudentCard({ student, index, isInitialLoad, onOpen, onBook }: {
                 sizes="(max-width: 600px) 110px, (max-width: 900px) 50vw, 280px"
                 style={{ objectFit: 'cover', objectPosition: 'center top' }}
               />
-            : student.emoji
+            : <SkillIcon size={18} strokeWidth={1.5} style={{ color: 'var(--orange)' }} />
           }
           {/* Gradient overlay */}
           <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(16,15,13,.7) 0, transparent 50%)' }} />
@@ -432,14 +445,20 @@ function StudentCard({ student, index, isInitialLoad, onOpen, onBook }: {
                 fontSize: 10, fontWeight: 700, color: 'var(--green)',
                 background: 'rgba(52,213,142,.1)', border: '1px solid rgba(52,213,142,.25)',
                 padding: '3px 8px', borderRadius: 100, whiteSpace: 'nowrap',
-                // hide on tablet+ since verified badge is on image
-              }}>✓ Verified</span>
+                display: 'inline-flex', alignItems: 'center', gap: 4,
+              }}>
+                <CircleCheck size={10} strokeWidth={1.5} />
+                Verified
+              </span>
             </div>
 
             {/* Name + rating */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 2 }}>
               <div style={{ fontWeight: 700, fontSize: 15, color: 'var(--cream)', lineHeight: 1.2 }}>{nameDisplay}</div>
-              <div style={{ fontSize: 12, color: 'var(--gold)', fontWeight: 600, whiteSpace: 'nowrap' }}>★ {student.rating}</div>
+              <div style={{ fontSize: 12, color: 'var(--gold)', fontWeight: 600, whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: 3 }}>
+                <Star size={11} strokeWidth={1.5} style={{ fill: 'var(--gold)', color: 'var(--gold)' }} />
+                {student.rating}
+              </div>
             </div>
 
             {/* Skill */}

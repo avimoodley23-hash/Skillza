@@ -1,11 +1,12 @@
 'use client'
 import { AnimateIn } from '@/components/AnimateIn'
 import { SplitText } from '@/components/SplitText'
+import { MessageCircle } from 'lucide-react'
 
 export function HowItWorksSection() {
   const steps = [
     { num: '01', title: 'Browse with confidence', body: "Every profile shows real portfolio work, verified university, transparent pricing tiers, and genuine client reviews. You know exactly who you're booking before you send a message." },
-    { num: '02', title: 'No account, no friction', body: 'Fill in a short form with what you need and when. The student reaches out on WhatsApp within 24 hours to confirm scope. Direct, human, no platform in the way.', badge: '📱 Connected via WhatsApp' },
+    { num: '02', title: 'No account, no friction', body: 'Fill in a short form with what you need and when. The student reaches out on WhatsApp within 24 hours to confirm scope. Direct, human, no platform in the way.', badge: 'Connected via WhatsApp' },
     { num: '03', title: "You're covered the whole way", body: '30% deposit before work starts, via EFT or SnapScan. Balance only on completion. Scope is agreed upfront. Both parties leave verified reviews. No surprises for either side.' },
   ]
 
@@ -32,6 +33,7 @@ export function HowItWorksSection() {
             <p style={{ fontSize: 13, color: 'var(--muted)', lineHeight: 1.7 }}>{step.body}</p>
             {step.badge && (
               <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, marginTop: 12, background: 'rgba(37,211,102,.08)', border: '1px solid rgba(37,211,102,.2)', color: '#25d366', fontSize: 11, fontWeight: 600, padding: '5px 11px', borderRadius: 100 }}>
+                <MessageCircle size={13} strokeWidth={1.5} />
                 {step.badge}
               </div>
             )}

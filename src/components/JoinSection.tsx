@@ -3,6 +3,8 @@ import Link from 'next/link'
 import { AnimateIn } from '@/components/AnimateIn'
 import { BorderBeam } from '@/components/BorderBeam'
 import { SplitText } from '@/components/SplitText'
+import { Banknote, BriefcaseBusiness, TrendingUp, Star } from 'lucide-react'
+import type React from 'react'
 
 export function JoinSection() {
   return (
@@ -28,14 +30,18 @@ export function JoinSection() {
             You are already good at this. People are already asking you to do it. Sometimes for free, sometimes for exposure. <strong style={{ color: 'var(--cream)' }}>Skillza gets you in front of clients who are ready to pay, and makes sure every job you do now builds a career, not just a favour bank.</strong>
           </p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-            {[
-              { icon: '💸', title: 'Earn on your own terms', body: 'Pick up jobs when it suits your schedule. A shoot on Saturday, a logo between exams. Real income from skills you are already developing.' },
-              { icon: '📁', title: 'Every job is a real portfolio piece', body: 'Work a paying client briefed, approved and vouched for. That is what gets you hired after graduation.' },
-              { icon: '🔨', title: "The experience your degree doesn't teach", body: 'Managing client expectations, delivering under pressure, handling real feedback. Ten jobs teaches you more than a semester of theory.' },
-              { icon: '⭐', title: 'A track record that survives graduation', body: 'Your reviews and completed jobs do not disappear when you leave. They travel with you into every interview and every pitch.' },
-            ].map(item => (
+            {(
+              [
+                { icon: Banknote, title: 'Earn on your own terms', body: 'Pick up jobs when it suits your schedule. A shoot on Saturday, a logo between exams. Real income from skills you are already developing.' },
+                { icon: BriefcaseBusiness, title: 'Every job is a real portfolio piece', body: 'Work a paying client briefed, approved and vouched for. That is what gets you hired after graduation.' },
+                { icon: TrendingUp, title: "The experience your degree doesn't teach", body: 'Managing client expectations, delivering under pressure, handling real feedback. Ten jobs teaches you more than a semester of theory.' },
+                { icon: Star, title: 'A track record that survives graduation', body: 'Your reviews and completed jobs do not disappear when you leave. They travel with you into every interview and every pitch.' },
+              ] as { icon: React.ElementType; title: string; body: string }[]
+            ).map(item => (
               <div key={item.title} style={{ display: 'flex', gap: 13, alignItems: 'flex-start' }}>
-                <div style={{ width: 34, height: 34, flexShrink: 0, background: 'var(--o-dim)', borderRadius: 9, fontSize: 15, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{item.icon}</div>
+                <div style={{ width: 34, height: 34, flexShrink: 0, background: 'var(--o-dim)', borderRadius: 9, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--orange)' }}>
+                  <item.icon size={18} strokeWidth={1.5} />
+                </div>
                 <div>
                   <h4 style={{ fontSize: 13, fontWeight: 700, color: 'var(--cream)', marginBottom: 1 }}>{item.title}</h4>
                   <p style={{ fontSize: 12, color: 'rgba(245,239,227,.45)', lineHeight: 1.5 }}>{item.body}</p>
