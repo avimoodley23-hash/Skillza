@@ -216,6 +216,8 @@ export default function TalentGrid({ students }: { students: Student[] }) {
           }
           .student-card-tags { display: flex; }
           .student-card-bio { display: block; }
+          /* Hide portfolio strip on mobile (too cramped in 110px column) */
+          .portfolio-strip { display: none !important; }
 
           /* Tablet+: vertical card layout */
           @media (min-width: 600px) {
@@ -230,6 +232,8 @@ export default function TalentGrid({ students }: { students: Student[] }) {
             .student-card-body {
               padding: 14px 15px 15px;
             }
+            /* Show portfolio strip on vertical card layout */
+            .portfolio-strip { display: flex !important; }
           }
 
         `}</style>
@@ -333,6 +337,31 @@ function StudentCard({ student, index, isInitialLoad, onOpen, onBook }: {
           }
           {/* Gradient overlay */}
           <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(16,15,13,.7) 0, transparent 50%)' }} />
+          {/* Portfolio thumbnail strip — visible on tablet+ layout */}
+          {(() => {
+            const thumbs = (student.student_portfolio ?? []).filter(p => p.image_url).slice(0, 3)
+            if (thumbs.length === 0) return null
+            return (
+              <div className="portfolio-strip" style={{
+                position: 'absolute', bottom: 7, left: 7, right: 7,
+                display: 'flex', gap: 4, zIndex: 2,
+              }}>
+                {thumbs.map((p, i) => (
+                  <div key={i} style={{
+                    flex: 1, aspectRatio: '1', borderRadius: 5, overflow: 'hidden',
+                    border: '1px solid rgba(255,255,255,.15)',
+                    background: 'rgba(0,0,0,.4)',
+                  }}>
+                    <img
+                      src={p.image_url!}
+                      alt=""
+                      style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                    />
+                  </div>
+                ))}
+              </div>
+            )
+          })()}
         </div>
 
         {/* Body */}

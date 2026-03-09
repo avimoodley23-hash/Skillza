@@ -86,6 +86,52 @@ export default async function StudentPage({ params }: { params: { id: string } }
             <p style={{ fontSize: 14, lineHeight: 1.75, color: 'rgba(245,239,227,.65)' }}>{student.bio}</p>
           </Section>
 
+          {/* Portfolio Images */}
+          {(() => {
+            const images = (student.student_portfolio ?? []).filter(p => p.image_url)
+            if (images.length === 0) return null
+            return (
+              <Section title="Portfolio Work">
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}>
+                  {images.map((p, i) => (
+                    <a
+                      key={p.id}
+                      href={p.image_url!}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      style={{
+                        aspectRatio: '1', borderRadius: 10, display: 'block',
+                        overflow: 'hidden', border: '1px solid var(--border)',
+                        background: '#1a1a1a', position: 'relative',
+                        transition: 'border-color .2s',
+                      }}
+                      onMouseEnter={e => (e.currentTarget.style.borderColor = 'rgba(255,74,28,.4)')}
+                      onMouseLeave={e => (e.currentTarget.style.borderColor = 'var(--border)')}
+                    >
+                      <img
+                        src={p.image_url!}
+                        alt={p.label || `Portfolio item ${i + 1}`}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                      />
+                      {p.label && (
+                        <div style={{
+                          position: 'absolute', bottom: 0, left: 0, right: 0,
+                          padding: '18px 7px 6px',
+                          background: 'linear-gradient(to top, rgba(0,0,0,.75) 0, transparent 100%)',
+                          fontSize: 9, fontWeight: 600, color: 'rgba(255,255,255,.85)',
+                          letterSpacing: .3, textTransform: 'uppercase',
+                          overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                        }}>
+                          {p.label}
+                        </div>
+                      )}
+                    </a>
+                  ))}
+                </div>
+              </Section>
+            )
+          })()}
+
           {/* Pricing */}
           {pricing.length > 0 && (
             <Section title="Pricing">

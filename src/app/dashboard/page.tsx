@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import { SKILLS, SKILL_EMOJIS, SKILL_CATEGORIES } from '@/lib/skills'
@@ -51,6 +51,15 @@ interface PricingPackage {
   sort_order?: number | null
 }
 
+interface PortfolioImage {
+  id: string
+  image_url: string
+  label: string
+  emoji: string
+  sort_order: number | null
+  storage_path: string
+}
+
 const UNIVERSITIES = ['UCT', 'Wits', 'AFDA', 'Red & Yellow', 'ICA', 'Stellenbosch', 'UJ', 'CPUT', 'Other']
 const YEARS = ['1st Year', '2nd Year', '3rd Year', '4th Year', 'Postgrad']
 const PRICE_UNITS = ['session', 'hour', 'project', 'event', 'day', 'order', 'package', 'piece', 'block']
@@ -78,6 +87,12 @@ const STATUS_ACTIONS: Record<string, { label: string; next: string; color: strin
 
 const emptyPackage = (): PricingPackage => ({ name: '', description: '', price: '', featured: false })
 
+function extractStoragePath(url: string): string {
+  const marker = '/object/public/student-media/'
+  const idx = url.indexOf(marker)
+  return idx !== -1 ? url.slice(idx + marker.length) : ''
+}
+
 export default function DashboardPage() {
   const router = useRouter()
   const [screen, setScreen] = useState<'loading' | 'not-approved' | 'register' | 'dashboard'>('loading')
@@ -96,6 +111,11 @@ export default function DashboardPage() {
   const [updatingBooking, setUpdatingBooking] = useState<string | null>(null)
   const [packages, setPackages] = useState<PricingPackage[]>([])
   const [customSkill, setCustomSkill] = useState('')
+  const [portfolioImages, setPortfolioImages] = useState<PortfolioImage[]>([])
+  const [uploadingPortfolio, setUploadingPortfolio] = useState(false)
+  const [portfolioError, setPortfolioError] = useState('')
+  const [deletingPortfolioId, setDeletingPortfolioId] = useState<string | null>(null)
+  const portfolioInputRef = useRef<HTMLInputElement>(null)
 
   const [reg, setReg] = useState({
     name: '', whatsapp: '', university: '', year: '', student_number: '',
@@ -143,6 +163,24 @@ export default function DashboardPage() {
         const { data: pkgData } = await supabase
           .from('student_pricing').select('*').eq('student_id', studentData.id).order('sort_order')
         setPackages(pkgData || [])
+
+        const { data: portfolioData } = await supabase
+          .from('student_portfolio')
+          .select('*')
+          .eq('student_id', studentData.id)
+          .not('image_url', 'is', null)
+          .order('sort_order', { ascending: true })
+        setPortfolioImages(
+          (portfolioData || []).map((p: any) => ({
+            id: p.id,
+            image_url: p.image_url,
+            label: p.label || '',
+            emoji: p.emoji || '🖼️',
+            sort_order: p.sort_order,
+            storage_path: extractStoragePath(p.image_url),
+          }))
+        )
+
         setScreen('dashboard')
         return
       }
@@ -303,6 +341,82 @@ export default function DashboardPage() {
       setUploadError('Upload failed. Please try again.')
     } finally {
       setUploading(false)
+    }
+  }
+
+  const handlePortfolioUpload = async (files: FileList) => {
+    if (!student) return
+    const remaining = 6 - portfolioImages.length
+    if (remaining <= 0) {
+      setPortfolioError('You can upload a maximum of 6 portfolio images.')
+      return
+    }
+    setPortfolioError('')
+    setUploadingPortfolio(true)
+
+    const filesToUpload = Array.from(files).slice(0, remaining)
+    const newImages: PortfolioImage[] = []
+
+    for (const file of filesToUpload) {
+      const ext = file.name.split('.').pop() || 'jpg'
+      const filename = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`
+      const storagePath = `portfolio/${student.id}/${filename}`
+
+      const { data: uploadData, error: uploadError } = await supabase.storage
+        .from('student-media')
+        .upload(storagePath, file, { upsert: false })
+
+      if (uploadError || !uploadData) {
+        setPortfolioError('One or more uploads failed. Please try again.')
+        continue
+      }
+
+      const { data: urlData } = supabase.storage
+        .from('student-media')
+        .getPublicUrl(storagePath)
+
+      const label = file.name.replace(/\.[^/.]+$/, '')
+      const { data: rowData, error: insertError } = await supabase
+        .from('student_portfolio')
+        .insert({
+          student_id: student.id,
+          image_url: urlData.publicUrl,
+          emoji: '🖼️',
+          label,
+          sort_order: portfolioImages.length + newImages.length + 1,
+        })
+        .select()
+        .single()
+
+      if (!insertError && rowData) {
+        newImages.push({
+          id: (rowData as any).id,
+          image_url: urlData.publicUrl,
+          label,
+          emoji: '🖼️',
+          sort_order: (rowData as any).sort_order,
+          storage_path: storagePath,
+        })
+      }
+    }
+
+    setPortfolioImages(prev => [...prev, ...newImages])
+    setUploadingPortfolio(false)
+    if (portfolioInputRef.current) portfolioInputRef.current.value = ''
+  }
+
+  const handlePortfolioDelete = async (image: PortfolioImage) => {
+    setDeletingPortfolioId(image.id)
+    try {
+      if (image.storage_path) {
+        await supabase.storage.from('student-media').remove([image.storage_path])
+      }
+      await supabase.from('student_portfolio').delete().eq('id', image.id)
+      setPortfolioImages(prev => prev.filter(p => p.id !== image.id))
+    } catch {
+      // silently ignore
+    } finally {
+      setDeletingPortfolioId(null)
     }
   }
 
@@ -683,6 +797,84 @@ export default function DashboardPage() {
               <label style={labelStyle}>Portfolio Links</label>
               <textarea value={student!.portfolio_links || ''} onChange={e => setStudent({ ...student!, portfolio_links: e.target.value })} rows={3} style={{ ...inputStyle, resize: 'vertical' }} />
             </div>
+
+            {/* Portfolio Images */}
+            <div>
+              <label style={labelStyle}>Portfolio Images</label>
+              <p style={{ color: 'var(--muted)', fontSize: 11, marginBottom: 12, lineHeight: 1.5 }}>
+                Upload up to 6 images to showcase your work. These appear on your public profile.
+              </p>
+
+              {portfolioImages.length > 0 && (
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8, marginBottom: 12 }}>
+                  {portfolioImages.map(img => (
+                    <div key={img.id} style={{ position: 'relative', aspectRatio: '1', borderRadius: 10, overflow: 'hidden', border: '1px solid var(--border)', background: '#1a1a1a' }}>
+                      <img
+                        src={img.image_url}
+                        alt={img.label}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                      />
+                      <button
+                        onClick={() => handlePortfolioDelete(img)}
+                        disabled={deletingPortfolioId === img.id}
+                        style={{
+                          position: 'absolute', top: 6, right: 6,
+                          width: 28, height: 28, borderRadius: '50%',
+                          background: 'rgba(0,0,0,.75)', border: '1px solid rgba(255,255,255,.15)',
+                          color: '#fff', fontSize: 14, cursor: deletingPortfolioId === img.id ? 'not-allowed' : 'pointer',
+                          display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          lineHeight: 1, padding: 0,
+                        }}
+                        aria-label="Delete image"
+                      >
+                        {deletingPortfolioId === img.id ? '…' : '×'}
+                      </button>
+                      {img.label && (
+                        <div style={{
+                          position: 'absolute', bottom: 0, left: 0, right: 0,
+                          padding: '16px 6px 5px',
+                          background: 'linear-gradient(to top, rgba(0,0,0,.7) 0, transparent 100%)',
+                          fontSize: 9, fontWeight: 600, color: 'rgba(255,255,255,.8)',
+                          letterSpacing: .3, textTransform: 'uppercase',
+                          overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                        }}>
+                          {img.label}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {portfolioImages.length < 6 && (
+                <label style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 8,
+                  background: 'transparent', border: '1px solid var(--border)',
+                  color: uploadingPortfolio ? 'var(--muted)' : 'var(--cream)',
+                  borderRadius: 8, padding: '10px 18px', fontSize: 13, fontWeight: 600,
+                  cursor: uploadingPortfolio ? 'not-allowed' : 'pointer',
+                }}>
+                  <span style={{ fontSize: 16 }}>+</span>
+                  {uploadingPortfolio ? 'Uploading...' : `Add Images (${portfolioImages.length}/6)`}
+                  <input
+                    ref={portfolioInputRef}
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    style={{ display: 'none' }}
+                    disabled={uploadingPortfolio}
+                    onChange={e => { if (e.target.files && e.target.files.length > 0) handlePortfolioUpload(e.target.files) }}
+                  />
+                </label>
+              )}
+
+              {portfolioError && (
+                <p style={{ color: '#ff6b6b', fontSize: 12, marginTop: 8, background: 'rgba(255,107,107,.08)', border: '1px solid rgba(255,107,107,.2)', borderRadius: 8, padding: '8px 12px' }}>
+                  {portfolioError}
+                </p>
+              )}
+            </div>
+
             <div>
               <label style={labelStyle}>Extra Info</label>
               <textarea value={student!.extra_info || ''} onChange={e => setStudent({ ...student!, extra_info: e.target.value })} rows={2} style={{ ...inputStyle, resize: 'vertical' }} />

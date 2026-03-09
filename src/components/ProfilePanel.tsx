@@ -17,7 +17,7 @@ interface Student {
   availability?: string[] | null
   portfolio_links?: string | null
   student_pricing: { name: string; description: string; price: string; unit: string; featured: boolean }[]
-  student_portfolio: { emoji: string; label: string }[]
+  student_portfolio: { emoji: string | null; label: string | null; image_url?: string | null }[]
   student_reviews: { reviewer_name: string; stars: number; text: string; date: string }[]
 }
 
@@ -159,15 +159,47 @@ export function ProfilePanel({ student, onClose, onBook }: Props) {
               <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: 'var(--muted)', marginBottom: 13 }}>Portfolio Work</div>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 7 }}>
                 {student.student_portfolio.map((p, i) => (
-                  <div key={i} style={{
-                    aspectRatio: '1', borderRadius: 8,
-                    display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-                    fontSize: 24, border: '1px solid var(--border)',
-                    background: 'var(--card)', gap: 6,
-                  }}>
-                    {p.emoji}
-                    <span style={{ fontSize: 9, fontWeight: 600, color: 'var(--muted)', letterSpacing: .3, textTransform: 'uppercase' }}>{p.label}</span>
-                  </div>
+                  p.image_url ? (
+                    <a
+                      key={i}
+                      href={p.image_url}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      style={{
+                        aspectRatio: '1', borderRadius: 8, display: 'block',
+                        overflow: 'hidden', border: '1px solid var(--border)',
+                        background: '#1a1a1a', position: 'relative', cursor: 'pointer',
+                      }}
+                    >
+                      <img
+                        src={p.image_url}
+                        alt={p.label || 'Portfolio image'}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                      />
+                      {p.label && (
+                        <div style={{
+                          position: 'absolute', bottom: 0, left: 0, right: 0,
+                          padding: '16px 6px 5px',
+                          background: 'linear-gradient(to top, rgba(0,0,0,.72) 0, transparent 100%)',
+                          fontSize: 9, fontWeight: 600, color: 'rgba(255,255,255,.85)',
+                          letterSpacing: .3, textTransform: 'uppercase',
+                          overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                        }}>
+                          {p.label}
+                        </div>
+                      )}
+                    </a>
+                  ) : (
+                    <div key={i} style={{
+                      aspectRatio: '1', borderRadius: 8,
+                      display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                      fontSize: 24, border: '1px solid var(--border)',
+                      background: 'var(--card)', gap: 6,
+                    }}>
+                      {p.emoji}
+                      <span style={{ fontSize: 9, fontWeight: 600, color: 'var(--muted)', letterSpacing: .3, textTransform: 'uppercase' }}>{p.label}</span>
+                    </div>
+                  )
                 ))}
               </div>
             </div>

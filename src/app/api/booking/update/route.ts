@@ -112,6 +112,13 @@ export async function POST(req: Request) {
               <div style="background: rgba(255,74,28,.06); border: 1px solid rgba(255,74,28,.15); border-radius: 10px; padding: 14px 18px; margin-top: 16px;">
                 <div style="font-size: 11px; font-weight: 700; color: #FF4B1F; margin-bottom: 4px;">Payment reminder</div>
                 <p style="font-size: 13px; color: rgba(245,239,227,.7); line-height: 1.6; margin: 0;">Please arrange the remaining 70% payment directly with the student as agreed.</p>
+              </div>
+              <div style="background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.07); border-radius: 10px; padding: 14px 18px; margin-top: 12px;">
+                <div style="font-size: 11px; font-weight: 700; color: #F5EFE3; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px;">Leave a review</div>
+                <p style="font-size: 13px; color: rgba(245,239,227,.7); line-height: 1.6; margin: 0 0 12px;">Help other clients find great talent — it only takes 30 seconds.</p>
+                <a href="https://skillza.co.za/review/${booking.reference}" style="display: inline-block; background: #FF4B1F; color: #fff; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 13px;">
+                  Leave a Review →
+                </a>
               </div>` : ''}
             <p style="font-size: 13px; color: rgba(245,239,227,.4); margin-top: 24px; line-height: 1.6;">
               Questions? Email us at <a href="mailto:hello@skillza.co.za" style="color: #FF4B1F;">hello@skillza.co.za</a>
