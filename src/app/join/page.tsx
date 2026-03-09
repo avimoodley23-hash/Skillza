@@ -65,7 +65,7 @@ if (done) {
               {[
                 { n: '01', t: 'We review your application' },
                 { n: '02', t: 'You get an email with your profile link' },
-                { n: '03', t: 'Fill in your full profile and upload your student card' },
+                { n: '03', t: 'Complete your profile and submit for Skillza verification' },
                 { n: '04', t: 'We verify you and your profile goes live' },
               ].map(step => (
                 <div key={step.n} style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
@@ -132,7 +132,7 @@ if (done) {
               {loading ? 'Securing your spot...' : 'Secure My Spot →'}
             </button>
             <p style={{ fontSize: 12, color: 'var(--muted)', textAlign: 'center', lineHeight: 1.6 }}>
-              Free to list forever. Student Card verification required before your profile goes live.
+              Free to list forever. Skillza verification required before your profile goes live.
             </p>
           </div>
         </div>

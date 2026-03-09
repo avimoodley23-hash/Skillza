@@ -54,7 +54,7 @@ export async function POST(req: Request) {
             <div style="font-size: 14px; color: rgba(245,239,227,.8); line-height: 2.2;">
               01 &nbsp; We review your application<br/>
               02 &nbsp; You get an email with your profile link<br/>
-              03 &nbsp; Fill in your full profile and upload your student card<br/>
+              03 &nbsp; Complete your profile and submit for Skillza verification<br/>
               04 &nbsp; We verify you and your profile goes live
             </div>
           </div>

@@ -130,7 +130,7 @@ export function ProfilePanel({ student, onClose, onBook }: Props) {
               <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 28, letterSpacing: 1, lineHeight: 1 }}>{student.name}</div>
               <div style={{ fontSize: 12, color: 'var(--muted)', marginTop: 3 }}>{student.skill} · {student.degree}</div>
               <div style={{ display: 'flex', gap: 6, marginTop: 7, flexWrap: 'wrap' }}>
-                <span style={{ fontSize: 10, fontWeight: 600, padding: '3px 9px', borderRadius: 100, background: 'var(--g-dim)', color: 'var(--green)', border: '1px solid rgba(46,204,113,.3)' }}>✓ Student Card Verified</span>
+                <span style={{ fontSize: 10, fontWeight: 600, padding: '3px 9px', borderRadius: 100, background: 'var(--g-dim)', color: 'var(--green)', border: '1px solid rgba(46,204,113,.3)' }}>✓ Skillza Verified</span>
                 <span style={{ fontSize: 10, fontWeight: 600, padding: '3px 9px', borderRadius: 100, background: 'rgba(255,255,255,.05)', color: 'var(--cream)', border: '1px solid var(--border)' }}>{student.university}</span>
                 <span style={{ fontSize: 10, fontWeight: 600, padding: '3px 9px', borderRadius: 100, background: 'var(--o-dim)', color: 'var(--orange)', border: '1px solid rgba(255,74,28,.2)' }}>{student.year}</span>
               </div>

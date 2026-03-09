@@ -6,7 +6,7 @@ export function FindTalentSection() {
   const features = [
     { icon: '🎓', title: "Trained at SA's best creative institutions", body: "These aren't hobbyists. They spend every day studying and practising the exact skill you need." },
     { icon: '💰', title: "Honest prices, not agency markups", body: "You pay for the skill, not a layer of account managers and overhead. Rates are set by the students themselves." },
-    { icon: '✅', title: "Student Card verified. You know who's coming.", body: "Every provider uploads their university student card before going live. No anonymous strangers, no guesswork." },
+    { icon: '✅', title: "Skillza Verified. You know who's coming.", body: "Every creative goes through our verification process before their profile goes live. Real people, real credentials, no guesswork." },
     { icon: '🔒', title: "Protected from the first rand", body: "A 30% deposit locks in the booking. You don't pay in full upfront, and students don't work without commitment." },
   ]
 

@@ -3,8 +3,8 @@ import './globals.css'
 import { ScrollBar } from '@/components/ScrollBar'
 
 export const metadata: Metadata = {
-  title: 'Skillza — SA\'s Student Talent Marketplace',
-  description: 'Book verified South African student talent. Photographers, designers, videographers, chefs, DJs and more — trained at SA\'s top creative schools.',
+  title: 'Skillza — SA\'s Creative Talent Platform',
+  description: 'Book SA\'s best young creative talent — photographers, designers, videographers and more. Skillza verified, fairly priced, ready for your next project.',
   keywords: ['student talent', 'South Africa', 'book photographer', 'student services', 'Cape Town', 'UCT', 'AFDA', 'Red and Yellow'],
   authors: [{ name: 'Skillza' }],
   creator: 'Skillza',
@@ -13,21 +13,21 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_ZA',
     url: 'https://skillza.co.za',
-    title: 'Skillza — SA\'s Student Talent Marketplace',
-    description: 'Agency quality. Student prices. SA verified. Book photographers, designers, videographers and more — all student card verified.',
+    title: 'Skillza — SA\'s Creative Talent Platform',
+    description: 'Book SA\'s best young creative talent — photographers, designers, videographers and more. Skillza verified, fairly priced, ready for your next project.',
     siteName: 'Skillza',
     images: [
       {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'Skillza — SA\'s Student Talent Marketplace',
+        alt: 'Skillza — SA\'s Creative Talent Platform',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Skillza — SA\'s Student Talent Marketplace',
+    title: 'Skillza — SA\'s Creative Talent Platform',
     description: 'Agency quality. Student prices. SA verified.',
     images: ['/og-image.png'],
   },

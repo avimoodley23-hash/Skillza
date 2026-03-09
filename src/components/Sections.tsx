@@ -6,7 +6,7 @@ export function FindTalentSection() {
   const features = [
     { icon: '🎓', title: "Trained at SA's best creative institutions", body: "These aren't hobbyists. They spend every day studying and practising the exact skill you need." },
     { icon: '💰', title: "Honest prices, not agency markups", body: "You pay for the skill, not a layer of account managers and overhead. Rates are set by the students themselves." },
-    { icon: '✅', title: "Student Card verified. You know who's coming.", body: "Every provider uploads their university student card before going live. No anonymous strangers, no guesswork." },
+    { icon: '✅', title: "Skillza Verified. You know who's coming.", body: "Every creative goes through our verification process before their profile goes live. Real people, real credentials, no guesswork." },
     { icon: '🔒', title: "Protected from the first rand", body: "A 30% deposit locks in the booking. You don't pay in full upfront, and students don't work without commitment." },
   ]
 
@@ -145,15 +145,15 @@ export function VerifySection() {
       <div>
         <div className="eyebrow">Trust Infrastructure</div>
         <h2 style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 'clamp(34px, 6vw, 60px)', lineHeight: .93, letterSpacing: 1, marginBottom: 14 }}>
-          Student Card<br />Verified.<br />Full stop.
+          Skillza<br />Verified.<br />Full stop.
         </h2>
         <p style={{ fontSize: 'clamp(14px, 1.8vw, 15px)', lineHeight: 1.8, color: 'rgba(245,239,227,.6)', maxWidth: 480 }}>
-          Every provider uploads their university student card before their profile goes live. Your university already did the hard ID work. We make that trust visible to clients.
+          Every creative on Skillza goes through our verification process before their profile goes live. We confirm identity, check credentials, and review their profile — so you always know exactly who you're booking.
         </p>
         <div style={{ marginTop: 32, display: 'flex', flexDirection: 'column', gap: 18 }}>
           {[
-            { icon: '🎓', title: 'University-backed identity', body: 'Student cards require enrolment verification to issue. Every provider is a real, currently enrolled student at a recognised SA institution.' },
-            { icon: '🔒', title: 'Safe for clients. Credibility for students.', body: 'Clients know who they\'re booking. Students get a verified badge that signals professionalism before they\'ve said a word.' },
+            { icon: '🪪', title: 'Identity confirmed', body: 'We verify every creative\'s identity before they go live. No anonymous profiles, no fake accounts.' },
+            { icon: '🎓', title: 'Credentials checked', body: 'We confirm qualifications, institution, or relevant training. You know who trained them and where.' },
             { icon: '⚡', title: 'Priority at launch campuses', body: 'UCT, Wits, AFDA, Red & Yellow, ICA. Verified within 24 hours of submission.' },
           ].map(vp => (
             <div key={vp.title} style={{ display: 'flex', gap: 13, alignItems: 'flex-start' }}>
@@ -218,7 +218,7 @@ export function VerifySection() {
         {/* Float badge */}
         <div style={{ position: 'absolute', top: 12, right: '10%', background: 'var(--black)', border: '1px solid var(--green)', borderRadius: 10, padding: '9px 15px', display: 'flex', alignItems: 'center', gap: 7, animation: 'flt 4s ease-in-out infinite', whiteSpace: 'nowrap' }}>
           <div style={{ width: 7, height: 7, background: 'var(--green)', borderRadius: '50%', animation: 'pdot 2s infinite' }} />
-          <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--green)' }}>Student Card Verified</span>
+          <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--green)' }}>Skillza Verified</span>
         </div>
       </div>
 
@@ -277,7 +277,7 @@ export function JoinSection() {
             Join the Waitlist →
           </Link>
           <p style={{ fontSize: 12, color: 'var(--muted)', textAlign: 'center', lineHeight: 1.6 }}>
-            Free to list forever. Student Card verification required before your profile goes live.
+            Free to list forever. Skillza verification required before your profile goes live.
           </p>
         </div>
       </div>

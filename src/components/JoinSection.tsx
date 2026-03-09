@@ -52,7 +52,7 @@ export function JoinSection() {
             </Link>
           </div>
           <p style={{ fontSize: 12, color: 'var(--muted)', textAlign: 'center', lineHeight: 1.6 }}>
-            Free to list forever. Student Card verification required before your profile goes live.
+            Free to list forever. Skillza verification required before your profile goes live.
           </p>
         </div>
       </AnimateIn>
