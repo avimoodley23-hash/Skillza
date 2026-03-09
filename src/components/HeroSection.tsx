@@ -2,7 +2,6 @@
 import Link from 'next/link'
 import { useRef, useState, useEffect } from 'react'
 import type { StudentFull } from '@/types/database'
-import { GooeyText } from '@/components/GooeyText'
 
 // ── Effect 1 helper: count-up hook ────────────────────────────────────────────
 function useCountUp(target: number, duration: number, active: boolean) {
@@ -102,10 +101,7 @@ export default function HeroSection({ students = [] }: { students?: StudentFull[
       padding: 'calc(60px + env(safe-area-inset-top, 0px) + 48px) 24px 48px',
       position: 'relative', overflow: 'hidden',
     }}>
-      {/* Effect 2: Dithering / Noise Hero Background */}
-      <div className="hero-dither" aria-hidden="true" />
-
-      {/* Effect 1: Retro Perspective Grid */}
+      {/* Retro Perspective Grid */}
       <div className="retro-grid" aria-hidden="true" ref={gridRef}>
         <div className="retro-grid-h" />
         <div className="retro-grid-v" />
@@ -124,7 +120,7 @@ export default function HeroSection({ students = [] }: { students?: StudentFull[
             South Africa's Student Talent Marketplace
           </div>
           <h1 style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 'clamp(60px, 10vw, 108px)', lineHeight: .9, letterSpacing: 1 }}>
-            <GooeyText /><br />
+            <span style={{ background: 'linear-gradient(135deg, #F5EFE3 0%, #c8b99a 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Agency quality.</span><br />
             <span style={{ background: 'linear-gradient(135deg, #F5EFE3 20%, #a89880 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Student prices.</span><br />
             <span style={{ fontFamily: 'Instrument Serif, serif', fontStyle: 'italic', color: 'var(--orange)' }}>SA verified.</span>
           </h1>
@@ -224,16 +220,7 @@ export default function HeroSection({ students = [] }: { students?: StudentFull[
       </div>
 
       <style>{`
-        /* Effect 2: Dithering / Noise Hero Background */
-        .hero-dither {
-          position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-          opacity: 0.04; mix-blend-mode: overlay; pointer-events: none; z-index: 0;
-          background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
-          background-repeat: repeat;
-          background-size: 256px 256px;
-        }
-
-        /* Effect 1: Retro Perspective Grid */
+        /* Retro Perspective Grid */
         .retro-grid {
           position: absolute;
           bottom: 0; left: 0; right: 0;
