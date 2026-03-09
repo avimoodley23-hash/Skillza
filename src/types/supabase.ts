@@ -218,6 +218,7 @@ export type Database = {
           starting_price: string
           student_card_link: string | null
           student_number: string | null
+          photo_url: string | null
           tags: string[] | null
           university: string
           verified: boolean | null
@@ -246,6 +247,7 @@ export type Database = {
           short_name: string
           skill: string
           starting_price: string
+          photo_url?: string | null
           student_card_link?: string | null
           student_number?: string | null
           tags?: string[] | null
@@ -276,6 +278,7 @@ export type Database = {
           short_name?: string
           skill?: string
           starting_price?: string
+          photo_url?: string | null
           student_card_link?: string | null
           student_number?: string | null
           tags?: string[] | null

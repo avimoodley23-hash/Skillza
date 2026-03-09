@@ -9,6 +9,7 @@ import HowItWorksSection from '@/components/HowItWorksSection'
 import VerifySection from '@/components/VerifySection'
 import JoinSection from '@/components/JoinSection'
 import Footer from '@/components/Footer'
+import Hero from '@/components/ui/demo'
 
 export const revalidate = 60 // revalidate every 60 seconds
 
@@ -41,7 +42,7 @@ export default async function HomePage() {
     <>
       <Nav />
       <div style={{ scrollBehavior: 'smooth' }}>
-        <HeroSection />
+        <Hero />
         <FindTalentSection />
         <TickerSection />
         <TalentGrid students={students} />

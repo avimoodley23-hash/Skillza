@@ -1,20 +1,10 @@
 'use client'
 import { useState } from 'react'
+import Image from 'next/image'
 import type { StudentFull as Student } from '@/types/database'
 import { ProfilePanel } from '@/components/ProfilePanel'
 import { BookingModal } from '@/components/BookingModal'
-
-const CATEGORIES = [
-  { id: 'all', label: 'All' },
-  { id: 'photography', label: '📸 Photography' },
-  { id: 'videography', label: '🎬 Videography' },
-  { id: 'graphic-design', label: '🎨 Graphic Design' },
-  { id: 'art-direction', label: '🎯 Art Direction' },
-  { id: 'digital-design', label: '💻 Digital Design' },
-  { id: 'ai-design', label: '🤖 AI Design' },
-  { id: 'illustration', label: '🖌️ Illustration' },
-  { id: 'fine-art', label: '🖼️ Fine Art' },
-]
+import { BROWSE_CATEGORIES as CATEGORIES } from '@/lib/skills'
 
 const SORT_OPTIONS = [
   { id: 'default', label: 'Featured' },
@@ -30,10 +20,23 @@ function parsePrice(p: string): number {
 export default function TalentGrid({ students }: { students: Student[] }) {
   const [activeFilter, setActiveFilter] = useState('all')
   const [sortBy, setSortBy] = useState('default')
+  const [search, setSearch] = useState('')
   const [activeStudent, setActiveStudent] = useState<Student | null>(null)
   const [bookingStudent, setBookingStudent] = useState<Student | null>(null)
 
   const filtered = students
+    .filter(s => {
+      if (search) {
+        const q = search.toLowerCase()
+        return (
+          s.name.toLowerCase().includes(q) ||
+          s.skill.toLowerCase().includes(q) ||
+          (s.university ?? '').toLowerCase().includes(q) ||
+          (s.bio ?? '').toLowerCase().includes(q)
+        )
+      }
+      return true
+    })
     .filter(s => activeFilter === 'all' || s.category === activeFilter)
     .sort((a, b) => {
       if (sortBy === 'price_asc') return parsePrice(a.starting_price) - parsePrice(b.starting_price)
@@ -75,6 +78,26 @@ export default function TalentGrid({ students }: { students: Student[] }) {
               {SORT_OPTIONS.map(o => <option key={o.id} value={o.id}>{o.label}</option>)}
             </select>
           </div>
+        </div>
+
+        {/* Search */}
+        <div style={{ position: 'relative', marginBottom: 10 }}>
+          <span style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', fontSize: 15, pointerEvents: 'none', opacity: .4 }}>🔍</span>
+          <input
+            type="search"
+            value={search}
+            onChange={e => { setSearch(e.target.value); setActiveFilter('all') }}
+            placeholder="Search by name, skill or university…"
+            style={{
+              width: '100%', background: 'var(--black-2)', border: '1px solid var(--border-2)',
+              borderRadius: 10, padding: '11px 16px 11px 40px',
+              color: 'var(--cream)', fontSize: 13,
+              fontFamily: 'Instrument Sans, sans-serif', outline: 'none',
+              transition: 'border-color .2s',
+            }}
+            onFocus={e => (e.currentTarget.style.borderColor = 'var(--orange)')}
+            onBlur={e => (e.currentTarget.style.borderColor = 'var(--border-2)')}
+          />
         </div>
 
         {/* Filter bar */}
@@ -119,8 +142,16 @@ export default function TalentGrid({ students }: { students: Student[] }) {
             />
           ))}
           {filtered.length === 0 && (
-            <div style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--muted)' }}>
-              No students in this category yet.
+            <div style={{ textAlign: 'center', padding: '60px 20px', gridColumn: '1 / -1' }}>
+              <div style={{ fontSize: 32, marginBottom: 12 }}>🔍</div>
+              <p style={{ color: 'var(--muted)', fontSize: 14, marginBottom: 8 }}>
+                {search ? `No results for "${search}"` : 'No students in this category yet.'}
+              </p>
+              {search && (
+                <button onClick={() => setSearch('')} style={{ background: 'none', border: 'none', color: 'var(--orange)', fontSize: 13, cursor: 'pointer', textDecoration: 'underline' }}>
+                  Clear search
+                </button>
+              )}
             </div>
           )}
         </div>
@@ -259,10 +290,12 @@ function StudentCard({ student, index, onOpen, onBook }: {
         {/* Image */}
         <div className="student-card-image">
           {student.photo_url
-            ? <img
+            ? <Image
                 src={student.photo_url}
                 alt={student.name}
-                style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }}
+                fill
+                sizes="(max-width: 600px) 110px, (max-width: 900px) 50vw, 280px"
+                style={{ objectFit: 'cover', objectPosition: 'center top' }}
               />
             : student.emoji
           }

@@ -2,9 +2,10 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
+import { SKILLS, SKILL_EMOJIS, SKILL_CATEGORIES } from '@/lib/skills'
 
 interface Student {
-  id: number
+  id: string
   name: string
   short_name: string
   university: string
@@ -30,7 +31,7 @@ interface Student {
 }
 
 interface Booking {
-  id: number
+  id: string
   client_name: string
   client_email: string
   client_whatsapp: string
@@ -41,34 +42,17 @@ interface Booking {
 }
 
 interface PricingPackage {
-  id?: number
-  student_id?: number
+  id?: string
+  student_id?: string | null
   name: string
-  description: string
+  description: string | null
   price: string
-  featured: boolean
-  sort_order?: number
+  featured: boolean | null
+  sort_order?: number | null
 }
 
 const UNIVERSITIES = ['UCT', 'Wits', 'AFDA', 'Red & Yellow', 'ICA', 'Stellenbosch', 'UJ', 'CPUT', 'Other']
 const YEARS = ['1st Year', '2nd Year', '3rd Year', '4th Year', 'Postgrad']
-const SKILLS = [
-  'Photography', 'Videography', 'Graphic Design', 'Art Direction',
-  'Digital Design', 'AI Design', 'Illustration', 'Fine Art', 'Other'
-]
-
-const SKILL_EMOJIS: Record<string, string> = {
-  'Photography': '📸', 'Videography': '🎬', 'Graphic Design': '🎨',
-  'Art Direction': '🎯', 'Digital Design': '💻', 'AI Design': '🤖',
-  'Illustration': '🖌️', 'Fine Art': '🖼️', 'Other': '⭐'
-}
-
-const SKILL_CATEGORIES: Record<string, string> = {
-  'Photography': 'photography', 'Videography': 'videography',
-  'Graphic Design': 'graphic-design', 'Art Direction': 'art-direction',
-  'Digital Design': 'digital-design', 'AI Design': 'ai-design',
-  'Illustration': 'illustration', 'Fine Art': 'fine-art', 'Other': 'other'
-}
 const PRICE_UNITS = ['session', 'hour', 'project', 'event', 'day', 'order', 'package', 'piece', 'block']
 const CITIES = ['Cape Town', 'Johannesburg', 'Pretoria', 'Durban', 'Other']
 const AVAILABILITY_OPTIONS = ['Weekdays', 'Weekday evenings', 'Saturdays', 'Sundays', 'Flexible']
@@ -107,8 +91,9 @@ export default function DashboardPage() {
   const [cardFile, setCardFile] = useState<File | null>(null)
   const [uploading, setUploading] = useState(false)
   const [uploadDone, setUploadDone] = useState(false)
+  const [uploadError, setUploadError] = useState('')
   const [uploadingPhoto, setUploadingPhoto] = useState(false)
-  const [updatingBooking, setUpdatingBooking] = useState<number | null>(null)
+  const [updatingBooking, setUpdatingBooking] = useState<string | null>(null)
   const [packages, setPackages] = useState<PricingPackage[]>([])
   const [customSkill, setCustomSkill] = useState('')
 
@@ -133,15 +118,15 @@ export default function DashboardPage() {
       const email = session.user.email ?? ''
       setAuthEmail(email)
 
-      let { data: studentData } = await (supabase as any)
+      let { data: studentData } = await supabase
         .from('students').select('*').eq('auth_user_id', session.user.id).single()
 
       if (!studentData) {
-        const { data: byEmail } = await (supabase as any)
+        const { data: byEmail } = await supabase
           .from('students').select('*').eq('email', email.toLowerCase()).single()
 
         if (byEmail) {
-          await (supabase as any)
+          await supabase
             .from('students')
             .update({ auth_user_id: session.user.id })
             .eq('id', byEmail.id)
@@ -151,17 +136,17 @@ export default function DashboardPage() {
 
       if (studentData) {
         setStudent(studentData as Student)
-        const { data: bookingData } = await (supabase as any)
+        const { data: bookingData } = await supabase
           .from('bookings').select('*').eq('student_id', studentData.id).order('created_at', { ascending: false })
         setBookings((bookingData as Booking[]) || [])
-        const { data: pkgData } = await (supabase as any)
+        const { data: pkgData } = await supabase
           .from('student_pricing').select('*').eq('student_id', studentData.id).order('sort_order')
         setPackages(pkgData || [])
         setScreen('dashboard')
         return
       }
 
-      const { data: approvedData } = await (supabase as any)
+      const { data: approvedData } = await supabase
         .from('approved_emails').select('email').eq('email', email.toLowerCase()).single()
       setScreen(approvedData ? 'register' : 'not-approved')
     })
@@ -203,7 +188,7 @@ export default function DashboardPage() {
     const emoji = SKILL_EMOJIS[skill] || '⭐'
     const category = SKILL_CATEGORIES[skill] || 'other'
 
-    const { data, error } = await (supabase as any)
+    const { data, error } = await supabase
       .from('students')
       .insert({
         name: name.trim(), short_name, university, degree: degree.trim(), year,
@@ -227,7 +212,7 @@ export default function DashboardPage() {
       { ...pkg2, student_id: data.id, sort_order: 2, featured: true, unit: price_unit },
       ...(reg.pkg3.name ? [{ ...reg.pkg3, student_id: data.id, sort_order: 3, featured: false, unit: price_unit }] : []),
     ]
-    await (supabase as any).from('student_pricing').insert(packages)
+    await supabase.from('student_pricing').insert(packages)
 
     setStudent(data as Student)
     setScreen('dashboard')
@@ -242,7 +227,7 @@ export default function DashboardPage() {
     const emoji = SKILL_EMOJIS[student.skill] || student.emoji || '⭐'
     const category = SKILL_CATEGORIES[student.skill] || 'other'
 
-    await (supabase as any).from('students').update({
+    await supabase.from('students').update({
       bio: student.bio,
       city: student.city,
       starting_price: student.starting_price,
@@ -259,7 +244,7 @@ export default function DashboardPage() {
 
     for (const pkg of packages) {
       if (pkg.id) {
-        await (supabase as any).from('student_pricing').update({
+        await supabase.from('student_pricing').update({
           name: pkg.name, description: pkg.description, price: pkg.price,
         }).eq('id', pkg.id)
       }
@@ -267,7 +252,7 @@ export default function DashboardPage() {
     setSaving(false); setSaved(true); setTimeout(() => setSaved(false), 2500)
   }
 
-  const handleUpdateBookingStatus = async (bookingId: number, newStatus: string) => {
+  const handleUpdateBookingStatus = async (bookingId: string, newStatus: string) => {
     if (!student) return
     setUpdatingBooking(bookingId)
     try {
@@ -277,8 +262,11 @@ export default function DashboardPage() {
         body: JSON.stringify({ bookingId, status: newStatus, studentId: student.id }),
       })
       if (res.ok) setBookings(prev => prev.map(b => b.id === bookingId ? { ...b, status: newStatus } : b))
-    } catch (err) { console.error(err) }
-    setUpdatingBooking(null)
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setUpdatingBooking(null)
+    }
   }
 
   const handlePhotoUpload = async (file: File) => {
@@ -289,7 +277,7 @@ export default function DashboardPage() {
     const { data, error } = await supabase.storage.from('avatars').upload(path, file, { upsert: true })
     if (!error && data) {
       const { data: urlData } = supabase.storage.from('avatars').getPublicUrl(path)
-      await (supabase as any).from('students').update({ photo_url: urlData.publicUrl }).eq('id', student.id)
+      await supabase.from('students').update({ photo_url: urlData.publicUrl }).eq('id', student.id)
       setStudent({ ...student, photo_url: urlData.publicUrl })
     }
     setUploadingPhoto(false)
@@ -298,15 +286,23 @@ export default function DashboardPage() {
   const handleCardUpload = async () => {
     if (!cardFile || !student) return
     setUploading(true)
-    const ext = cardFile.name.split('.').pop()
-    const path = 'student-cards/' + student.id + '.' + ext
-    const { data, error } = await supabase.storage.from('verification').upload(path, cardFile, { upsert: true })
-    if (!error && data) {
-      const { data: urlData } = supabase.storage.from('verification').getPublicUrl(path)
-      await (supabase as any).from('verification_requests').upsert({ student_id: student.id, card_image_url: urlData.publicUrl, status: 'pending', submitted_at: new Date().toISOString() }, { onConflict: 'student_id' })
-      setUploadDone(true)
+    setUploadError('')
+    try {
+      const ext = cardFile.name.split('.').pop()
+      const path = 'student-cards/' + student.id + '.' + ext
+      const { data, error } = await supabase.storage.from('verification').upload(path, cardFile, { upsert: true })
+      if (error || !data) {
+        setUploadError('Upload failed. Please try again.')
+      } else {
+        const { data: urlData } = supabase.storage.from('verification').getPublicUrl(path)
+        await supabase.from('verification_requests').upsert({ student_id: student.id, card_image_url: urlData.publicUrl, status: 'pending', submitted_at: new Date().toISOString() }, { onConflict: 'student_id' })
+        setUploadDone(true)
+      }
+    } catch {
+      setUploadError('Upload failed. Please try again.')
+    } finally {
+      setUploading(false)
     }
-    setUploading(false)
   }
 
   const handleSignOut = async () => { await supabase.auth.signOut(); router.push('/') }
@@ -452,7 +448,7 @@ export default function DashboardPage() {
                 <FormField key={key as string} label={label}>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 8, background: isFeatured ? 'rgba(255,74,28,.04)' : 'transparent', border: isFeatured ? '1px solid rgba(255,74,28,.15)' : '1px solid var(--border)', borderRadius: 10, padding: 14 }}>
                     <input value={(reg[key] as PricingPackage).name} onChange={e => setReg(r => ({ ...r, [key]: { ...(r[key] as PricingPackage), name: e.target.value } }))} placeholder="Package name e.g. Basic / Standard / Premium" style={inputStyle} />
-                    <input value={(reg[key] as PricingPackage).description} onChange={e => setReg(r => ({ ...r, [key]: { ...(r[key] as PricingPackage), description: e.target.value } }))} placeholder="Description e.g. 2-hr shoot, 30 edited photos" style={inputStyle} />
+                    <input value={(reg[key] as PricingPackage).description ?? ''} onChange={e => setReg(r => ({ ...r, [key]: { ...(r[key] as PricingPackage), description: e.target.value } }))} placeholder="Description e.g. 2-hr shoot, 30 edited photos" style={inputStyle} />
                     <input value={(reg[key] as PricingPackage).price} onChange={e => setReg(r => ({ ...r, [key]: { ...(r[key] as PricingPackage), price: e.target.value } }))} placeholder="Price e.g. R550" style={inputStyle} />
                   </div>
                 </FormField>
@@ -640,7 +636,7 @@ export default function DashboardPage() {
                       {pkg.featured && <p style={{ fontSize: 10, color: 'var(--orange)', fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 8 }}>Popular</p>}
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                         <input value={pkg.name} onChange={e => setPackages(prev => prev.map((p, j) => j === i ? { ...p, name: e.target.value } : p))} placeholder="Package name" style={inputStyle} />
-                        <input value={pkg.description} onChange={e => setPackages(prev => prev.map((p, j) => j === i ? { ...p, description: e.target.value } : p))} placeholder="Description" style={inputStyle} />
+                        <input value={pkg.description ?? ''} onChange={e => setPackages(prev => prev.map((p, j) => j === i ? { ...p, description: e.target.value } : p))} placeholder="Description" style={inputStyle} />
                         <input value={pkg.price} onChange={e => setPackages(prev => prev.map((p, j) => j === i ? { ...p, price: e.target.value } : p))} placeholder="Price e.g. R550" style={inputStyle} />
                       </div>
                     </div>
@@ -720,6 +716,7 @@ export default function DashboardPage() {
                     {uploading ? 'Uploading...' : uploadDone ? 'Submitted ✓' : 'Submit for Verification'}
                   </button>
                 )}
+                {uploadError && <p style={{ color: '#ff6b6b', fontSize: 12, marginTop: 8 }}>{uploadError}</p>}
               </div>
             )}
           </div>

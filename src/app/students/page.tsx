@@ -33,8 +33,8 @@ export default async function StudentPage({ params }: { params: { id: string } }
   const student = await getStudent(params.id)
   if (!student) notFound()
 
-  const pricing = student.student_pricing.sort((a, b) => a.sort_order - b.sort_order)
-  const reviews = student.student_reviews.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+  const pricing = (student.student_pricing ?? []).sort((a, b) => a.sort_order - b.sort_order)
+  const reviews = (student.student_reviews ?? []).sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
 
   return (
     <>

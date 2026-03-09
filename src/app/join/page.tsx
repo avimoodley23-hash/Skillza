@@ -2,10 +2,10 @@
 import { useState } from 'react'
 import Nav from '@/components/Nav'
 import Link from 'next/link'
+import { SKILLS } from '@/lib/skills'
 
 const UNIVERSITIES = ['UCT', 'Wits', 'AFDA', 'Red & Yellow', 'ICA', 'Stellenbosch', 'UJ', 'CPUT', 'Other']
 const YEARS = ['1st Year', '2nd Year', '3rd Year', '4th Year+', 'Postgrad']
-const SKILLS = ['Photography', 'Graphic Design', 'Videography', 'Makeup Artistry', 'Catering & Baking', 'DJ & Music Production', 'Tutoring', 'Web Development', 'Fashion & Styling', 'Other']
 
 export default function JoinPage() {
   const [form, setForm] = useState({ name: '', email: '', university: '', year: '', skill: '' })

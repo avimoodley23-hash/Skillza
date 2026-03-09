@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js'
 import { Resend } from 'resend'
 import { NextResponse } from 'next/server'
+import { h, rateLimit, getIp } from '@/lib/api'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -8,6 +9,11 @@ const supabase = createClient(
 )
 
 export async function POST(req: Request) {
+  // Rate limit: 3 waitlist submissions per IP per hour
+  if (!rateLimit(getIp(req), 3, 60 * 60 * 1000)) {
+    return NextResponse.json({ error: 'Too many requests. Please try again later.' }, { status: 429 })
+  }
+
   const resend = new Resend(process.env.RESEND_API_KEY)
 
   try {
@@ -41,7 +47,7 @@ export async function POST(req: Request) {
           ${logo}
           <h2 style="font-size: 20px; margin-bottom: 8px;">You're on the list 🎉</h2>
           <p style="color: rgba(245,239,227,.6); font-size: 14px; line-height: 1.7; margin-bottom: 24px;">
-            Hey ${name.split(' ')[0]}, we've received your application. We'll review it and reach out within 48 hours with next steps.
+            Hey ${h(name.split(' ')[0])}, we've received your application. We'll review it and reach out within 48 hours with next steps.
           </p>
           <div style="background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.07); border-radius: 12px; padding: 20px; margin-bottom: 24px;">
             <div style="font-size: 11px; font-weight: 700; color: rgba(245,239,227,.4); margin-bottom: 14px; text-transform: uppercase; letter-spacing: 1px;">What happens next</div>
@@ -62,20 +68,20 @@ export async function POST(req: Request) {
       // Email 2 — Admin notification
       resend.emails.send({
         from: 'Skillza <hello@skillza.co.za>',
-        to: 'avi.moodley23@gmail.com',
+        to: (process.env.ADMIN_EMAIL ?? 'avi.moodley23@gmail.com').split(',').map(e => e.trim()).filter(Boolean),
         subject: `New waitlist application — ${name} · ${skill} · ${university}`,
         html: `<div style="${base}">
           ${logo}
           <h2 style="font-size: 20px; margin-bottom: 8px;">New waitlist application</h2>
           <div style="background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.07); border-radius: 12px; padding: 20px; margin-bottom: 24px;">
             <div style="font-size: 12px; color: rgba(245,239,227,.4); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px;">Name</div>
-            <div style="font-size: 15px; font-weight: 600; margin-bottom: 14px;">${name}</div>
+            <div style="font-size: 15px; font-weight: 600; margin-bottom: 14px;">${h(name)}</div>
             <div style="font-size: 12px; color: rgba(245,239,227,.4); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px;">Email</div>
-            <div style="font-size: 15px; margin-bottom: 14px;">${email}</div>
+            <div style="font-size: 15px; margin-bottom: 14px;">${h(email)}</div>
             <div style="font-size: 12px; color: rgba(245,239,227,.4); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px;">University</div>
-            <div style="font-size: 15px; margin-bottom: 14px;">${university}${year ? ` · ${year}` : ''}</div>
+            <div style="font-size: 15px; margin-bottom: 14px;">${h(university)}${year ? ` · ${h(year)}` : ''}</div>
             <div style="font-size: 12px; color: rgba(245,239,227,.4); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px;">Skill</div>
-            <div style="font-size: 15px; font-weight: 600; color: #FF4B1F;">${skill}</div>
+            <div style="font-size: 15px; font-weight: 600; color: #FF4B1F;">${h(skill)}</div>
           </div>
           <a href="https://skillza.co.za/admin" style="display: inline-block; background: #FF4B1F; color: #fff; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px;">
             View in Admin →

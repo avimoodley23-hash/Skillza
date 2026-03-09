@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js'
 import { Resend } from 'resend'
 import { NextResponse } from 'next/server'
+import { h } from '@/lib/api'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -99,7 +100,7 @@ export async function POST(req: Request) {
             ${logo}
             <h2 style="font-size: 20px; margin-bottom: 8px;">${info.clientHeading}</h2>
             <p style="color: rgba(245,239,227,.6); font-size: 14px; line-height: 1.7; margin-bottom: 24px;">
-              Hey ${booking.client_name}, here is an update on your booking with <strong style="color: #F5EFE3;">${studentName}</strong>.
+              Hey ${h(booking.client_name)}, here is an update on your booking with <strong style="color: #F5EFE3;">${h(studentName)}</strong>.
             </p>
             <p style="font-size: 14px; line-height: 1.7; color: rgba(245,239,227,.8); margin-bottom: 24px;">${info.clientBody}</p>
             ${refBadge}
@@ -122,7 +123,7 @@ export async function POST(req: Request) {
         // Email to admin (you)
         resend.emails.send({
           from: 'Skillza <hello@skillza.co.za>',
-          to: 'avi.moodley23@gmail.com',
+          to: (process.env.ADMIN_EMAIL ?? 'avi.moodley23@gmail.com').split(',').map(e => e.trim()).filter(Boolean),
           subject: `Booking ${info.adminLabel} — ${booking.reference} · ${studentName} → ${booking.client_name}`,
           html: `<div style="${base}">
             ${logo}
@@ -132,9 +133,9 @@ export async function POST(req: Request) {
             </p>
             <div style="background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.07); border-radius: 12px; padding: 20px; margin-bottom: 24px;">
               <div style="font-size: 12px; color: rgba(245,239,227,.4); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px;">Student</div>
-              <div style="font-size: 15px; font-weight: 600; margin-bottom: 14px;">${studentName}</div>
+              <div style="font-size: 15px; font-weight: 600; margin-bottom: 14px;">${h(studentName)}</div>
               <div style="font-size: 12px; color: rgba(245,239,227,.4); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px;">Client</div>
-              <div style="font-size: 15px; font-weight: 600; margin-bottom: 14px;">${booking.client_name}</div>
+              <div style="font-size: 15px; font-weight: 600; margin-bottom: 14px;">${h(booking.client_name)}</div>
               <div style="font-size: 12px; color: rgba(245,239,227,.4); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px;">New Status</div>
               <div style="font-size: 15px; font-weight: 700; color: #FF4B1F;">${info.adminLabel}</div>
             </div>

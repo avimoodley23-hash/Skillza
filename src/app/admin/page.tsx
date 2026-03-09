@@ -3,10 +3,8 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 
-const ADMIN_EMAILS = [
-  'avi.moodley23@gmail.com',
-  'gareth.rasmussen@icloud.com'
-]
+const ADMIN_EMAILS = (process.env.NEXT_PUBLIC_ADMIN_EMAILS ?? 'avi.moodley23@gmail.com,gareth.rasmussen@icloud.com')
+  .split(',').map(e => e.trim()).filter(Boolean)
 
 interface AdminData {
   students: any[]
