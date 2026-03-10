@@ -313,6 +313,7 @@ export function PlatformSection() {
     >
       {/* Sticky viewport */}
       <div
+        className="platform-sticky"
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
         style={{
@@ -343,7 +344,7 @@ export function PlatformSection() {
         }} className="platform-grid">
 
           {/* ── Left: text ── */}
-          <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+          <div className="platform-text-area" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
 
             {/* Slide counter — uses activeIdx directly for instant visual feedback */}
             <div className="platform-counter" style={{ display: 'flex', gap: 6, marginBottom: 32 }}>
@@ -421,43 +422,11 @@ export function PlatformSection() {
             </div>
             </div>{/* end fading content */}
 
-            {/* Mobile prev/next navigation — shown on mobile via CSS */}
-            <div className="platform-mobile-nav" style={{ marginTop: 20, gap: 10, display: 'none' }}>
-              <button
-                onClick={() => goTo(activeIdx - 1)}
-                disabled={activeIdx === 0}
-                aria-label="Previous slide"
-                style={{
-                  background: 'rgba(255,255,255,.06)',
-                  border: '1px solid rgba(255,255,255,.14)',
-                  borderRadius: 8, padding: '10px 20px',
-                  color: 'rgba(250,250,248,.65)',
-                  cursor: activeIdx === 0 ? 'default' : 'pointer',
-                  fontSize: 13, fontWeight: 600,
-                  opacity: activeIdx === 0 ? 0.35 : 1,
-                  transition: 'opacity .2s',
-                }}
-              >← Prev</button>
-              <button
-                onClick={() => goTo(activeIdx + 1)}
-                disabled={activeIdx === SLIDES.length - 1}
-                aria-label="Next slide"
-                style={{
-                  background: colorSlide.accent,
-                  border: 'none',
-                  borderRadius: 8, padding: '10px 20px',
-                  color: colorSlide.accent === '#E0E446' ? '#0B0B0A' : '#fff',
-                  cursor: activeIdx === SLIDES.length - 1 ? 'default' : 'pointer',
-                  fontSize: 13, fontWeight: 700,
-                  opacity: activeIdx === SLIDES.length - 1 ? 0.35 : 1,
-                  transition: 'all .3s',
-                }}
-              >Next →</button>
-            </div>
           </div>
 
           {/* ── Right: UI card mockup ── */}
           <div
+            className="platform-card-area"
             style={{
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               padding: 'clamp(16px, 4vw, 48px)',
@@ -490,30 +459,51 @@ export function PlatformSection() {
           grid-template-columns: 1fr;
         }
         @media (max-width: 859px) {
+          /* Use 100dvh — dynamic viewport height that excludes browser chrome on iOS Safari */
           .platform-section {
-            height: 100vh;
+            height: 100dvh;
+          }
+          .platform-sticky {
+            height: 100dvh !important;
           }
           .platform-bg-glow {
             opacity: 0.45;
           }
-          /* On mobile: counter flows naturally in document, no absolute positioning */
+          /* On mobile: counter flows naturally in document */
           .platform-counter {
             position: static !important;
             top: auto !important;
             left: auto !important;
             right: auto !important;
-            margin-bottom: 16px !important;
+            margin-bottom: 12px !important;
             z-index: auto !important;
           }
-          /* Fit content within 100vh — account for nav height at top */
+          /* Stable two-row layout so all 3 slides are the same height */
           .platform-grid {
-            gap: 8px !important;
-            padding-top: calc(60px + env(safe-area-inset-top, 0px) + 16px) !important;
-            padding-bottom: 16px !important;
+            gap: 0 !important;
+            padding-top: calc(60px + env(safe-area-inset-top, 0px) + 12px) !important;
+            padding-bottom: 12px !important;
+            grid-template-rows: auto 1fr;
+            align-items: stretch !important;
           }
-          /* Show mobile prev/next arrows */
-          .platform-mobile-nav {
+          /* Fixed min-height prevents text area from collapsing/expanding between slides */
+          .platform-text-area {
+            min-height: 240px;
+          }
+          /* Card area fills remaining vertical space — all cards centre within it */
+          .platform-card-area {
+            flex: 1;
             display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            padding: 8px 0 !important;
+            min-height: 220px;
+            overflow: visible;
+          }
+          /* Scale oversized cards to fit without cropping */
+          .platform-card-area > * {
+            transform-origin: top center;
+            max-width: 100% !important;
           }
         }
         @media (min-width: 860px) {
