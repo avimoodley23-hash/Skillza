@@ -160,7 +160,7 @@ export default function TalentGrid({ students }: { students: Student[] }) {
         {/* Filter bar */}
         <div style={{
           position: 'sticky', top: 'calc(60px + env(safe-area-inset-top, 0px))', zIndex: 200,
-          background: 'rgba(16,15,13,.95)', backdropFilter: 'blur(20px)',
+          background: 'rgba(248,249,255,.95)', backdropFilter: 'blur(20px)',
           borderBottom: '1px solid var(--border)',
           margin: '0 -24px', padding: '10px 24px',
           overflowX: 'auto', display: 'flex', gap: 6,
@@ -181,7 +181,7 @@ export default function TalentGrid({ students }: { students: Student[] }) {
                   color: activeFilter === cat.id ? '#fff' : 'var(--muted-2)',
                   cursor: 'pointer', whiteSpace: 'nowrap',
                   transition: 'all .18s', minHeight: 36, flexShrink: 0,
-                  boxShadow: activeFilter === cat.id ? '0 2px 12px rgba(255,75,31,.3)' : 'none',
+                  boxShadow: activeFilter === cat.id ? '0 2px 12px rgba(37,99,235,.25)' : 'none',
                   display: 'inline-flex', alignItems: 'center', gap: 5,
                 }}
               >
@@ -257,7 +257,7 @@ export default function TalentGrid({ students }: { students: Student[] }) {
             width: 110px;
             flex-shrink: 0;
             position: relative;
-            background: linear-gradient(135deg, #1e1c19, #141210);
+            background: linear-gradient(135deg, #dde6f5, #c7d6f0);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -341,18 +341,18 @@ function StudentCard({ student, index, isInitialLoad, onOpen, onBook }: {
 
   const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
     const el = e.currentTarget as HTMLElement
-    el.style.background = 'var(--black-3)'
-    el.style.borderColor = 'rgba(255,75,31,.3)'
-    el.style.boxShadow = '0 20px 50px rgba(0,0,0,.5), 0 0 0 1px rgba(255,75,31,.1)'
+    el.style.background = '#FFFFFF'
+    el.style.borderColor = 'rgba(37,99,235,.25)'
+    el.style.boxShadow = '0 8px 32px rgba(13,27,62,0.13)'
     scramble()
   }
 
   const handleMouseLeave = (e: React.MouseEvent<HTMLDivElement>) => {
     const el = e.currentTarget as HTMLElement
-    el.style.background = 'var(--black-2)'
+    el.style.background = '#FFFFFF'
     el.style.borderColor = 'var(--border)'
     el.style.transform = 'translateY(0)'
-    el.style.boxShadow = 'none'
+    el.style.boxShadow = '0 2px 20px rgba(13,27,62,0.07)'
     resetScramble()
   }
 
@@ -367,13 +367,14 @@ function StudentCard({ student, index, isInitialLoad, onOpen, onBook }: {
       onKeyDown={e => { if (e.key === 'Enter') onOpen() }}
       aria-label={`View ${student.name}'s profile`}
       style={{
-        background: 'var(--black-2)',
+        background: '#FFFFFF',
         border: '1px solid var(--border)',
         borderRadius: 14,
         overflow: 'hidden',
         transition: 'all .3s',
         cursor: 'pointer',
         willChange: 'transform',
+        boxShadow: '0 2px 20px rgba(13,27,62,0.07)',
         ...(isInitialLoad
           ? {
               animation: `fup .4s ease both`,
@@ -435,8 +436,8 @@ function StudentCard({ student, index, isInitialLoad, onOpen, onBook }: {
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 6, marginBottom: 6 }}>
               <span style={{
                 fontSize: 10, fontWeight: 700, color: 'var(--muted)',
-                background: 'rgba(245,239,227,.06)', padding: '3px 8px',
-                borderRadius: 100, border: '1px solid var(--border)',
+                background: 'rgba(13,27,62,.05)', padding: '3px 8px',
+                borderRadius: 100, border: '1px solid rgba(13,27,62,.1)',
                 whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
               }}>
                 {student.university} · {student.year}
@@ -467,7 +468,7 @@ function StudentCard({ student, index, isInitialLoad, onOpen, onBook }: {
             {/* Bio — visible on mobile too now */}
             {student.bio && (
               <div className="student-card-bio" style={{
-                fontSize: 11, color: 'rgba(245,239,227,.45)', lineHeight: 1.5,
+                fontSize: 11, color: 'rgba(13,27,62,.5)', lineHeight: 1.5,
                 marginBottom: 8,
                 display: '-webkit-box', WebkitLineClamp: 2,
                 WebkitBoxOrient: 'vertical', overflow: 'hidden',
@@ -482,8 +483,8 @@ function StudentCard({ student, index, isInitialLoad, onOpen, onBook }: {
                 {student.tags.slice(0, 3).map(tag => (
                   <span key={tag} style={{
                     fontSize: 10, padding: '3px 7px', borderRadius: 100,
-                    background: 'rgba(245,239,227,.04)', color: 'rgba(245,239,227,.45)',
-                    border: '1px solid rgba(245,239,227,.07)',
+                    background: 'rgba(13,27,62,.04)', color: 'rgba(13,27,62,.5)',
+                    border: '1px solid rgba(13,27,62,.08)',
                   }}>
                     {tag}
                   </span>
@@ -512,7 +513,7 @@ function StudentCard({ student, index, isInitialLoad, onOpen, onBook }: {
                 fontSize: 12, fontWeight: 700,
                 cursor: 'pointer', minHeight: 38, whiteSpace: 'nowrap',
                 transition: 'all .2s', flexShrink: 0,
-                boxShadow: '0 2px 12px rgba(255,75,31,.35)',
+                boxShadow: '0 2px 12px rgba(37,99,235,.35)',
               }}
               onMouseEnter={e => { (e.currentTarget as HTMLElement).style.opacity = '0.85' }}
               onMouseLeave={e => { (e.currentTarget as HTMLElement).style.opacity = '1' }}

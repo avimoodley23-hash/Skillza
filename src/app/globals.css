@@ -5,29 +5,46 @@
 @tailwind utilities;
 
 :root {
-  --black: #100F0D;
-  --black-2: #161410;
-  --black-3: #1D1B17;
-  --cream: #F5EFE3;
-  --cream-dim: rgba(245,239,227,.6);
-  --cream-faint: rgba(245,239,227,.08);
-  --orange: #FF4B1F;
-  --orange-2: #FF6B42;
-  --o-dim: rgba(255,75,31,.12);
-  --o-bright: rgba(255,75,31,.22);
-  --sand: #C8956C;
-  --sand-dim: rgba(200,149,108,.12);
-  --green: #34D58E;
-  --g-dim: rgba(52,213,142,.12);
-  --blue: #5B9CF6;
-  --b-dim: rgba(91,156,246,.12);
-  --gold: #D4A853;
-  --muted: #7A7469;
-  --muted-2: #9A9189;
-  --border: rgba(245,239,227,.07);
-  --border-2: rgba(245,239,227,.12);
-  --card: rgba(245,239,227,.03);
-  --card-2: rgba(245,239,227,.055);
+  /* Backgrounds */
+  --black:   #F8F9FF;        /* page background — very slightly blue-tinted white */
+  --black-2: #EEF2FF;        /* alternate section bg — pale blue */
+  --black-3: #FFFFFF;        /* card / surface white */
+
+  /* Text */
+  --cream:   #0D1B3E;        /* primary text — deep navy */
+  --cream-dim: rgba(13,27,62,.55);
+  --cream-faint: rgba(13,27,62,.07);
+
+  /* Blue accent (replaces orange) */
+  --orange:   #2563EB;       /* primary accent — electric cobalt (kept as --orange so all var(--orange) refs auto-update) */
+  --orange-2: #1D4ED8;       /* hover / deeper blue */
+  --o-dim:    rgba(37,99,235,.10);
+  --o-bright: rgba(37,99,235,.22);
+
+  /* Keep sand for subtle accents */
+  --sand:     #C8956C;
+  --sand-dim: rgba(200,149,108,.10);
+
+  /* Status */
+  --green:    #059669;
+  --g-dim:    rgba(5,150,105,.10);
+  --blue:     #2563EB;
+  --b-dim:    rgba(37,99,235,.10);
+  --gold:     #D97706;
+
+  /* Typography */
+  --muted:    #64748B;
+  --muted-2:  #94A3B8;
+
+  /* Borders */
+  --border:   rgba(13,27,62,.08);
+  --border-2: rgba(13,27,62,.14);
+
+  /* Cards */
+  --card:     rgba(37,99,235,.03);
+  --card-2:   rgba(37,99,235,.06);
+
+  /* Safe areas */
   --safe-b: env(safe-area-inset-bottom, 0px);
   --safe-t: env(safe-area-inset-top, 0px);
 }
@@ -58,7 +75,7 @@ body::before {
   inset: -60px;
   z-index: 9999;
   pointer-events: none;
-  opacity: .028;
+  opacity: .018;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
@@ -70,7 +87,7 @@ body::after {
   transform: translateX(-50%);
   width: 900px;
   height: 500px;
-  background: radial-gradient(ellipse at center, rgba(255,75,31,.04) 0%, transparent 65%);
+  background: radial-gradient(ellipse at center, rgba(37,99,235,.04) 0%, transparent 65%);
   pointer-events: none;
   z-index: 0;
 }
@@ -95,8 +112,8 @@ body::after {
 /* Scrollbar */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--black); }
-::-webkit-scrollbar-thumb { background: rgba(245,239,227,.1); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(245,239,227,.2); }
+::-webkit-scrollbar-thumb { background: rgba(13,27,62,.12); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(13,27,62,.22); }
 
 /* Typography utilities */
 .font-bebas { font-family: 'Bebas Neue', sans-serif; }
@@ -137,20 +154,17 @@ body::after {
   cursor: pointer;
   transition: all .25s;
   white-space: nowrap;
-  box-shadow: 0 4px 18px rgba(255,75,31,.25);
+  box-shadow: 0 4px 18px rgba(37,99,235,.28);
   -webkit-tap-highlight-color: transparent;
-}
-.btn-primary:hover { background: var(--orange-2); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(255,75,31,.38); }
-.btn-primary:active { transform: translateY(0); }
-
-/* Effect 3: Pulse glow on primary CTA */
-.btn-primary {
   animation: btn-pulse 2.8s ease-out infinite;
 }
+.btn-primary:hover { background: var(--orange-2); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(37,99,235,.42); }
+.btn-primary:active { transform: translateY(0); }
+
 @keyframes btn-pulse {
-  0%   { box-shadow: 0 0 0 0 rgba(255,74,28,0.45); }
-  60%  { box-shadow: 0 0 0 10px rgba(255,74,28,0); }
-  100% { box-shadow: 0 0 0 0 rgba(255,74,28,0); }
+  0%   { box-shadow: 0 0 0 0 rgba(37,99,235,.4); }
+  60%  { box-shadow: 0 0 0 10px rgba(37,99,235,0); }
+  100% { box-shadow: 0 0 0 0 rgba(37,99,235,0); }
 }
 @media (prefers-reduced-motion: reduce) {
   .btn-primary { animation: none; }
@@ -162,7 +176,7 @@ body::after {
   gap: 8px;
   background: transparent;
   color: var(--cream);
-  border: 1.5px solid rgba(245,239,227,.2);
+  border: 1.5px solid rgba(13,27,62,.2);
   padding: 13px 28px;
   border-radius: 8px;
   font-size: 14px;
@@ -172,7 +186,7 @@ body::after {
   white-space: nowrap;
   -webkit-tap-highlight-color: transparent;
 }
-.btn-outline:hover { border-color: rgba(245,239,227,.5); background: rgba(245,239,227,.04); }
+.btn-outline:hover { border-color: rgba(13,27,62,.45); background: rgba(13,27,62,.04); }
 
 /* Tag pill */
 .tag-pill {
@@ -187,8 +201,8 @@ body::after {
   border-radius: 100px;
   margin-bottom: 20px;
 }
-.tag-orange { background: var(--o-dim); color: var(--orange); border: 1px solid rgba(255,75,31,.2); }
-.tag-blue { background: var(--b-dim); color: var(--blue); border: 1px solid rgba(91,156,246,.2); }
+.tag-orange { background: var(--o-dim); color: var(--orange); border: 1px solid rgba(37,99,235,.2); }
+.tag-blue   { background: var(--b-dim); color: var(--blue);   border: 1px solid rgba(37,99,235,.2); }
 
 /* ── Scroll-entrance animations ───────────────────────────────── */
 @keyframes fadeInUp {
@@ -228,7 +242,7 @@ body::after {
   top: -120px; left: 50%;
   transform: translateX(-50%);
   width: 600px; height: 400px;
-  background: radial-gradient(ellipse at center, rgba(255,75,31,.06) 0%, transparent 70%);
+  background: radial-gradient(ellipse at center, rgba(37,99,235,.07) 0%, transparent 70%);
   pointer-events: none;
   z-index: 0;
 }
@@ -238,7 +252,7 @@ body::after {
   top: -80px; left: 50%;
   transform: translateX(-50%);
   width: 500px; height: 300px;
-  background: radial-gradient(ellipse at center, rgba(52,213,142,.05) 0%, transparent 70%);
+  background: radial-gradient(ellipse at center, rgba(5,150,105,.06) 0%, transparent 70%);
   pointer-events: none;
   z-index: 0;
 }
@@ -248,7 +262,7 @@ body::after {
   top: -80px; left: 50%;
   transform: translateX(-50%);
   width: 500px; height: 300px;
-  background: radial-gradient(ellipse at center, rgba(91,156,246,.05) 0%, transparent 70%);
+  background: radial-gradient(ellipse at center, rgba(37,99,235,.07) 0%, transparent 70%);
   pointer-events: none;
   z-index: 0;
 }
