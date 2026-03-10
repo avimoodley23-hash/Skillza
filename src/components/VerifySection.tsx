@@ -75,7 +75,7 @@ export function VerifySection() {
           </div>
           <div style={{ height: 1, background: 'rgba(124,58,237,.2)', margin: '14px 0' }} />
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 9 }}>
-            {[['Student No.', 'UCT2021-4872'], ['Faculty', 'Humanities'], ['Campus', 'Upper Campus'], ['Valid Until', 'Nov 2025']].map(([label, value]) => (
+            {[['Student No.', 'UCT2021-4872'], ['Faculty', 'Humanities'], ['Campus', 'Upper Campus'], ['Valid Until', 'Nov 2026']].map(([label, value]) => (
               <div key={label}>
                 <div style={{ fontSize: 9, letterSpacing: 1, textTransform: 'uppercase', color: 'rgba(250,250,248,.35)', display: 'block', marginBottom: 2 }}>{label}</div>
                 <div style={{ fontSize: 12, color: '#FAFAF8', fontWeight: 600 }}>{value}</div>

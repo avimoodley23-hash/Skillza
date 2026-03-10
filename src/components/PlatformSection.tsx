@@ -162,7 +162,7 @@ function VerifyCard({ accent }: { accent: string }) {
         </div>
         <div style={{ height: 1, background: `${accent}22`, margin: '0 0 14px' }} />
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 9 }}>
-          {[['Student No.', 'UCT2021-4872'], ['Faculty', 'Humanities'], ['Campus', 'Upper Campus'], ['Valid Until', 'Nov 2025']].map(([label, value]) => (
+          {[['Student No.', 'UCT2021-4872'], ['Faculty', 'Humanities'], ['Campus', 'Upper Campus'], ['Valid Until', 'Nov 2026']].map(([label, value]) => (
             <div key={label}>
               <div style={{ fontSize: 9, letterSpacing: 1, textTransform: 'uppercase', color: 'rgba(250,250,248,.35)', marginBottom: 2 }}>{label}</div>
               <div style={{ fontSize: 11, color: '#FAFAF8', fontWeight: 600 }}>{value}</div>
@@ -246,10 +246,32 @@ const CARD_MAP: Record<CardKey, (accent: string) => React.ReactNode> = {
 export function PlatformSection() {
   const sectionRef = useRef<HTMLDivElement>(null)
   const [activeIdx, setActiveIdx] = useState(0)
+  const [displayIdx, setDisplayIdx] = useState(0)
+  const [isFading, setIsFading] = useState(false)
+  const fadeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const [progress, setProgress] = useState(0)
+  const touchStartXRef = useRef<number | null>(null)
+
+  const goTo = (idx: number) => {
+    setActiveIdx(Math.max(0, Math.min(SLIDES.length - 1, idx)))
+  }
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartXRef.current = e.touches[0].clientX
+  }
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartXRef.current === null) return
+    const dx = e.changedTouches[0].clientX - touchStartXRef.current
+    touchStartXRef.current = null
+    if (Math.abs(dx) < 50) return
+    if (dx < 0) goTo(activeIdx + 1)
+    else goTo(activeIdx - 1)
+  }
 
   useEffect(() => {
     const onScroll = () => {
+      if (window.innerWidth <= 859) return
       if (!sectionRef.current) return
       const rect = sectionRef.current.getBoundingClientRect()
       const scrollable = sectionRef.current.scrollHeight - window.innerHeight
@@ -263,34 +285,52 @@ export function PlatformSection() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  const slide = SLIDES[activeIdx]
+  // Crossfade content when active slide changes — prevents re-mount flicker on mobile
+  useEffect(() => {
+    if (activeIdx === displayIdx) return
+    if (fadeTimerRef.current) clearTimeout(fadeTimerRef.current)
+    setIsFading(true)
+    fadeTimerRef.current = setTimeout(() => {
+      setDisplayIdx(activeIdx)
+      setIsFading(false)
+      fadeTimerRef.current = null
+    }, 100)
+    return () => { if (fadeTimerRef.current) clearTimeout(fadeTimerRef.current) }
+  }, [activeIdx, displayIdx])
+
+  const slide = SLIDES[displayIdx]      // displayed content — updates after fade-out
+  const colorSlide = SLIDES[activeIdx]  // accent colours — update instantly
 
   return (
     <section
       ref={sectionRef}
       id="platform"
+      className="platform-section"
       style={{
         position: 'relative',
-        height: `${SLIDES.length * 100}vh`,
         background: '#0A0A0A',
       }}
     >
       {/* Sticky viewport */}
-      <div style={{
-        position: 'sticky',
-        top: 0,
-        height: '100vh',
-        overflow: 'hidden',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-      }}>
+      <div
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+        style={{
+          position: 'sticky',
+          top: 0,
+          height: '100vh',
+          overflow: 'hidden',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+        }}
+      >
 
         {/* Background accent glow — transitions with slide */}
         <div className="platform-bg-glow" aria-hidden="true" style={{
           position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0,
           transition: 'background .7s cubic-bezier(.4,0,.2,1)',
-          background: `radial-gradient(ellipse 60% 55% at 70% 50%, ${slide.accentGlow} 0%, transparent 70%)`,
+          background: `radial-gradient(ellipse 60% 55% at 70% 50%, ${colorSlide.accentGlow} 0%, transparent 70%)`,  // instant colour change
         }} />
 
         {/* Content */}
@@ -305,17 +345,36 @@ export function PlatformSection() {
           {/* ── Left: text ── */}
           <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
 
-            {/* Slide counter */}
+            {/* Slide counter — uses activeIdx directly for instant visual feedback */}
             <div className="platform-counter" style={{ display: 'flex', gap: 6, marginBottom: 32 }}>
               {SLIDES.map((s, i) => (
-                <div key={s.id} style={{
-                  height: 2, borderRadius: 2,
-                  flex: i === activeIdx ? 3 : 1,
-                  background: i === activeIdx ? slide.accent : 'rgba(255,255,255,.28)',
-                  transition: 'flex .5s cubic-bezier(.4,0,.2,1), background .5s',
-                }} />
+                <button
+                  key={s.id}
+                  onClick={() => goTo(i)}
+                  aria-label={`View ${s.eyebrow}`}
+                  style={{
+                    flex: i === activeIdx ? 3 : 1,
+                    padding: '8px 0',
+                    background: 'none', border: 'none', cursor: 'pointer',
+                    transition: 'flex .5s cubic-bezier(.4,0,.2,1)',
+                    display: 'flex', alignItems: 'center',
+                  }}
+                >
+                  <div style={{
+                    height: 3, borderRadius: 2, width: '100%',
+                    background: i === activeIdx ? colorSlide.accent : 'rgba(255,255,255,.38)',
+                    transition: 'background .5s',
+                  }} />
+                </button>
               ))}
             </div>
+
+            {/* Fading content — eyebrow, headline, body, index all crossfade together */}
+            <div style={{
+              opacity: isFading ? 0 : 1,
+              transform: isFading ? 'translateY(10px)' : 'translateY(0)',
+              transition: 'opacity 0.2s ease, transform 0.2s ease',
+            }}>
 
             {/* Eyebrow */}
             <div style={{
@@ -323,24 +382,21 @@ export function PlatformSection() {
               fontSize: 11, fontWeight: 700, letterSpacing: 2.5,
               textTransform: 'uppercase', color: slide.accent,
               marginBottom: 18,
-              transition: 'color .4s',
             }}>
-              <span style={{ width: 18, height: 1.5, background: slide.accent, display: 'inline-block', transition: 'background .4s' }} />
+              <span style={{ width: 18, height: 1.5, background: slide.accent, display: 'inline-block' }} />
               {slide.eyebrow}
             </div>
 
             {/* Headline */}
             <h2
-              key={slide.id + '-h'}
               style={{
                 fontFamily: 'Bebas Neue, sans-serif',
-                fontSize: 'clamp(52px, 8vw, 96px)',
+                fontSize: 'clamp(42px, 10vw, 96px)',
                 lineHeight: .9,
                 letterSpacing: 1,
                 color: '#FAFAF8',
                 marginBottom: 20,
                 whiteSpace: 'pre-line',
-                animation: 'slideTextIn .45s cubic-bezier(.16,1,.3,1) both',
               }}
             >
               {slide.headline}
@@ -348,14 +404,12 @@ export function PlatformSection() {
 
             {/* Body */}
             <p
-              key={slide.id + '-p'}
               style={{
                 fontSize: 'clamp(14px, 1.6vw, 16px)',
                 lineHeight: 1.8,
                 color: 'rgba(250,250,248,.55)',
                 maxWidth: 420,
                 marginBottom: 32,
-                animation: 'slideTextIn .5s cubic-bezier(.16,1,.3,1) .06s both',
               }}
             >
               {slide.sub}
@@ -363,17 +417,53 @@ export function PlatformSection() {
 
             {/* Slide index label */}
             <div style={{ fontSize: 11, color: 'rgba(255,255,255,.2)', fontWeight: 600, letterSpacing: 1 }}>
-              {String(activeIdx + 1).padStart(2, '0')} / {String(SLIDES.length).padStart(2, '0')}
+              {String(displayIdx + 1).padStart(2, '0')} / {String(SLIDES.length).padStart(2, '0')}
+            </div>
+            </div>{/* end fading content */}
+
+            {/* Mobile prev/next navigation — shown on mobile via CSS */}
+            <div className="platform-mobile-nav" style={{ marginTop: 20, gap: 10, display: 'none' }}>
+              <button
+                onClick={() => goTo(activeIdx - 1)}
+                disabled={activeIdx === 0}
+                aria-label="Previous slide"
+                style={{
+                  background: 'rgba(255,255,255,.06)',
+                  border: '1px solid rgba(255,255,255,.14)',
+                  borderRadius: 8, padding: '10px 20px',
+                  color: 'rgba(250,250,248,.65)',
+                  cursor: activeIdx === 0 ? 'default' : 'pointer',
+                  fontSize: 13, fontWeight: 600,
+                  opacity: activeIdx === 0 ? 0.35 : 1,
+                  transition: 'opacity .2s',
+                }}
+              >← Prev</button>
+              <button
+                onClick={() => goTo(activeIdx + 1)}
+                disabled={activeIdx === SLIDES.length - 1}
+                aria-label="Next slide"
+                style={{
+                  background: colorSlide.accent,
+                  border: 'none',
+                  borderRadius: 8, padding: '10px 20px',
+                  color: colorSlide.accent === '#E0E446' ? '#0B0B0A' : '#fff',
+                  cursor: activeIdx === SLIDES.length - 1 ? 'default' : 'pointer',
+                  fontSize: 13, fontWeight: 700,
+                  opacity: activeIdx === SLIDES.length - 1 ? 0.35 : 1,
+                  transition: 'all .3s',
+                }}
+              >Next →</button>
             </div>
           </div>
 
           {/* ── Right: UI card mockup ── */}
           <div
-            key={slide.id + '-card'}
             style={{
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              padding: 'clamp(24px, 4vw, 48px)',
-              animation: 'cardSwapIn .5s cubic-bezier(.16,1,.3,1) both',
+              padding: 'clamp(16px, 4vw, 48px)',
+              opacity: isFading ? 0 : 1,
+              transform: isFading ? 'scale(0.96) translateY(8px)' : 'scale(1) translateY(0)',
+              transition: 'opacity 0.2s ease, transform 0.2s ease',
             }}
           >
             {CARD_MAP[slide.card as CardKey](slide.accent)}
@@ -393,26 +483,37 @@ export function PlatformSection() {
       </div>
 
       <style>{`
+        .platform-section {
+          height: calc(3 * 100vh);
+        }
         .platform-grid {
           grid-template-columns: 1fr;
         }
         @media (max-width: 859px) {
+          .platform-section {
+            height: 100vh;
+          }
           .platform-bg-glow {
             opacity: 0.45;
           }
-          /* On mobile the counter can get clipped when content overflows 100vh.
-             Pull it out of flow and pin it just below the nav so it's always visible. */
+          /* On mobile: counter flows naturally in document, no absolute positioning */
           .platform-counter {
-            position: absolute;
-            top: 72px;
-            left: clamp(20px, 5vw, 64px);
-            right: clamp(20px, 5vw, 64px);
-            margin-bottom: 0;
-            z-index: 5;
+            position: static !important;
+            top: auto !important;
+            left: auto !important;
+            right: auto !important;
+            margin-bottom: 16px !important;
+            z-index: auto !important;
           }
-          /* compensate for counter being out of flow */
+          /* Fit content within 100vh — account for nav height at top */
           .platform-grid {
-            padding-top: 40px;
+            gap: 8px !important;
+            padding-top: calc(60px + env(safe-area-inset-top, 0px) + 16px) !important;
+            padding-bottom: 16px !important;
+          }
+          /* Show mobile prev/next arrows */
+          .platform-mobile-nav {
+            display: flex !important;
           }
         }
         @media (min-width: 860px) {
@@ -421,14 +522,7 @@ export function PlatformSection() {
             align-items: center;
           }
         }
-        @keyframes slideTextIn {
-          from { opacity: 0; transform: translateY(20px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes cardSwapIn {
-          from { opacity: 0; transform: scale(0.92) translateY(16px); }
-          to   { opacity: 1; transform: scale(1) translateY(0); }
-        }
+        /* slideTextIn / cardSwapIn replaced by JS-driven crossfade — no keyframes needed */
         @media (prefers-reduced-motion: reduce) {
           .platform-grid * { animation: none !important; transition: none !important; }
         }

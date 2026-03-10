@@ -46,24 +46,22 @@ export default function Nav() {
         </Link>
 
         {/* Desktop links */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 28 }} className="hide-mobile">
-          <Link href="/#find-talent" style={{ fontSize: 13, fontWeight: 500, color: 'var(--muted)', transition: 'color .2s', letterSpacing: '.2px' }}
-            onMouseEnter={e => (e.currentTarget.style.color = 'var(--cream)')}
-            onMouseLeave={e => (e.currentTarget.style.color = 'var(--muted)')}>
-            Browse Talent
-          </Link>
-          <Link href="/#how-it-works" style={{ fontSize: 13, fontWeight: 500, color: 'var(--muted)', transition: 'color .2s', letterSpacing: '.2px' }}
-            onMouseEnter={e => (e.currentTarget.style.color = 'var(--cream)')}
-            onMouseLeave={e => (e.currentTarget.style.color = 'var(--muted)')}>
-            How It Works
-          </Link>
-          <Link href="/#for-students" style={{ fontSize: 13, fontWeight: 500, color: 'var(--muted)', transition: 'color .2s', letterSpacing: '.2px' }}
-            onMouseEnter={e => (e.currentTarget.style.color = 'var(--cream)')}
-            onMouseLeave={e => (e.currentTarget.style.color = 'var(--muted)')}>
-            For Students
-          </Link>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 24 }} className="hide-mobile">
+          {[
+            { href: '/#find-talent',  label: 'Browse Talent' },
+            { href: '/#how-it-works', label: 'How It Works' },
+            { href: '/#platform',     label: 'For Clients' },
+            { href: '/#verify',       label: 'Verification' },
+            { href: '/#for-students', label: 'For Students' },
+          ].map(({ href, label }) => (
+            <Link key={href} href={href} style={{ fontSize: 13, fontWeight: 500, color: 'var(--muted)', transition: 'color .2s', letterSpacing: '.2px' }}
+              onMouseEnter={e => (e.currentTarget.style.color = 'var(--cream)')}
+              onMouseLeave={e => (e.currentTarget.style.color = 'var(--muted)')}>
+              {label}
+            </Link>
+          ))}
           <Link href="/join" className="btn-primary" style={{ padding: '9px 20px', fontSize: 13 }}>
-            Join Now
+            Join the Waitlist
           </Link>
         </div>
 
@@ -105,10 +103,11 @@ export default function Nav() {
       }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 4, flex: 1 }}>
 {[
-  { href: '/#find-talent', label: 'Find Talent' },
+  { href: '/#find-talent', label: 'Browse Talent' },
   { href: '/#how-it-works', label: 'How It Works' },
+  { href: '/#platform', label: 'For Clients' },
   { href: '/#verify', label: 'Verification' },
-{ href: '/#for-students', label: 'For Students' }
+  { href: '/#for-students', label: 'For Students' }
 ].map(({ href, label }) => (
   <Link
     key={href}

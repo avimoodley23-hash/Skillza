@@ -185,7 +185,7 @@ export default function HeroSection({ students = [] }: { students?: StudentFull[
           </h1>
 
           {/* Sub-copy */}
-          <p style={{ fontSize: 'clamp(14px, 1.8vw, 16px)', lineHeight: 1.75, color: 'rgba(17,17,16,0.55)', maxWidth: 460, marginBottom: 28 }}>
+          <p style={{ fontSize: 'clamp(14px, 1.8vw, 16px)', lineHeight: 1.75, color: 'rgba(250,250,248,.55)', maxWidth: 460, marginBottom: 28 }}>
             Book photographers, designers, videographers and more — Skillza verified, fairly priced, and ready for your next project.
           </p>
 
@@ -194,9 +194,9 @@ export default function HeroSection({ students = [] }: { students?: StudentFull[
             {cards.map((card, i) => (
               <div key={i} style={{
                 flexShrink: 0, width: 160, borderRadius: 14,
-                background: '#FFFFFF',
+                background: '#1C1C1C',
                 border: `1px solid ${CARD_ACCENTS[i].border}`,
-                boxShadow: '0 2px 12px rgba(17,17,16,0.07)',
+                boxShadow: '0 2px 16px rgba(0,0,0,.4)',
                 padding: 14, position: 'relative', overflow: 'hidden',
               }}>
                 <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, borderRadius: '14px 14px 0 0', background: CARD_ACCENTS[i].top }} />
@@ -238,24 +238,24 @@ export default function HeroSection({ students = [] }: { students?: StudentFull[
           </div>
 
           {/* Stats */}
-          <div ref={statsRef} style={{ display: 'flex', gap: 'clamp(20px, 5vw, 48px)', paddingTop: 22, borderTop: '1px solid rgba(17,17,16,0.1)' }}>
+          <div ref={statsRef} style={{ display: 'flex', gap: 'clamp(20px, 5vw, 48px)', paddingTop: 22, borderTop: '1px solid rgba(255,255,255,.08)' }}>
             <div>
               <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 'clamp(30px, 4.5vw, 42px)', letterSpacing: 1, lineHeight: 1, color: 'var(--orange)' }}>
                 {c1}<span style={{ color: 'var(--orange)' }}>+</span>
               </div>
-              <div style={{ fontSize: 10, fontWeight: 600, color: 'var(--muted)', marginTop: 3, letterSpacing: .4, textTransform: 'uppercase' }}>Skills</div>
+              <div style={{ fontSize: 10, fontWeight: 600, color: 'var(--muted)', marginTop: 3, letterSpacing: .4, textTransform: 'uppercase' }}>Disciplines</div>
             </div>
             <div>
               <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 'clamp(30px, 4.5vw, 42px)', letterSpacing: 1, lineHeight: 1, color: 'var(--violet)' }}>
-                R<span>0</span>
+                0<span style={{ fontSize: '0.7em' }}>%</span>
               </div>
-              <div style={{ fontSize: 10, fontWeight: 600, color: 'var(--muted)', marginTop: 3, letterSpacing: .4, textTransform: 'uppercase' }}>No Fees</div>
+              <div style={{ fontSize: 10, fontWeight: 600, color: 'var(--muted)', marginTop: 3, letterSpacing: .4, textTransform: 'uppercase' }}>Platform Fees</div>
             </div>
             <div>
               <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 'clamp(30px, 4.5vw, 42px)', letterSpacing: 1, lineHeight: 1, color: 'var(--coral)' }}>
-                {c3}<span>%</span>
+                24<span style={{ fontSize: '0.55em', letterSpacing: 0 }}>hr</span>
               </div>
-              <div style={{ fontSize: 10, fontWeight: 600, color: 'var(--muted)', marginTop: 3, letterSpacing: .4, textTransform: 'uppercase' }}>Verified</div>
+              <div style={{ fontSize: 10, fontWeight: 600, color: 'var(--muted)', marginTop: 3, letterSpacing: .4, textTransform: 'uppercase' }}>Verification</div>
             </div>
           </div>
         </div>
@@ -299,7 +299,7 @@ export default function HeroSection({ students = [] }: { students?: StudentFull[
                   </div>
                 </div>
                 <div style={{ fontSize: 11, color: 'var(--muted-2)', marginBottom: 10 }}>{card.skill}</div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 10, borderTop: '1px solid rgba(17,17,16,0.08)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 10, borderTop: '1px solid rgba(255,255,255,.08)' }}>
                   <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 17, letterSpacing: .5, color: 'var(--cream)' }}>{card.price}</div>
                   <span style={{
                     fontSize: 9, fontWeight: 800, padding: '3px 8px', borderRadius: 100, letterSpacing: .5,

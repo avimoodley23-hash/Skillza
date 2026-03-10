@@ -107,7 +107,7 @@ export function ProfilePanel({ student, onClose, onBook }: Props) {
             <span style={{ fontSize: 13, color: 'var(--muted)', fontWeight: 500 }}>Student Profile</span>
             <button onClick={onClose} style={{
               background: 'rgba(255,255,255,.07)', border: '1px solid var(--border)',
-              color: 'var(--cream)', borderRadius: 8, width: 36, height: 36,
+            color: 'var(--cream)', borderRadius: 8, width: 44, height: 44,
               display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 15,
               cursor: 'pointer',
             }}>×</button>

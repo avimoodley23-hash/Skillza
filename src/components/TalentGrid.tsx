@@ -178,6 +178,8 @@ export default function TalentGrid({ students }: { students: Student[] }) {
           margin: '0 -24px', padding: '10px 24px',
           overflowX: 'auto', display: 'flex', gap: 6,
           scrollbarWidth: 'none',
+          WebkitMaskImage: 'linear-gradient(to right, black calc(100% - 56px), transparent 100%)',
+          maskImage: 'linear-gradient(to right, black calc(100% - 56px), transparent 100%)',
         }}>
           {CATEGORIES.map(cat => {
             const CatIcon = cat.icon
@@ -193,7 +195,7 @@ export default function TalentGrid({ students }: { students: Student[] }) {
                   background: activeFilter === cat.id ? '#334ED8' : '#FFFFFF',
                   color: activeFilter === cat.id ? '#fff' : '#555555',
                   cursor: 'pointer', whiteSpace: 'nowrap',
-                  transition: 'all .18s', minHeight: 36, flexShrink: 0,
+                  transition: 'all .18s', minHeight: 44, flexShrink: 0,
                   boxShadow: activeFilter === cat.id ? '0 2px 12px rgba(20,69,255,.25)' : 'none',
                   display: 'inline-flex', alignItems: 'center', gap: 5,
                 }}
@@ -470,10 +472,15 @@ function StudentCard({ student, index, isInitialLoad, onOpen, onBook, colors }: 
             {/* Name + rating */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 2 }}>
               <div style={{ fontWeight: 700, fontSize: 15, color: colors.text, lineHeight: 1.2 }}>{nameDisplay}</div>
-              <div style={{ fontSize: 12, color: colors.ratingCol, fontWeight: 600, whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: 3 }}>
-                <Star size={11} strokeWidth={1.5} style={{ fill: colors.ratingCol, color: colors.ratingCol }} />
-                {student.rating}
-              </div>
+              {(student.review_count ?? 0) > 0 ? (
+                <div style={{ fontSize: 12, color: colors.ratingCol, fontWeight: 600, whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: 3 }}>
+                  <Star size={11} strokeWidth={1.5} style={{ fill: colors.ratingCol, color: colors.ratingCol }} />
+                  {student.rating}
+                  <span style={{ fontSize: 10, fontWeight: 500, opacity: 0.65 }}>({student.review_count})</span>
+                </div>
+              ) : (
+                <span style={{ fontSize: 9, fontWeight: 800, padding: '2px 7px', borderRadius: 100, background: 'rgba(51,78,216,.12)', color: '#334ED8', letterSpacing: .6, border: '1px solid rgba(51,78,216,.2)' }}>NEW</span>
+              )}
             </div>
 
             {/* Skill */}
@@ -525,7 +532,7 @@ function StudentCard({ student, index, isInitialLoad, onOpen, onBook, colors }: 
                 border: 'none',
                 padding: '10px 18px', borderRadius: 8,
                 fontSize: 12, fontWeight: 700,
-                cursor: 'pointer', minHeight: 38, whiteSpace: 'nowrap',
+                cursor: 'pointer', minHeight: 44, whiteSpace: 'nowrap',
                 transition: 'all .2s', flexShrink: 0,
                 boxShadow: `0 2px 12px ${colors.hoverShadow}`,
               }}
