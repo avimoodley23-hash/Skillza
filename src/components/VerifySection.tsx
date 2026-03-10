@@ -5,13 +5,16 @@ import type React from 'react'
 
 export function VerifySection() {
   return (
-    <section id="verify" style={{ padding: 'clamp(48px, 8vw, 80px) 24px', borderBottom: '1px solid rgba(248,249,255,.12)', background: '#0D1B3E' }} className="verify-section">
+    <section id="verify" style={{ padding: 'clamp(48px, 8vw, 80px) 24px', borderBottom: '1px solid rgba(255,255,255,.06)', background: '#0F0E0E' }} className="verify-section">
       <AnimateIn>
-        <div className="eyebrow" style={{ color: '#60A5FA' }}>Trust Infrastructure</div>
-        <h2 style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 'clamp(34px, 6vw, 60px)', lineHeight: .93, letterSpacing: 1, marginBottom: 14, color: '#F8F9FF' }}>
+        {/* Lime badge eyebrow */}
+        <div style={{ marginBottom: 18 }}>
+          <span className="badge-lime">Trust Infrastructure</span>
+        </div>
+        <h2 style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 'clamp(34px, 6vw, 60px)', lineHeight: .93, letterSpacing: 1, marginBottom: 14, color: '#FAFAF8' }}>
           Skillza<br />Verified.<br />Full stop.
         </h2>
-        <p style={{ fontSize: 'clamp(14px, 1.8vw, 15px)', lineHeight: 1.8, color: 'rgba(248,249,255,.6)', maxWidth: 480 }}>
+        <p style={{ fontSize: 'clamp(14px, 1.8vw, 15px)', lineHeight: 1.8, color: 'rgba(250,250,248,.6)', maxWidth: 480 }}>
           Every creative on Skillza goes through our verification process before their profile goes live. We confirm identity, check credentials, and review their profile — so you always know exactly who you're booking.
         </p>
         <div style={{ marginTop: 32, display: 'flex', flexDirection: 'column', gap: 18 }}>
@@ -23,12 +26,12 @@ export function VerifySection() {
             ] as { icon: React.ElementType; title: string; body: string }[]
           ).map(vp => (
             <div key={vp.title} style={{ display: 'flex', gap: 13, alignItems: 'flex-start' }}>
-              <div style={{ width: 36, height: 36, flexShrink: 0, borderRadius: 8, background: 'rgba(37,99,235,.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#60A5FA' }}>
+              <div style={{ width: 36, height: 36, flexShrink: 0, borderRadius: 8, background: 'rgba(20,69,255,.22)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#6B8FFF' }}>
                 <vp.icon size={18} strokeWidth={1.5} />
               </div>
               <div>
-                <h4 style={{ fontSize: 14, fontWeight: 600, marginBottom: 2, color: '#F8F9FF' }}>{vp.title}</h4>
-                <p style={{ fontSize: 13, color: 'rgba(248,249,255,.6)', lineHeight: 1.6 }}>{vp.body}</p>
+                <h4 style={{ fontSize: 14, fontWeight: 700, marginBottom: 2, color: '#FAFAF8' }}>{vp.title}</h4>
+                <p style={{ fontSize: 13, color: 'rgba(250,250,248,.58)', lineHeight: 1.6 }}>{vp.body}</p>
               </div>
             </div>
           ))}
@@ -45,47 +48,48 @@ export function VerifySection() {
           position: 'relative', overflow: 'visible',
           transform: 'rotate(-2deg)',
         }}>
-          <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 4, background: 'linear-gradient(90deg, var(--orange), var(--gold))', borderRadius: '18px 18px 0 0' }} />
-          <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 10, letterSpacing: 3, color: 'rgba(248,249,255,.5)', marginBottom: 16, textTransform: 'uppercase' }}>University of Cape Town — Student Services</div>
+          <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 4, background: 'linear-gradient(90deg, var(--orange), var(--lime))', borderRadius: '18px 18px 0 0' }} />
+          <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 10, letterSpacing: 3, color: 'rgba(250,250,248,.45)', marginBottom: 16, textTransform: 'uppercase' }}>University of Cape Town — Student Services</div>
           <div style={{ display: 'flex', gap: 13, alignItems: 'center', marginBottom: 16 }}>
-            <div style={{ width: 48, height: 48, borderRadius: 10, background: 'linear-gradient(135deg, #2a2a2a, #1a1a1a)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(255,255,255,.07)', flexShrink: 0, color: '#60A5FA' }}>
+            <div style={{ width: 48, height: 48, borderRadius: 10, background: 'rgba(20,69,255,.18)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(20,69,255,.25)', flexShrink: 0, color: '#6B8FFF' }}>
               <Camera size={22} strokeWidth={1.5} />
             </div>
             <div>
-              <div style={{ fontWeight: 600, fontSize: 14, color: '#F8F9FF' }}>Amahle Khumalo</div>
-              <div style={{ fontSize: 11, color: 'rgba(248,249,255,.5)', marginTop: 1 }}>BA Visual Communication</div>
-              <div style={{ fontSize: 10, color: '#60A5FA', marginTop: 2, fontWeight: 600 }}>3rd Year · 2024</div>
+              <div style={{ fontWeight: 700, fontSize: 14, color: '#FAFAF8' }}>Amahle Khumalo</div>
+              <div style={{ fontSize: 11, color: 'rgba(250,250,248,.5)', marginTop: 1 }}>BA Visual Communication</div>
+              <div style={{ fontSize: 10, color: '#A8FF00', marginTop: 2, fontWeight: 700 }}>3rd Year · 2024</div>
             </div>
           </div>
-          <div style={{ height: 1, background: 'rgba(248,249,255,.12)', margin: '14px 0' }} />
+          <div style={{ height: 1, background: 'rgba(250,250,248,.1)', margin: '14px 0' }} />
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 9 }}>
             {[['Student No.', 'UCT2021-4872'], ['Faculty', 'Humanities'], ['Campus', 'Upper Campus'], ['Valid Until', 'Nov 2025']].map(([label, value]) => (
               <div key={label}>
-                <div style={{ fontSize: 9, letterSpacing: 1, textTransform: 'uppercase', color: 'rgba(248,249,255,.5)', display: 'block', marginBottom: 2 }}>{label}</div>
-                <div style={{ fontSize: 12, color: '#F8F9FF', fontWeight: 500 }}>{value}</div>
+                <div style={{ fontSize: 9, letterSpacing: 1, textTransform: 'uppercase', color: 'rgba(250,250,248,.4)', display: 'block', marginBottom: 2 }}>{label}</div>
+                <div style={{ fontSize: 12, color: '#FAFAF8', fontWeight: 600 }}>{value}</div>
               </div>
             ))}
           </div>
+          {/* Skillza Verified stamp — lime */}
           <div style={{
             position: 'absolute', bottom: -22, right: 16,
             width: 64, height: 64,
-            background: 'linear-gradient(135deg, #0d1a12, #0a1a10)',
-            border: '2.5px solid var(--green)',
+            background: '#A8FF00',
+            border: '2.5px solid #A8FF00',
             borderRadius: '50%',
             display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-            color: 'var(--green)', fontSize: 9, fontWeight: 700,
+            color: '#0F0E0E', fontSize: 9, fontWeight: 800,
             letterSpacing: .5, textTransform: 'uppercase', textAlign: 'center', lineHeight: 1.2,
             transform: 'rotate(15deg)',
-            boxShadow: '0 0 0 4px #0D1B3E, 0 0 20px rgba(52,213,142,.2)',
+            boxShadow: '0 0 0 4px #0F0E0E, 0 0 20px rgba(168,255,0,.35)',
             zIndex: 5,
           }}>
             <span style={{ fontSize: 20, display: 'block', marginBottom: 2 }}>✓</span>
             Skillza<br />Verified
           </div>
         </div>
-        <div style={{ position: 'absolute', top: 12, right: '10%', background: '#0D1B3E', border: '1px solid var(--green)', borderRadius: 10, padding: '9px 15px', display: 'flex', alignItems: 'center', gap: 7, animation: 'flt 4s ease-in-out infinite', whiteSpace: 'nowrap' }}>
-          <div style={{ width: 7, height: 7, background: 'var(--green)', borderRadius: '50%', animation: 'pdot 2s infinite' }} />
-          <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--green)' }}>Skillza Verified</span>
+        <div style={{ position: 'absolute', top: 12, right: '10%', background: '#A8FF00', border: 'none', borderRadius: 100, padding: '9px 16px', display: 'flex', alignItems: 'center', gap: 7, animation: 'flt 4s ease-in-out infinite', whiteSpace: 'nowrap' }}>
+          <div style={{ width: 6, height: 6, background: '#0F0E0E', borderRadius: '50%', animation: 'pdot 2s infinite' }} />
+          <span style={{ fontSize: 12, fontWeight: 800, color: '#0F0E0E', letterSpacing: .5 }}>Skillza Verified</span>
         </div>
       </AnimateIn>
 

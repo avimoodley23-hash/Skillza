@@ -23,11 +23,11 @@ export function FindTalentSection() {
             <br />
             <span style={{ fontFamily: 'Instrument Serif, serif', fontStyle: 'italic', color: 'var(--blue)' }}>Serious quality.</span>
           </h2>
-          <p style={{ fontSize: 'clamp(14px, 1.8vw, 15px)', lineHeight: 1.8, color: 'rgba(13,27,62,.6)', maxWidth: 480 }}>
+          <p style={{ fontSize: 'clamp(14px, 1.8vw, 15px)', lineHeight: 1.8, color: 'var(--cream-dim)', maxWidth: 480 }}>
             Mid-degree students at UCT, AFDA, Red &amp; Yellow, Wits and ICA. Trained full-time in exactly what you need. Lower prices because they're students. The quality isn't.
           </p>
-          <div style={{ marginTop: 28, background: 'var(--card)', border: '1px solid var(--border)', borderLeft: '3px solid var(--blue)', borderRadius: '0 14px 14px 0', padding: 22 }}>
-            <p style={{ fontFamily: 'Instrument Serif, serif', fontStyle: 'italic', fontSize: 16, lineHeight: 1.65, color: 'rgba(13,27,62,.8)', marginBottom: 12 }}>
+          <div style={{ marginTop: 28, background: 'var(--card)', border: '1px solid var(--border)', borderLeft: '3px solid var(--orange)', borderRadius: '0 14px 14px 0', padding: 22 }}>
+            <p style={{ fontFamily: 'Instrument Serif, serif', fontStyle: 'italic', fontSize: 16, lineHeight: 1.65, color: 'var(--cream)', marginBottom: 12 }}>
               "You're getting someone who trained for this, who wants to add your project to their portfolio, and who is going to show up and do their absolute best. That motivation is worth everything."
             </p>
             <p style={{ fontSize: 12, fontWeight: 600, color: 'var(--muted)' }}>Why Skillza Works for Clients</p>
@@ -42,7 +42,7 @@ export function FindTalentSection() {
               </div>
               <div>
                 <h4 style={{ fontSize: 13, fontWeight: 700, marginBottom: 2 }}>{f.title}</h4>
-                <p style={{ fontSize: 12.5, lineHeight: 1.6, color: 'rgba(13,27,62,.55)' }}>{f.body}</p>
+                <p style={{ fontSize: 12.5, lineHeight: 1.6, color: 'var(--cream-dim)' }}>{f.body}</p>
               </div>
             </div>
           ))}

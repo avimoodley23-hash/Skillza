@@ -50,8 +50,8 @@ const FALLBACK_CARDS = [
 const ROTATIONS = ['-4deg', '0deg', '3deg']
 const OFFSETS = [{ top: 0, left: 0 }, { top: 28, left: 90 }, { top: 12, left: 185 }]
 const ZINDEXES = [1, 2, 1]
-const BORDERS = ['rgba(37,99,235,.2)', 'rgba(37,99,235,.15)', 'rgba(5,150,105,.2)']
-const TOPS = ['var(--orange)', 'var(--blue)', 'var(--green)']
+const BORDERS = ['rgba(20,69,255,.2)', 'rgba(255,107,53,.15)', 'rgba(34,197,94,.2)']
+const TOPS = ['var(--orange)', 'var(--sand)', 'var(--green)']
 
 export default function HeroSection({ students = [] }: { students?: StudentFull[] }) {
   // ── Effect 1: count-up state + IntersectionObserver ───────────────────────
@@ -127,32 +127,31 @@ export default function HeroSection({ students = [] }: { students?: StudentFull[
         <div className="retro-grid-v" />
       </div>
 
-      {/* Decorative line */}
-      <div style={{ position: 'absolute', top: 0, left: 0, width: 3, height: '100%', background: 'linear-gradient(to bottom, transparent 0%, var(--orange) 30%, var(--orange) 70%, transparent 100%)', opacity: .22, zIndex: 0 }} />
+      {/* Decorative left line */}
+      <div style={{ position: 'absolute', top: 0, left: 0, width: 3, height: '100%', background: 'linear-gradient(to bottom, transparent 0%, var(--orange) 30%, var(--orange) 70%, transparent 100%)', opacity: .18, zIndex: 0 }} />
 
       {/* Background text */}
-      <div aria-hidden="true" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -54%)', fontFamily: 'Bebas Neue, sans-serif', fontSize: 'clamp(100px, 28vw, 380px)', color: 'rgba(13,27,62,0.04)', whiteSpace: 'nowrap', pointerEvents: 'none', letterSpacing: 6, userSelect: 'none', zIndex: 0 }}>SKILLZA</div>
+      <div aria-hidden="true" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -54%)', fontFamily: 'Bebas Neue, sans-serif', fontSize: 'clamp(100px, 28vw, 380px)', color: 'rgba(17,17,16,0.03)', whiteSpace: 'nowrap', pointerEvents: 'none', letterSpacing: 6, userSelect: 'none', zIndex: 0 }}>SKILLZA</div>
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 1200, margin: '0 auto', width: '100%' }} className="hero-inner">
 
         {/* ── Left column: eyebrow → h1 → sub-copy → talent strip (mobile) → CTAs → stats ── */}
         <div className="hero-left">
 
-          {/* Eyebrow */}
-          <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 2, textTransform: 'uppercase', color: 'var(--orange)', marginBottom: 20, display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span style={{ width: 20, height: 1.5, background: 'var(--orange)', display: 'inline-block', flexShrink: 0 }} />
-            SA's Creative Talent Platform
+          {/* Eyebrow — lime pill badge */}
+          <div style={{ marginBottom: 22, display: 'flex', alignItems: 'center', gap: 10 }}>
+            <span className="badge-lime">SA Creative Talent</span>
           </div>
 
           {/* H1 */}
-          <h1 style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 'clamp(60px, 10vw, 108px)', lineHeight: .9, letterSpacing: 1, marginBottom: 20 }}>
-            <span style={{ background: 'linear-gradient(135deg, #0D1B3E 0%, #1E3A8A 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>Your next favourite</span><br />
-            <span style={{ background: 'linear-gradient(135deg, #0D1B3E 20%, #2563EB 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>creative is probably</span><br />
+          <h1 style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 'clamp(58px, 10vw, 112px)', lineHeight: .88, letterSpacing: 1, marginBottom: 22 }}>
+            <span style={{ color: 'var(--cream)' }}>Your next favourite</span><br />
+            <span style={{ color: 'var(--cream)' }}>creative is probably</span><br />
             <span style={{ fontFamily: 'Instrument Serif, serif', fontStyle: 'italic', color: 'var(--orange)' }}>a student.</span>
           </h1>
 
           {/* Sub-copy */}
-          <p style={{ fontSize: 'clamp(14px, 1.8vw, 16px)', lineHeight: 1.8, color: 'rgba(13,27,62,0.55)', maxWidth: 460, marginBottom: 28 }}>
+          <p style={{ fontSize: 'clamp(14px, 1.8vw, 16px)', lineHeight: 1.75, color: 'rgba(17,17,16,0.55)', maxWidth: 460, marginBottom: 28 }}>
             Book photographers, designers, videographers and more — Skillza verified, fairly priced, and ready for your next project.
           </p>
 
@@ -165,7 +164,7 @@ export default function HeroSection({ students = [] }: { students?: StudentFull[
                 borderRadius: 14,
                 background: '#FFFFFF',
                 border: '1px solid var(--border)',
-                boxShadow: '0 2px 12px rgba(13,27,62,0.07)',
+                boxShadow: '0 2px 12px rgba(17,17,16,0.07)',
                 padding: 14,
                 position: 'relative',
                 overflow: 'hidden',
@@ -174,7 +173,7 @@ export default function HeroSection({ students = [] }: { students?: StudentFull[
                 <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, borderRadius: '14px 14px 0 0', background: TOPS[i] }} />
                 {/* Avatar + name */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                  <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'rgba(37,99,235,.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, color: 'var(--orange)' }}>
+                  <div style={{ width: 40, height: 40, borderRadius: '50%', background: 'rgba(20,69,255,.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, color: 'var(--orange)' }}>
                     {(() => { const Icon = card.icon; return <Icon size={16} strokeWidth={1.5} /> })()}
                   </div>
                   <div style={{ minWidth: 0 }}>
@@ -184,12 +183,12 @@ export default function HeroSection({ students = [] }: { students?: StudentFull[
                 </div>
                 {/* Price */}
                 <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 15, letterSpacing: .5, color: 'var(--cream)', marginBottom: 6 }}>{card.price}</div>
-                {/* Badge */}
+                {/* Badge — lime for verified, gold for rating */}
                 <span style={{
-                  fontSize: 9, fontWeight: 700, padding: '3px 7px', borderRadius: 100, letterSpacing: .3, display: 'inline-block',
-                  background: card.badgeType === 'v' ? 'rgba(52,213,142,.12)' : 'rgba(212,168,83,.1)',
-                  color: card.badgeType === 'v' ? 'var(--green)' : 'var(--gold)',
-                  border: `1px solid ${card.badgeType === 'v' ? 'rgba(52,213,142,.25)' : 'rgba(212,168,83,.2)'}`,
+                  fontSize: 9, fontWeight: 800, padding: '3px 8px', borderRadius: 100, letterSpacing: .5, display: 'inline-block',
+                  background: card.badgeType === 'v' ? 'var(--lime)' : 'rgba(245,158,11,.12)',
+                  color: card.badgeType === 'v' ? '#111110' : 'var(--gold)',
+                  border: card.badgeType === 'v' ? 'none' : '1px solid rgba(245,158,11,.25)',
                 }}>{card.badge}</span>
               </div>
             ))}
@@ -202,29 +201,29 @@ export default function HeroSection({ students = [] }: { students?: StudentFull[
           </div>
 
           {/* Proof stats — Effect 1: count-up on scroll into view */}
-          <div ref={statsRef} style={{ display: 'flex', gap: 'clamp(20px, 5vw, 48px)', paddingTop: 24, borderTop: '1px solid rgba(13,27,62,0.1)' }}>
-            {/* Stat 1: Skills available — counts 0 → 9 */}
+          <div ref={statsRef} style={{ display: 'flex', gap: 'clamp(20px, 5vw, 48px)', paddingTop: 22, borderTop: '1px solid rgba(17,17,16,0.1)' }}>
+            {/* Stat 1 */}
             <div>
-              <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 'clamp(28px, 4.5vw, 38px)', letterSpacing: 1, lineHeight: 1, color: 'var(--cream)' }}>
+              <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 'clamp(30px, 4.5vw, 42px)', letterSpacing: 1, lineHeight: 1, color: 'var(--cream)' }}>
                 {c1}<span style={{ color: 'var(--orange)' }}>+</span>
               </div>
-              <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 3, letterSpacing: .3 }}>Skills available</div>
+              <div style={{ fontSize: 10, fontWeight: 600, color: 'var(--muted)', marginTop: 3, letterSpacing: .4, textTransform: 'uppercase' }}>Skills</div>
             </div>
 
-            {/* Stat 2: No fees — static "R0" */}
+            {/* Stat 2 */}
             <div>
-              <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 'clamp(28px, 4.5vw, 38px)', letterSpacing: 1, lineHeight: 1, color: 'var(--cream)' }}>
+              <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 'clamp(30px, 4.5vw, 42px)', letterSpacing: 1, lineHeight: 1, color: 'var(--cream)' }}>
                 R<span style={{ color: 'var(--orange)' }}>0</span>
               </div>
-              <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 3, letterSpacing: .3 }}>No fees to book</div>
+              <div style={{ fontSize: 10, fontWeight: 600, color: 'var(--muted)', marginTop: 3, letterSpacing: .4, textTransform: 'uppercase' }}>No fees</div>
             </div>
 
-            {/* Stat 3: Skillza Verified — counts 0 → 100 */}
+            {/* Stat 3 */}
             <div>
-              <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 'clamp(28px, 4.5vw, 38px)', letterSpacing: 1, lineHeight: 1, color: 'var(--cream)' }}>
+              <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 'clamp(30px, 4.5vw, 42px)', letterSpacing: 1, lineHeight: 1, color: 'var(--cream)' }}>
                 {c3}<span style={{ color: 'var(--orange)' }}>%</span>
               </div>
-              <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 3, letterSpacing: .3 }}>Skillza Verified</div>
+              <div style={{ fontSize: 10, fontWeight: 600, color: 'var(--muted)', marginTop: 3, letterSpacing: .4, textTransform: 'uppercase' }}>Verified</div>
             </div>
           </div>
         </div>
@@ -244,11 +243,11 @@ export default function HeroSection({ students = [] }: { students?: StudentFull[
                 borderRadius: 16,
                 padding: '16px 18px',
                 width: 220,
-                boxShadow: '0 16px 48px rgba(13,27,62,0.12)',
+                boxShadow: '0 16px 48px rgba(17,17,16,0.1)',
               }}>
                 <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, borderRadius: '16px 16px 0 0', background: TOPS[i] }} />
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
-                  <div style={{ width: 36, height: 36, borderRadius: 8, background: 'rgba(37,99,235,.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, color: 'var(--orange)' }}>
+                  <div style={{ width: 36, height: 36, borderRadius: 8, background: 'rgba(20,69,255,.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, color: 'var(--orange)' }}>
                     {(() => { const Icon = card.icon; return <Icon size={18} strokeWidth={1.5} /> })()}
                   </div>
                   <div>
@@ -257,13 +256,13 @@ export default function HeroSection({ students = [] }: { students?: StudentFull[
                   </div>
                 </div>
                 <div style={{ fontSize: 11, color: 'var(--muted-2)', marginBottom: 8 }}>{card.skill}</div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 8, borderTop: '1px solid rgba(13,27,62,0.08)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 8, borderTop: '1px solid rgba(17,17,16,0.08)' }}>
                   <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 17, letterSpacing: .5, color: 'var(--cream)' }}>{card.price}</div>
                   <span style={{
-                    fontSize: 9, fontWeight: 700, padding: '3px 7px', borderRadius: 100, letterSpacing: .3,
-                    background: card.badgeType === 'v' ? 'rgba(52,213,142,.12)' : 'rgba(212,168,83,.1)',
-                    color: card.badgeType === 'v' ? 'var(--green)' : 'var(--gold)',
-                    border: `1px solid ${card.badgeType === 'v' ? 'rgba(52,213,142,.25)' : 'rgba(212,168,83,.2)'}`,
+                    fontSize: 9, fontWeight: 800, padding: '3px 8px', borderRadius: 100, letterSpacing: .5,
+                    background: card.badgeType === 'v' ? 'var(--lime)' : 'rgba(245,158,11,.12)',
+                    color: card.badgeType === 'v' ? '#111110' : 'var(--gold)',
+                    border: card.badgeType === 'v' ? 'none' : '1px solid rgba(245,158,11,.25)',
                   }}>{card.badge}</span>
                 </div>
               </div>
@@ -294,8 +293,8 @@ export default function HeroSection({ students = [] }: { students?: StudentFull[
         .retro-grid-h {
           background-image: repeating-linear-gradient(
             to bottom,
-            rgba(37,99,235,0.08) 0px,
-            rgba(37,99,235,0.08) 1px,
+            rgba(20,69,255,0.07) 0px,
+            rgba(20,69,255,0.07) 1px,
             transparent 1px,
             transparent 40px
           );
@@ -303,8 +302,8 @@ export default function HeroSection({ students = [] }: { students?: StudentFull[
         .retro-grid-v {
           background-image: repeating-linear-gradient(
             to right,
-            rgba(37,99,235,0.08) 0px,
-            rgba(37,99,235,0.08) 1px,
+            rgba(20,69,255,0.07) 0px,
+            rgba(20,69,255,0.07) 1px,
             transparent 1px,
             transparent 40px
           );

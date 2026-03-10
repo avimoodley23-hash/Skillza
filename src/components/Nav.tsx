@@ -26,7 +26,7 @@ export default function Nav() {
         paddingTop: 'env(safe-area-inset-top, 0px)',
         height: 'calc(60px + env(safe-area-inset-top, 0px))',
         background: 'rgba(16,15,13,.96)',
-        borderBottom: `1px solid ${scrolled ? 'rgba(245,239,227,.1)' : 'transparent'}`,
+        borderBottom: `1px solid ${scrolled ? 'rgba(17,17,16,.1)' : 'transparent'}`,
         backdropFilter: 'blur(24px)',
         WebkitBackdropFilter: 'blur(24px)',
         transition: 'border-color .3s',

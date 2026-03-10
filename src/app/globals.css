@@ -5,44 +5,49 @@
 @tailwind utilities;
 
 :root {
-  /* Backgrounds */
-  --black:   #F8F9FF;        /* page background — very slightly blue-tinted white */
-  --black-2: #EEF2FF;        /* alternate section bg — pale blue */
+  /* Backgrounds — clean white, warm tint */
+  --black:   #FAFAF8;        /* page bg — warm ivory white */
+  --black-2: #F2F0EB;        /* alternate section — warm parchment */
   --black-3: #FFFFFF;        /* card / surface white */
+  --dark:    #0F0E0E;        /* near-black for dark panel sections */
 
   /* Text */
-  --cream:   #0D1B3E;        /* primary text — deep navy */
-  --cream-dim: rgba(13,27,62,.55);
-  --cream-faint: rgba(13,27,62,.07);
+  --cream:        #111110;   /* primary text — warm near-black */
+  --cream-dim:    rgba(17,17,16,.55);
+  --cream-faint:  rgba(17,17,16,.07);
 
-  /* Blue accent (replaces orange) */
-  --orange:   #2563EB;       /* primary accent — electric cobalt (kept as --orange so all var(--orange) refs auto-update) */
-  --orange-2: #1D4ED8;       /* hover / deeper blue */
-  --o-dim:    rgba(37,99,235,.10);
-  --o-bright: rgba(37,99,235,.22);
+  /* Rich cobalt blue — primary brand (all var(--orange) refs auto-update) */
+  --orange:   #1445FF;       /* rich cobalt — bold editorial blue */
+  --orange-2: #0035D4;       /* hover — deeper cobalt */
+  --o-dim:    rgba(20,69,255,.10);
+  --o-bright: rgba(20,69,255,.20);
 
-  /* Keep sand for subtle accents */
-  --sand:     #C8956C;
-  --sand-dim: rgba(200,149,108,.10);
+  /* Neon lime — badge / highlight accent */
+  --lime:     #A8FF00;       /* neon lime — "VERIFIED" / badge pop */
+  --lime-dark: #111110;      /* text on lime badges */
+
+  /* Warm sand (secondary warmth) */
+  --sand:     #FF6B35;       /* warm coral-orange */
+  --sand-dim: rgba(255,107,53,.10);
 
   /* Status */
-  --green:    #059669;
-  --g-dim:    rgba(5,150,105,.10);
-  --blue:     #2563EB;
-  --b-dim:    rgba(37,99,235,.10);
-  --gold:     #D97706;
+  --green:    #22C55E;
+  --g-dim:    rgba(34,197,94,.10);
+  --blue:     #1445FF;
+  --b-dim:    rgba(20,69,255,.10);
+  --gold:     #F59E0B;
 
   /* Typography */
-  --muted:    #64748B;
-  --muted-2:  #94A3B8;
+  --muted:    #6B6B6A;
+  --muted-2:  #9E9E9C;
 
   /* Borders */
-  --border:   rgba(13,27,62,.08);
-  --border-2: rgba(13,27,62,.14);
+  --border:   rgba(17,17,16,.08);
+  --border-2: rgba(17,17,16,.15);
 
   /* Cards */
-  --card:     rgba(37,99,235,.03);
-  --card-2:   rgba(37,99,235,.06);
+  --card:     rgba(20,69,255,.03);
+  --card-2:   rgba(20,69,255,.06);
 
   /* Safe areas */
   --safe-b: env(safe-area-inset-bottom, 0px);
@@ -87,7 +92,7 @@ body::after {
   transform: translateX(-50%);
   width: 900px;
   height: 500px;
-  background: radial-gradient(ellipse at center, rgba(37,99,235,.04) 0%, transparent 65%);
+  background: radial-gradient(ellipse at center, rgba(20,69,255,.04) 0%, transparent 65%);
   pointer-events: none;
   z-index: 0;
 }
@@ -112,8 +117,8 @@ body::after {
 /* Scrollbar */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--black); }
-::-webkit-scrollbar-thumb { background: rgba(13,27,62,.12); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(13,27,62,.22); }
+::-webkit-scrollbar-thumb { background: rgba(28,27,26,.12); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(28,27,26,.22); }
 
 /* Typography utilities */
 .font-bebas { font-family: 'Bebas Neue', sans-serif; }
@@ -149,22 +154,23 @@ body::after {
   padding: 14px 28px;
   border-radius: 8px;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
+  letter-spacing: .3px;
   border: none;
   cursor: pointer;
-  transition: all .25s;
+  transition: all .22s;
   white-space: nowrap;
-  box-shadow: 0 4px 18px rgba(37,99,235,.28);
+  box-shadow: 0 4px 20px rgba(20,69,255,.32);
   -webkit-tap-highlight-color: transparent;
   animation: btn-pulse 2.8s ease-out infinite;
 }
-.btn-primary:hover { background: var(--orange-2); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(37,99,235,.42); }
+.btn-primary:hover { background: var(--orange-2); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(20,69,255,.45); }
 .btn-primary:active { transform: translateY(0); }
 
 @keyframes btn-pulse {
-  0%   { box-shadow: 0 0 0 0 rgba(37,99,235,.4); }
-  60%  { box-shadow: 0 0 0 10px rgba(37,99,235,0); }
-  100% { box-shadow: 0 0 0 0 rgba(37,99,235,0); }
+  0%   { box-shadow: 0 0 0 0 rgba(20,69,255,.4); }
+  60%  { box-shadow: 0 0 0 10px rgba(20,69,255,0); }
+  100% { box-shadow: 0 0 0 0 rgba(20,69,255,0); }
 }
 @media (prefers-reduced-motion: reduce) {
   .btn-primary { animation: none; }
@@ -176,17 +182,33 @@ body::after {
   gap: 8px;
   background: transparent;
   color: var(--cream);
-  border: 1.5px solid rgba(13,27,62,.2);
+  border: 1.5px solid rgba(17,17,16,.22);
   padding: 13px 28px;
   border-radius: 8px;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
+  letter-spacing: .3px;
   cursor: pointer;
   transition: all .2s;
   white-space: nowrap;
   -webkit-tap-highlight-color: transparent;
 }
-.btn-outline:hover { border-color: rgba(13,27,62,.45); background: rgba(13,27,62,.04); }
+.btn-outline:hover { border-color: rgba(17,17,16,.5); background: rgba(17,17,16,.04); }
+
+/* Lime badge utility */
+.badge-lime {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--lime);
+  color: var(--lime-dark);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 100px;
+}
 
 /* Tag pill */
 .tag-pill {
@@ -201,8 +223,8 @@ body::after {
   border-radius: 100px;
   margin-bottom: 20px;
 }
-.tag-orange { background: var(--o-dim); color: var(--orange); border: 1px solid rgba(37,99,235,.2); }
-.tag-blue   { background: var(--b-dim); color: var(--blue);   border: 1px solid rgba(37,99,235,.2); }
+.tag-orange { background: var(--o-dim); color: var(--orange); border: 1px solid rgba(20,69,255,.2); }
+.tag-blue   { background: var(--b-dim); color: var(--blue);   border: 1px solid rgba(20,69,255,.2); }
 
 /* ── Scroll-entrance animations ───────────────────────────────── */
 @keyframes fadeInUp {
@@ -242,7 +264,7 @@ body::after {
   top: -120px; left: 50%;
   transform: translateX(-50%);
   width: 600px; height: 400px;
-  background: radial-gradient(ellipse at center, rgba(37,99,235,.07) 0%, transparent 70%);
+  background: radial-gradient(ellipse at center, rgba(20,69,255,.06) 0%, transparent 70%);
   pointer-events: none;
   z-index: 0;
 }
@@ -252,7 +274,7 @@ body::after {
   top: -80px; left: 50%;
   transform: translateX(-50%);
   width: 500px; height: 300px;
-  background: radial-gradient(ellipse at center, rgba(5,150,105,.06) 0%, transparent 70%);
+  background: radial-gradient(ellipse at center, rgba(34,197,94,.06) 0%, transparent 70%);
   pointer-events: none;
   z-index: 0;
 }
@@ -262,7 +284,7 @@ body::after {
   top: -80px; left: 50%;
   transform: translateX(-50%);
   width: 500px; height: 300px;
-  background: radial-gradient(ellipse at center, rgba(37,99,235,.07) 0%, transparent 70%);
+  background: radial-gradient(ellipse at center, rgba(20,69,255,.06) 0%, transparent 70%);
   pointer-events: none;
   z-index: 0;
 }

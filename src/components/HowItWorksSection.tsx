@@ -25,10 +25,10 @@ export function HowItWorksSection() {
 
       <AnimateIn delay={1} style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 2, borderRadius: 16, overflow: 'hidden', background: 'var(--border)' }} className="steps-grid">
         {steps.map(step => (
-          <div key={step.num} style={{ background: '#EEF2FF', padding: 'clamp(28px, 4vw, 40px) clamp(20px, 3vw, 32px)', transition: 'background .3s' }}
-            onMouseEnter={e => (e.currentTarget as HTMLElement).style.background = '#E0E9FF'}
-            onMouseLeave={e => (e.currentTarget as HTMLElement).style.background = '#EEF2FF'}>
-            <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 48, color: 'rgba(13,27,62,.07)', lineHeight: 1, marginBottom: 14 }}>{step.num}</div>
+          <div key={step.num} style={{ background: 'var(--black-2)', padding: 'clamp(28px, 4vw, 40px) clamp(20px, 3vw, 32px)', transition: 'background .3s' }}
+            onMouseEnter={e => (e.currentTarget as HTMLElement).style.background = '#E8E5DC'}
+            onMouseLeave={e => (e.currentTarget as HTMLElement).style.background = 'var(--black-2)'}>
+            <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 48, color: 'rgba(17,17,16,.06)', lineHeight: 1, marginBottom: 14 }}>{step.num}</div>
             <h3 style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 20, letterSpacing: .5, marginBottom: 8 }}>{step.title}</h3>
             <p style={{ fontSize: 13, color: 'var(--muted)', lineHeight: 1.7 }}>{step.body}</p>
             {step.badge && (
@@ -41,10 +41,10 @@ export function HowItWorksSection() {
         ))}
       </AnimateIn>
 
-      <AnimateIn delay={2} style={{ marginTop: 28, background: 'rgba(37,99,235,.04)', border: '1px solid rgba(37,99,235,.12)', borderLeft: '3px solid var(--orange)', borderRadius: '0 10px 10px 0', padding: '18px 20px' }}>
+      <AnimateIn delay={2} style={{ marginTop: 28, background: 'rgba(20,69,255,.04)', border: '1px solid rgba(20,69,255,.12)', borderLeft: '3px solid var(--orange)', borderRadius: '0 10px 10px 0', padding: '18px 20px' }}>
         <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: 'var(--orange)', marginBottom: 6 }}>Phase 1 — How it works right now</div>
-        <p style={{ fontSize: 13.5, color: 'rgba(13,27,62,.55)', lineHeight: 1.7 }}>
-          Skillza is launching lean. <strong style={{ color: 'rgba(13,27,62,.8)' }}>No login needed to book.</strong> All communication happens via WhatsApp. Deposits go directly between parties via EFT or SnapScan. <strong style={{ color: 'rgba(13,27,62,.8)' }}>Secure in-platform payments and student dashboards are coming in Phase 2.</strong>
+        <p style={{ fontSize: 13.5, color: 'rgba(17,17,16,.55)', lineHeight: 1.7 }}>
+          Skillza is launching lean. <strong style={{ color: 'rgba(17,17,16,.85)' }}>No login needed to book.</strong> All communication happens via WhatsApp. Deposits go directly between parties via EFT or SnapScan. <strong style={{ color: 'rgba(17,17,16,.85)' }}>Secure in-platform payments and student dashboards are coming in Phase 2.</strong>
         </p>
       </AnimateIn>
 

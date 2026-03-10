@@ -8,13 +8,14 @@ import type React from 'react'
 
 export function JoinSection() {
   return (
-    <section id="for-students" className="noise-overlay" style={{ padding: 'clamp(48px, 8vw, 80px) 24px', background: 'linear-gradient(160deg, #1E3A8A 0%, #2563EB 60%, #3B82F6 100%)', borderTop: '1px solid rgba(255,255,255,.15)', borderBottom: '1px solid rgba(255,255,255,.15)', position: 'relative', overflow: 'hidden' }}>
-      <div style={{ position: 'absolute', top: -100, right: -100, width: 500, height: 500, background: 'radial-gradient(ellipse at center, rgba(255,255,255,.08) 0%, transparent 65%)', pointerEvents: 'none' }} />
+    <section id="for-students" className="noise-overlay" style={{ padding: 'clamp(48px, 8vw, 80px) 24px', background: 'linear-gradient(160deg, #0B0B0B 0%, #0A1FBB 55%, #1445FF 100%)', borderTop: '1px solid rgba(255,255,255,.08)', borderBottom: '1px solid rgba(255,255,255,.08)', position: 'relative', overflow: 'hidden' }}>
+      {/* Glow orbs */}
+      <div style={{ position: 'absolute', top: -80, right: -80, width: 400, height: 400, background: 'radial-gradient(ellipse at center, rgba(168,255,0,.08) 0%, transparent 65%)', pointerEvents: 'none' }} />
+      <div style={{ position: 'absolute', bottom: -100, left: -60, width: 350, height: 350, background: 'radial-gradient(ellipse at center, rgba(20,69,255,.2) 0%, transparent 65%)', pointerEvents: 'none' }} />
 
       <AnimateIn>
-        <div style={{ color: 'rgba(255,255,255,.85)', marginBottom: 14, fontSize: 11, fontWeight: 600, letterSpacing: 2.5, textTransform: 'uppercase', display: 'flex', alignItems: 'center', gap: 10 }}>
-          <span style={{ width: 18, height: 1.5, background: 'rgba(255,255,255,.85)', display: 'inline-block' }} />
-          For Students
+        <div style={{ marginBottom: 16 }}>
+          <span className="badge-lime">For Students</span>
         </div>
         <h2 style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 'clamp(34px, 6vw, 60px)', lineHeight: .93, letterSpacing: 1, marginBottom: 48, color: '#FFFFFF' }}>
           <SplitText text="Turn your skills" style={{ display: 'block' }} />
@@ -52,9 +53,9 @@ export function JoinSection() {
         </div>
         <div>
           <div style={{ position: 'relative', marginBottom: 16 }}>
-            <Link href="/join" className="btn-primary" style={{ width: '100%', justifyContent: 'center', fontSize: 16, padding: '18px 28px', display: 'flex', position: 'relative', overflow: 'hidden', background: '#FFFFFF', color: '#2563EB', boxShadow: '0 4px 18px rgba(0,0,0,.15)' }}>
+            <Link href="/join" className="btn-primary" style={{ width: '100%', justifyContent: 'center', fontSize: 16, padding: '18px 28px', display: 'flex', position: 'relative', overflow: 'hidden', background: '#A8FF00', color: '#0F0E0E', boxShadow: '0 4px 24px rgba(168,255,0,.3)', animation: 'none' }}>
               Join the Waitlist →
-              <BorderBeam colorFrom="rgba(37,99,235,0)" colorTo="rgba(59,130,246,0.9)" duration={2.4} />
+              <BorderBeam colorFrom="rgba(168,255,0,0)" colorTo="rgba(168,255,0,0.8)" duration={2.4} />
             </Link>
           </div>
           <p style={{ fontSize: 12, color: 'rgba(255,255,255,.7)', textAlign: 'center', lineHeight: 1.6 }}>

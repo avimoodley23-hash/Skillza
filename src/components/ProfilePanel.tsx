@@ -140,7 +140,7 @@ export function ProfilePanel({ student, onClose, onBook }: Props) {
           {/* About */}
           <div style={{ padding: '0 22px 22px', borderBottom: '1px solid var(--border)' }}>
             <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: 'var(--muted)', marginBottom: 13 }}>About</div>
-            <p style={{ fontSize: 14, lineHeight: 1.75, color: 'rgba(245,239,227,.65)' }}>{student.bio}</p>
+            <p style={{ fontSize: 14, lineHeight: 1.75, color: 'rgba(250,250,248,.65)' }}>{student.bio}</p>
             {student.availability && student.availability.length > 0 && (
               <div style={{ marginTop: 14 }}>
                 <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: 'var(--muted)', marginBottom: 8 }}>Availability</div>
@@ -278,7 +278,7 @@ export function ProfilePanel({ student, onClose, onBook }: Props) {
                       <span style={{ fontWeight: 600, fontSize: 13 }}>{r.reviewer_name}</span>
                       <span style={{ color: 'var(--gold)', fontSize: 12 }}>{'★'.repeat(r.stars)}{'☆'.repeat(5 - r.stars)}</span>
                     </div>
-                    <div style={{ fontSize: 13, color: 'rgba(245,239,227,.6)', lineHeight: 1.65 }}>{r.text}</div>
+                    <div style={{ fontSize: 13, color: 'rgba(250,250,248,.6)', lineHeight: 1.65 }}>{r.text}</div>
                     <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 5 }}>{r.date}</div>
                   </div>
                 ))}

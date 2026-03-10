@@ -146,7 +146,7 @@ export function BookingModal({ student, onClose }: Props) {
 
                 <div style={{ background: 'var(--o-dim)', border: '1px solid rgba(255,74,28,.22)', borderRadius: 10, padding: '13px 15px', marginBottom: 18 }}>
                   <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', color: 'var(--orange)', marginBottom: 5 }}>30% Deposit Required</div>
-                  <p style={{ fontSize: 13, color: 'rgba(245,239,227,.7)', lineHeight: 1.6 }}>A <strong style={{ color: 'var(--cream)' }}>30% deposit</strong> is required before work begins. The remaining 70% is paid directly to the student on completion.</p>
+                  <p style={{ fontSize: 13, color: 'rgba(250,250,248,.7)', lineHeight: 1.6 }}>A <strong style={{ color: 'var(--cream)' }}>30% deposit</strong> is required before work begins. The remaining 70% is paid directly to the student on completion.</p>
                 </div>
 
                 {/* Form */}
@@ -156,31 +156,31 @@ export function BookingModal({ student, onClose }: Props) {
                   { label: 'Email Address', value: email, set: setEmail, placeholder: 'you@example.com', type: 'email' },
                 ].map(f => (
                   <div key={f.label} style={{ marginBottom: 13 }}>
-                    <label style={{ display: 'block', fontSize: 10, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: 'rgba(245,239,227,.38)', marginBottom: 7 }}>{f.label}</label>
+                    <label style={{ display: 'block', fontSize: 10, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: 'rgba(250,250,248,.38)', marginBottom: 7 }}>{f.label}</label>
                     <input
                       type={f.type}
                       value={f.value}
                       onChange={e => f.set(e.target.value)}
                       placeholder={f.placeholder}
-                      style={{ width: '100%', padding: '13px 14px', background: 'rgba(245,239,227,.05)', border: '1px solid rgba(245,239,227,.09)', borderRadius: 8, fontSize: 16, color: 'var(--cream)', outline: 'none', boxSizing: 'border-box' }}
+                      style={{ width: '100%', padding: '13px 14px', background: 'rgba(250,250,248,.05)', border: '1px solid rgba(250,250,248,.09)', borderRadius: 8, fontSize: 16, color: 'var(--cream)', outline: 'none', boxSizing: 'border-box' }}
                     />
                   </div>
                 ))}
 
                 <div style={{ marginBottom: 13 }}>
-                  <label style={{ display: 'block', fontSize: 10, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: 'rgba(245,239,227,.38)', marginBottom: 7 }}>What do you need? (optional)</label>
+                  <label style={{ display: 'block', fontSize: 10, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: 'rgba(250,250,248,.38)', marginBottom: 7 }}>What do you need? (optional)</label>
                   <textarea
                     value={description}
                     onChange={e => setDescription(e.target.value)}
                     placeholder="Brief description of your project..."
                     rows={3}
-                    style={{ width: '100%', padding: '13px 14px', background: 'rgba(245,239,227,.05)', border: '1px solid rgba(245,239,227,.09)', borderRadius: 8, fontSize: 14, color: 'var(--cream)', outline: 'none', resize: 'none', boxSizing: 'border-box', fontFamily: 'inherit' }}
+                    style={{ width: '100%', padding: '13px 14px', background: 'rgba(250,250,248,.05)', border: '1px solid rgba(250,250,248,.09)', borderRadius: 8, fontSize: 14, color: 'var(--cream)', outline: 'none', resize: 'none', boxSizing: 'border-box', fontFamily: 'inherit' }}
                   />
                 </div>
 
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: 9, background: 'rgba(37,211,102,.07)', border: '1px solid rgba(37,211,102,.18)', borderRadius: 10, padding: 13, marginBottom: 18 }}>
                   <span style={{ fontSize: 18, flexShrink: 0, marginTop: 1 }}>💬</span>
-                  <p style={{ fontSize: 12, color: 'rgba(245,239,227,.65)', lineHeight: 1.6 }}>After submitting, <strong style={{ color: 'var(--green)' }}>you'll be contacted on WhatsApp</strong> within 24 hours to confirm scope and arrange the deposit.</p>
+                  <p style={{ fontSize: 12, color: 'rgba(250,250,248,.65)', lineHeight: 1.6 }}>After submitting, <strong style={{ color: 'var(--green)' }}>you'll be contacted on WhatsApp</strong> within 24 hours to confirm scope and arrange the deposit.</p>
                 </div>
 
                 <button
@@ -195,7 +195,7 @@ export function BookingModal({ student, onClose }: Props) {
                 >
                   {loading ? 'Sending...' : `Request Booking →`}
                 </button>
-                <p style={{ textAlign: 'center', fontSize: 11, color: 'rgba(245,239,227,.3)', marginTop: 11, lineHeight: 1.6 }}>No payment now. You'll confirm everything on WhatsApp first.</p>
+                <p style={{ textAlign: 'center', fontSize: 11, color: 'rgba(250,250,248,.3)', marginTop: 11, lineHeight: 1.6 }}>No payment now. You'll confirm everything on WhatsApp first.</p>
               </>
             ) : (
               <div style={{ textAlign: 'center', paddingBottom: 'calc(28px + var(--safe-b))' }}>
@@ -203,7 +203,7 @@ export function BookingModal({ student, onClose }: Props) {
                 <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: 'var(--muted)', marginBottom: 6 }}>Your Reference</div>
                 <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 36, letterSpacing: 3, color: 'var(--orange)', marginBottom: 10 }}>{ref}</div>
                 <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 24, letterSpacing: .5, marginBottom: 8 }}>Request Sent!</div>
-                <p style={{ fontSize: 14, color: 'rgba(245,239,227,.6)', lineHeight: 1.7, marginBottom: 24, textAlign: 'left' }}>
+                <p style={{ fontSize: 14, color: 'rgba(250,250,248,.6)', lineHeight: 1.7, marginBottom: 24, textAlign: 'left' }}>
                   {student.name.split(' ')[0]} will reach out on WhatsApp within 24 hours to confirm scope and arrange the 30% deposit. Save your reference number above.
                 </p>
                 <button onClick={handleClose} style={{ width: '100%', background: 'var(--orange)', color: '#fff', border: 'none', borderRadius: 10, padding: 16, fontSize: 15, fontWeight: 700, cursor: 'pointer' }}>

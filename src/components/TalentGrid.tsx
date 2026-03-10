@@ -160,7 +160,7 @@ export default function TalentGrid({ students }: { students: Student[] }) {
         {/* Filter bar */}
         <div style={{
           position: 'sticky', top: 'calc(60px + env(safe-area-inset-top, 0px))', zIndex: 200,
-          background: 'rgba(248,249,255,.95)', backdropFilter: 'blur(20px)',
+          background: 'rgba(250,250,248,.97)', backdropFilter: 'blur(20px)',
           borderBottom: '1px solid var(--border)',
           margin: '0 -24px', padding: '10px 24px',
           overflowX: 'auto', display: 'flex', gap: 6,
@@ -181,7 +181,7 @@ export default function TalentGrid({ students }: { students: Student[] }) {
                   color: activeFilter === cat.id ? '#fff' : 'var(--muted-2)',
                   cursor: 'pointer', whiteSpace: 'nowrap',
                   transition: 'all .18s', minHeight: 36, flexShrink: 0,
-                  boxShadow: activeFilter === cat.id ? '0 2px 12px rgba(37,99,235,.25)' : 'none',
+                  boxShadow: activeFilter === cat.id ? '0 2px 12px rgba(20,69,255,.25)' : 'none',
                   display: 'inline-flex', alignItems: 'center', gap: 5,
                 }}
               >
@@ -257,7 +257,7 @@ export default function TalentGrid({ students }: { students: Student[] }) {
             width: 110px;
             flex-shrink: 0;
             position: relative;
-            background: linear-gradient(135deg, #dde6f5, #c7d6f0);
+            background: linear-gradient(135deg, #E8EDFF, #d4deff);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -342,8 +342,8 @@ function StudentCard({ student, index, isInitialLoad, onOpen, onBook }: {
   const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
     const el = e.currentTarget as HTMLElement
     el.style.background = '#FFFFFF'
-    el.style.borderColor = 'rgba(37,99,235,.25)'
-    el.style.boxShadow = '0 8px 32px rgba(13,27,62,0.13)'
+    el.style.borderColor = 'rgba(20,69,255,.3)'
+    el.style.boxShadow = '0 8px 32px rgba(20,69,255,0.14)'
     scramble()
   }
 
@@ -352,7 +352,7 @@ function StudentCard({ student, index, isInitialLoad, onOpen, onBook }: {
     el.style.background = '#FFFFFF'
     el.style.borderColor = 'var(--border)'
     el.style.transform = 'translateY(0)'
-    el.style.boxShadow = '0 2px 20px rgba(13,27,62,0.07)'
+    el.style.boxShadow = '0 2px 20px rgba(17,17,16,0.07)'
     resetScramble()
   }
 
@@ -374,7 +374,7 @@ function StudentCard({ student, index, isInitialLoad, onOpen, onBook }: {
         transition: 'all .3s',
         cursor: 'pointer',
         willChange: 'transform',
-        boxShadow: '0 2px 20px rgba(13,27,62,0.07)',
+        boxShadow: '0 2px 20px rgba(17,17,16,0.07)',
         ...(isInitialLoad
           ? {
               animation: `fup .4s ease both`,
@@ -435,20 +435,22 @@ function StudentCard({ student, index, isInitialLoad, onOpen, onBook }: {
           <div>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 6, marginBottom: 6 }}>
               <span style={{
-                fontSize: 10, fontWeight: 700, color: 'var(--muted)',
-                background: 'rgba(13,27,62,.05)', padding: '3px 8px',
-                borderRadius: 100, border: '1px solid rgba(13,27,62,.1)',
+                fontSize: 10, fontWeight: 600, color: 'var(--muted)',
+                background: 'rgba(17,17,16,.04)', padding: '3px 8px',
+                borderRadius: 100, border: '1px solid rgba(17,17,16,.1)',
                 whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
               }}>
                 {student.university} · {student.year}
               </span>
+              {/* Lime verified badge */}
               <span style={{
-                fontSize: 10, fontWeight: 700, color: 'var(--green)',
-                background: 'rgba(52,213,142,.1)', border: '1px solid rgba(52,213,142,.25)',
+                fontSize: 9, fontWeight: 800, color: '#111110',
+                background: '#A8FF00',
                 padding: '3px 8px', borderRadius: 100, whiteSpace: 'nowrap',
-                display: 'inline-flex', alignItems: 'center', gap: 4,
+                display: 'inline-flex', alignItems: 'center', gap: 3,
+                letterSpacing: .4,
               }}>
-                <CircleCheck size={10} strokeWidth={1.5} />
+                <CircleCheck size={9} strokeWidth={2.5} />
                 Verified
               </span>
             </div>
@@ -465,10 +467,10 @@ function StudentCard({ student, index, isInitialLoad, onOpen, onBook }: {
             {/* Skill */}
             <div style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 8 }}>{student.skill}</div>
 
-            {/* Bio — visible on mobile too now */}
+            {/* Bio */}
             {student.bio && (
               <div className="student-card-bio" style={{
-                fontSize: 11, color: 'rgba(13,27,62,.5)', lineHeight: 1.5,
+                fontSize: 11, color: 'rgba(17,17,16,.5)', lineHeight: 1.5,
                 marginBottom: 8,
                 display: '-webkit-box', WebkitLineClamp: 2,
                 WebkitBoxOrient: 'vertical', overflow: 'hidden',
@@ -483,8 +485,8 @@ function StudentCard({ student, index, isInitialLoad, onOpen, onBook }: {
                 {student.tags.slice(0, 3).map(tag => (
                   <span key={tag} style={{
                     fontSize: 10, padding: '3px 7px', borderRadius: 100,
-                    background: 'rgba(13,27,62,.04)', color: 'rgba(13,27,62,.5)',
-                    border: '1px solid rgba(13,27,62,.08)',
+                    background: 'rgba(17,17,16,.04)', color: 'rgba(17,17,16,.5)',
+                    border: '1px solid rgba(17,17,16,.08)',
                   }}>
                     {tag}
                   </span>
@@ -513,7 +515,7 @@ function StudentCard({ student, index, isInitialLoad, onOpen, onBook }: {
                 fontSize: 12, fontWeight: 700,
                 cursor: 'pointer', minHeight: 38, whiteSpace: 'nowrap',
                 transition: 'all .2s', flexShrink: 0,
-                boxShadow: '0 2px 12px rgba(37,99,235,.35)',
+                boxShadow: '0 2px 12px rgba(20,69,255,.35)',
               }}
               onMouseEnter={e => { (e.currentTarget as HTMLElement).style.opacity = '0.85' }}
               onMouseLeave={e => { (e.currentTarget as HTMLElement).style.opacity = '1' }}
