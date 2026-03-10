@@ -45,6 +45,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en-ZA">
+      <head>
+        <meta name="color-scheme" content="dark" />
+      </head>
       <body>
         <ScrollBar />
         <CustomCursor />

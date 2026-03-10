@@ -4,12 +4,12 @@ import { SplitText } from '@/components/SplitText'
 import { GraduationCap, CircleDollarSign, ShieldCheck, CircleCheck } from 'lucide-react'
 import type React from 'react'
 
-// Multi-color icon accents per feature
+// Multi-color icon accents per feature — aligned to design system palette
 const FEATURE_ACCENTS = [
-  { bg: 'rgba(20,69,255,.1)',    color: '#1445FF' },   // cobalt
-  { bg: 'rgba(124,58,237,.1)',   color: '#7C3AED' },   // violet
-  { bg: 'rgba(170,255,0,.15)',   color: '#3A7D00' },   // lime (dark text)
-  { bg: 'rgba(255,69,32,.1)',    color: '#FF4520' },   // coral
+  { bg: 'rgba(51,78,216,.1)',   color: '#334ED8', border: 'rgba(51,78,216,.22)'   }, // cobalt
+  { bg: 'rgba(199,176,255,.1)', color: '#C7B0FF', border: 'rgba(199,176,255,.22)'  }, // lavender
+  { bg: 'rgba(224,228,70,.1)',  color: '#C8CC28', border: 'rgba(224,228,70,.22)'   }, // citrus
+  { bg: 'rgba(255,113,68,.1)',  color: '#FF7144', border: 'rgba(255,113,68,.22)'   }, // coral
 ]
 
 export function FindTalentSection() {
@@ -21,8 +21,11 @@ export function FindTalentSection() {
   ]
 
   return (
-    <section id="browse-talent" style={{ borderBottom: '1px solid var(--border)' }}>
-      <div style={{ padding: 'clamp(48px, 8vw, 80px) 24px', background: 'var(--black-2)' }} className="find-talent-inner">
+    <section id="browse-talent" style={{ borderBottom: '1px solid var(--border)', position: 'relative', overflow: 'hidden' }}>
+      {/* Ambient background glow */}
+      <div aria-hidden="true" style={{ position: 'absolute', top: -100, right: -80, width: 400, height: 400, background: 'radial-gradient(ellipse at center, rgba(51,78,216,.06) 0%, transparent 65%)', borderRadius: '50%', pointerEvents: 'none' }} />
+      <div aria-hidden="true" style={{ position: 'absolute', bottom: -80, left: -60, width: 320, height: 320, background: 'radial-gradient(ellipse at center, rgba(199,176,255,.06) 0%, transparent 65%)', borderRadius: '50%', pointerEvents: 'none' }} />
+      <div style={{ padding: 'clamp(48px, 8vw, 80px) 24px', background: 'var(--black-2)', position: 'relative', zIndex: 1 }} className="find-talent-inner">
 
         {/* Left */}
         <AnimateIn style={{ display: 'flex', flexDirection: 'column' }}>
@@ -30,8 +33,7 @@ export function FindTalentSection() {
           <h2 style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 'clamp(34px, 6vw, 60px)', lineHeight: .93, letterSpacing: 1, marginBottom: 14 }}>
             <SplitText text="Local talent." style={{ display: 'block' }} />
             <SplitText text="Affordable prices." style={{ display: 'block' }} delay={80} />
-            <br />
-            <span style={{ fontFamily: 'Instrument Serif, serif', fontStyle: 'italic', color: 'var(--orange)' }}>Serious quality.</span>
+            <span style={{ fontFamily: 'Instrument Serif, serif', fontStyle: 'italic', color: 'var(--orange)', display: 'block', marginTop: 6 }}>Serious quality.</span>
           </h2>
           <p style={{ fontSize: 'clamp(14px, 1.8vw, 15px)', lineHeight: 1.8, color: 'var(--cream-dim)', maxWidth: 480 }}>
             Mid-degree students at UCT, AFDA, Red &amp; Yellow, Wits and ICA. Trained full-time in exactly what you need. Lower prices because they&apos;re students. The quality isn&apos;t.
@@ -55,7 +57,7 @@ export function FindTalentSection() {
             ))}
           </div>
 
-          <div style={{ marginTop: 24, background: 'var(--card)', border: '1px solid var(--border)', borderLeft: '3px solid var(--orange)', borderRadius: '0 14px 14px 0', padding: 22 }}>
+          <div style={{ marginTop: 24, background: 'rgba(51,78,216,.05)', border: '1px solid rgba(51,78,216,.12)', borderLeft: '3px solid var(--orange)', borderRadius: '0 14px 14px 0', padding: 22 }}>
             <p style={{ fontFamily: 'Instrument Serif, serif', fontStyle: 'italic', fontSize: 15.5, lineHeight: 1.65, color: 'var(--cream)', marginBottom: 12 }}>
               &ldquo;You&apos;re getting someone who trained for this, who wants to add your project to their portfolio, and who is going to show up and do their absolute best. That motivation is worth everything.&rdquo;
             </p>
@@ -72,7 +74,7 @@ export function FindTalentSection() {
                 background: FEATURE_ACCENTS[i].bg,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 color: FEATURE_ACCENTS[i].color,
-                border: `1px solid ${FEATURE_ACCENTS[i].bg.replace('.1)', '.2)').replace('.15)', '.3)')}`,
+                border: `1px solid ${FEATURE_ACCENTS[i].border}`,
               }}>
                 <f.icon size={18} strokeWidth={1.5} />
               </div>

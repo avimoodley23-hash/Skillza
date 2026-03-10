@@ -5,6 +5,8 @@
 @tailwind utilities;
 
 :root {
+  color-scheme: dark;
+
   /* ── Dark base backgrounds ────────────────────────────── */
   --black:    #111111;     /* page bg */
   --black-2:  #0D0D0D;     /* deeper dark */
