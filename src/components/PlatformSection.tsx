@@ -22,7 +22,7 @@ const SLIDES = [
     sub: 'Fill a short form. The student WhatsApps you within 24 hours. 30% deposit before work starts. Balance on delivery. No surprises.',
     accent: '#E0E446',       // Citrus Green
     accentDim: 'rgba(224,228,70,.1)',
-    accentGlow: 'rgba(224,228,70,.15)',
+    accentGlow: 'rgba(224,228,70,.06)',  // reduced — citrus is high-luminosity, keep subtle
     tagClass: 'tag-citrus',
     card: 'book',
   },
@@ -287,7 +287,7 @@ export function PlatformSection() {
       }}>
 
         {/* Background accent glow — transitions with slide */}
-        <div aria-hidden="true" style={{
+        <div className="platform-bg-glow" aria-hidden="true" style={{
           position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0,
           transition: 'background .7s cubic-bezier(.4,0,.2,1)',
           background: `radial-gradient(ellipse 60% 55% at 70% 50%, ${slide.accentGlow} 0%, transparent 70%)`,
@@ -306,12 +306,12 @@ export function PlatformSection() {
           <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
 
             {/* Slide counter */}
-            <div style={{ display: 'flex', gap: 6, marginBottom: 32 }}>
+            <div className="platform-counter" style={{ display: 'flex', gap: 6, marginBottom: 32 }}>
               {SLIDES.map((s, i) => (
                 <div key={s.id} style={{
                   height: 2, borderRadius: 2,
                   flex: i === activeIdx ? 3 : 1,
-                  background: i === activeIdx ? slide.accent : 'rgba(255,255,255,.12)',
+                  background: i === activeIdx ? slide.accent : 'rgba(255,255,255,.28)',
                   transition: 'flex .5s cubic-bezier(.4,0,.2,1), background .5s',
                 }} />
               ))}
@@ -395,6 +395,25 @@ export function PlatformSection() {
       <style>{`
         .platform-grid {
           grid-template-columns: 1fr;
+        }
+        @media (max-width: 859px) {
+          .platform-bg-glow {
+            opacity: 0.45;
+          }
+          /* On mobile the counter can get clipped when content overflows 100vh.
+             Pull it out of flow and pin it just below the nav so it's always visible. */
+          .platform-counter {
+            position: absolute;
+            top: 72px;
+            left: clamp(20px, 5vw, 64px);
+            right: clamp(20px, 5vw, 64px);
+            margin-bottom: 0;
+            z-index: 5;
+          }
+          /* compensate for counter being out of flow */
+          .platform-grid {
+            padding-top: 40px;
+          }
         }
         @media (min-width: 860px) {
           .platform-grid {
