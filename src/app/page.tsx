@@ -5,6 +5,7 @@ import HeroSection from '@/components/HeroSection'
 import FindTalentSection from '@/components/FindTalentSection'
 import TickerSection from '@/components/TickerSection'
 import TalentGrid from '@/components/TalentGrid'
+import PlatformSection from '@/components/PlatformSection'
 import HowItWorksSection from '@/components/HowItWorksSection'
 import VerifySection from '@/components/VerifySection'
 import JoinSection from '@/components/JoinSection'
@@ -44,6 +45,7 @@ export default async function HomePage() {
         <FindTalentSection />
         <TickerSection />
         <TalentGrid students={students} />
+        <PlatformSection />
         <HowItWorksSection />
         <VerifySection />
         <JoinSection />

@@ -66,22 +66,22 @@ const PRICE_UNITS = ['session', 'hour', 'project', 'event', 'day', 'order', 'pac
 const CITIES = ['Cape Town', 'Johannesburg', 'Pretoria', 'Durban', 'Other']
 const AVAILABILITY_OPTIONS = ['Weekdays', 'Weekday evenings', 'Saturdays', 'Sundays', 'Flexible']
 const STATUS_CONFIG: Record<string, { label: string; color: string; bg: string }> = {
-  pending:     { label: 'PENDING',     color: 'var(--orange)', bg: '#f9731622' },
-  confirmed:   { label: 'CONFIRMED',   color: '#4ade80',       bg: '#16a34a22' },
-  in_progress: { label: 'IN PROGRESS', color: '#60a5fa',       bg: '#2563eb22' },
-  completed:   { label: 'COMPLETED',   color: '#4ade80',       bg: '#16a34a22' },
-  rejected:    { label: 'REJECTED',    color: 'var(--muted)',  bg: '#94a3b822' },
-  unavailable: { label: 'UNAVAILABLE', color: 'var(--muted)',  bg: '#94a3b822' },
+  pending:     { label: 'PENDING',     color: 'var(--orange)',  bg: 'var(--o-dim)' },
+  confirmed:   { label: 'CONFIRMED',   color: 'var(--mint)',    bg: 'var(--mint-dim)' },
+  in_progress: { label: 'IN PROGRESS', color: 'var(--lavender)', bg: 'var(--lav-dim)' },
+  completed:   { label: 'COMPLETED',   color: 'var(--mint)',    bg: 'var(--mint-dim)' },
+  rejected:    { label: 'REJECTED',    color: 'var(--muted)',   bg: 'var(--card)' },
+  unavailable: { label: 'UNAVAILABLE', color: 'var(--muted)',   bg: 'var(--card)' },
 }
 
 const STATUS_ACTIONS: Record<string, { label: string; next: string; color: string }[]> = {
   pending: [
-    { label: 'Accept',      next: 'confirmed',   color: '#4ade80' },
+    { label: 'Accept',      next: 'confirmed',   color: 'var(--mint)' },
     { label: 'Unavailable', next: 'unavailable', color: 'var(--muted)' },
-    { label: 'Reject',      next: 'rejected',    color: '#ff6b6b' },
+    { label: 'Reject',      next: 'rejected',    color: 'var(--sunset)' },
   ],
-  confirmed:   [{ label: 'Mark In Progress', next: 'in_progress', color: '#60a5fa' }, { label: 'Reject', next: 'rejected', color: '#ff6b6b' }],
-  in_progress: [{ label: 'Mark Completed', next: 'completed', color: '#4ade80' }],
+  confirmed:   [{ label: 'Mark In Progress', next: 'in_progress', color: 'var(--lavender)' }, { label: 'Reject', next: 'rejected', color: 'var(--sunset)' }],
+  in_progress: [{ label: 'Mark Completed', next: 'completed', color: 'var(--mint)' }],
   completed: [], rejected: [], unavailable: [],
 }
 
@@ -570,8 +570,8 @@ export default function DashboardPage() {
             </>}
 
             {regStep === 3 && <>
-              <div style={{ background: 'rgba(255,74,28,.06)', border: '1px solid rgba(255,74,28,.15)', borderRadius: 10, padding: '12px 16px', marginBottom: 4 }}>
-                <p style={{ fontSize: 13, color: 'rgba(245,239,227,.7)', lineHeight: 1.6 }}>
+              <div style={{ background: 'var(--o-dim)', border: '1px solid var(--o-bright)', borderRadius: 10, padding: '12px 16px', marginBottom: 4 }}>
+                <p style={{ fontSize: 13, color: 'rgba(255,255,255,.7)', lineHeight: 1.6 }}>
                   Set your pricing packages. These appear on your public profile. Package 2 is marked as "Popular".
                 </p>
               </div>
@@ -585,7 +585,7 @@ export default function DashboardPage() {
               </FormField>
               {([['pkg1', 'Package 1 *', false], ['pkg2', 'Package 2 * (Popular)', true], ['pkg3', 'Package 3 (optional)', false]] as [keyof typeof reg, string, boolean][]).map(([key, label, isFeatured]) => (
                 <FormField key={key as string} label={label}>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 8, background: isFeatured ? 'rgba(255,74,28,.04)' : 'transparent', border: isFeatured ? '1px solid rgba(255,74,28,.15)' : '1px solid var(--border)', borderRadius: 10, padding: 14 }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 8, background: isFeatured ? 'var(--o-dim)' : 'transparent', border: isFeatured ? '1px solid var(--o-bright)' : '1px solid var(--border)', borderRadius: 10, padding: 14 }}>
                     <input value={(reg[key] as PricingPackage).name} onChange={e => setReg(r => ({ ...r, [key]: { ...(r[key] as PricingPackage), name: e.target.value } }))} placeholder="Package name e.g. Basic / Standard / Premium" style={inputStyle} />
                     <input value={(reg[key] as PricingPackage).description ?? ''} onChange={e => setReg(r => ({ ...r, [key]: { ...(r[key] as PricingPackage), description: e.target.value } }))} placeholder="Description e.g. 2-hr shoot, 30 edited photos" style={inputStyle} />
                     <input value={(reg[key] as PricingPackage).price} onChange={e => setReg(r => ({ ...r, [key]: { ...(r[key] as PricingPackage), price: e.target.value } }))} placeholder="Price e.g. R550" style={inputStyle} />
@@ -607,7 +607,7 @@ export default function DashboardPage() {
               <div style={{ background: 'rgba(255,255,255,.03)', border: '1px solid var(--border)', borderRadius: 10, padding: '16px' }}>
                 <label style={{ display: 'flex', gap: 12, alignItems: 'flex-start', cursor: 'pointer' }}>
                   <input type="checkbox" checked={reg.agreed} onChange={e => setReg(r => ({ ...r, agreed: e.target.checked }))} style={{ marginTop: 2, accentColor: 'var(--orange)', width: 16, height: 16, flexShrink: 0 }} />
-                  <span style={{ fontSize: 13, color: 'rgba(245,239,227,.7)', lineHeight: 1.6 }}>
+                  <span style={{ fontSize: 13, color: 'rgba(255,255,255,.7)', lineHeight: 1.6 }}>
                     I have read and agree to Skillza's{' '}
                     <a href="/privacy" target="_blank" style={{ color: 'var(--orange)' }}>Privacy Policy</a> and{' '}
                     <a href="/terms" target="_blank" style={{ color: 'var(--orange)' }}>Terms of Service</a>.
@@ -618,11 +618,11 @@ export default function DashboardPage() {
             </>}
 
             {regError && (
-              <p style={{ color: '#ff6b6b', fontSize: 13, background: 'rgba(255,107,107,.08)', border: '1px solid rgba(255,107,107,.2)', borderRadius: 8, padding: '10px 14px' }}>{regError}</p>
+              <p style={{ color: 'var(--sunset)', fontSize: 13, background: 'var(--sun-dim)', border: '1px solid rgba(255,113,68,.3)', borderRadius: 8, padding: '10px 14px' }}>{regError}</p>
             )}
 
             {regStepError && (
-              <p style={{ color: '#ff6b6b', fontSize: 13, background: 'rgba(255,107,107,.08)', border: '1px solid rgba(255,107,107,.2)', borderRadius: 8, padding: '10px 14px' }}>{regStepError}</p>
+              <p style={{ color: 'var(--sunset)', fontSize: 13, background: 'var(--sun-dim)', border: '1px solid rgba(255,113,68,.3)', borderRadius: 8, padding: '10px 14px' }}>{regStepError}</p>
             )}
 
             <div style={{ display: 'flex', gap: 10, marginTop: 4 }}>
@@ -781,7 +781,7 @@ export default function DashboardPage() {
                 <label style={labelStyle}>Pricing Packages</label>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginTop: 4 }}>
                   {packages.map((pkg, i) => (
-                    <div key={pkg.id ?? i} style={{ background: pkg.featured ? 'rgba(255,74,28,.04)' : 'transparent', border: `1px solid ${pkg.featured ? 'rgba(255,74,28,.2)' : 'var(--border)'}`, borderRadius: 10, padding: 14 }}>
+                    <div key={pkg.id ?? i} style={{ background: pkg.featured ? 'var(--o-dim)' : 'transparent', border: `1px solid ${pkg.featured ? 'var(--o-bright)' : 'var(--border)'}`, borderRadius: 10, padding: 14 }}>
                       {pkg.featured && <p style={{ fontSize: 10, color: 'var(--orange)', fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 8 }}>Popular</p>}
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                         <input value={pkg.name} onChange={e => setPackages(prev => prev.map((p, j) => j === i ? { ...p, name: e.target.value } : p))} placeholder="Package name" style={inputStyle} />
@@ -869,7 +869,7 @@ export default function DashboardPage() {
               )}
 
               {portfolioError && (
-                <p style={{ color: '#ff6b6b', fontSize: 12, marginTop: 8, background: 'rgba(255,107,107,.08)', border: '1px solid rgba(255,107,107,.2)', borderRadius: 8, padding: '8px 12px' }}>
+                <p style={{ color: 'var(--sunset)', fontSize: 12, marginTop: 8, background: 'var(--sun-dim)', border: '1px solid rgba(255,113,68,.3)', borderRadius: 8, padding: '8px 12px' }}>
                   {portfolioError}
                 </p>
               )}
@@ -907,7 +907,7 @@ export default function DashboardPage() {
                   </div>
                   {b.description && <p style={{ color: 'var(--muted)', fontSize: 13, marginBottom: 10, lineHeight: 1.5 }}>{b.description}</p>}
                   <div style={{ display: 'flex', gap: 16, marginBottom: 14, flexWrap: 'wrap' }}>
-                    <a href={`https://wa.me/${b.client_whatsapp.replace(/\D/g, '')}`} target="_blank" rel="noreferrer" style={{ fontSize: 12, color: '#4ade80', textDecoration: 'none' }}>💬 WhatsApp {b.client_whatsapp}</a>
+                    <a href={`https://wa.me/${b.client_whatsapp.replace(/\D/g, '')}`} target="_blank" rel="noreferrer" style={{ fontSize: 12, color: 'var(--mint)', textDecoration: 'none' }}>💬 WhatsApp {b.client_whatsapp}</a>
                     <a href={`mailto:${b.client_email}`} style={{ fontSize: 12, color: 'var(--muted)', textDecoration: 'none' }}>✉ {b.client_email}</a>
                   </div>
                   {actions.length > 0 && (
@@ -930,8 +930,8 @@ export default function DashboardPage() {
         {/* VERIFICATION TAB */}
         {tab === 'verification' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-            <div style={{ background: student!.verified ? '#16a34a22' : '#f9731622', border: '1px solid ' + (student!.verified ? '#4ade8044' : '#f9731644'), borderRadius: 12, padding: '20px' }}>
-              <p style={{ color: student!.verified ? '#4ade80' : 'var(--orange)', fontWeight: 600, fontSize: 15, marginBottom: 4 }}>{student!.verified ? 'Verified ✓' : 'Not yet verified'}</p>
+            <div style={{ background: student!.verified ? 'var(--mint-dim)' : 'var(--sun-dim)', border: '1px solid ' + (student!.verified ? 'rgba(192,240,170,.3)' : 'rgba(255,113,68,.3)'), borderRadius: 12, padding: '20px' }}>
+              <p style={{ color: student!.verified ? 'var(--mint)' : 'var(--orange)', fontWeight: 600, fontSize: 15, marginBottom: 4 }}>{student!.verified ? 'Verified ✓' : 'Not yet verified'}</p>
               <p style={{ color: 'var(--muted)', fontSize: 13, lineHeight: 1.6 }}>{student!.verified ? 'Your student card has been verified. Your profile is live.' : 'Upload your student card below to get verified. We review within 24 hours.'}</p>
             </div>
             {!student!.verified && (
@@ -943,7 +943,7 @@ export default function DashboardPage() {
                     {uploading ? 'Uploading...' : uploadDone ? 'Submitted ✓' : 'Submit for Verification'}
                   </button>
                 )}
-                {uploadError && <p style={{ color: '#ff6b6b', fontSize: 12, marginTop: 8 }}>{uploadError}</p>}
+                {uploadError && <p style={{ color: 'var(--sunset)', fontSize: 12, marginTop: 8 }}>{uploadError}</p>}
               </div>
             )}
           </div>

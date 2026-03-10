@@ -25,11 +25,11 @@ export default function Nav() {
         padding: '0 24px',
         paddingTop: 'env(safe-area-inset-top, 0px)',
         height: 'calc(60px + env(safe-area-inset-top, 0px))',
-        background: 'rgba(16,15,13,.96)',
-        borderBottom: `1px solid ${scrolled ? 'rgba(17,17,16,.1)' : 'transparent'}`,
-        backdropFilter: 'blur(24px)',
-        WebkitBackdropFilter: 'blur(24px)',
-        transition: 'border-color .3s',
+        background: scrolled ? 'rgba(16,15,13,.96)' : 'transparent',
+        borderBottom: `1px solid ${scrolled ? 'rgba(255,255,255,.07)' : 'transparent'}`,
+        backdropFilter: scrolled ? 'blur(24px)' : 'none',
+        WebkitBackdropFilter: scrolled ? 'blur(24px)' : 'none',
+        transition: 'background .35s ease, border-color .35s ease, backdrop-filter .35s ease',
       }}>
         {/* Extend blur behind status bar */}
         <div style={{

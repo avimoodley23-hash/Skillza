@@ -11,17 +11,6 @@ export default function PrivacyPage() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Instrument+Sans:wght@400;500;600;700&display=swap');
 
-        :root {
-          --black: #100F0D;
-          --black-2: #161410;
-          --cream: #F5EFE3;
-          --orange: #FF4B1F;
-          --o-dim: rgba(255,75,31,.12);
-          --muted: #7A7469;
-          --border: rgba(245,239,227,.07);
-          --card: rgba(245,239,227,.03);
-        }
-
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
@@ -35,7 +24,7 @@ export default function PrivacyPage() {
           position: fixed; top: 0; left: 0; right: 0; z-index: 400;
           display: flex; align-items: center; justify-content: space-between;
           padding: 0 24px; height: 60px;
-          background: rgba(16,15,13,.96);
+          background: rgba(17,17,17,.96);
           border-bottom: 1px solid var(--border);
           backdrop-filter: blur(24px);
         }
@@ -57,8 +46,8 @@ export default function PrivacyPage() {
         .lm-tag {
           display: inline-block; font-size: 10px; font-weight: 700;
           letter-spacing: 2px; text-transform: uppercase;
-          color: var(--orange); background: rgba(255,74,28,.1);
-          border: 1px solid rgba(255,74,28,.2); border-radius: 100px;
+          color: var(--lavender); background: var(--lav-dim);
+          border: 1px solid var(--lav-bright); border-radius: 100px;
           padding: 4px 14px; margin-bottom: 16px;
         }
         .lm-title {
@@ -71,7 +60,7 @@ export default function PrivacyPage() {
           display: flex; gap: 16px; flex-wrap: wrap;
         }
         .lm-intro {
-          font-size: 14px; color: rgba(245,239,227,.75); line-height: 1.8;
+          font-size: 14px; color: rgba(255,255,255,.75); line-height: 1.8;
           padding: 18px 20px; background: var(--card);
           border: 1px solid var(--border); border-radius: 12px; margin-bottom: 28px;
         }
@@ -88,12 +77,12 @@ export default function PrivacyPage() {
           text-transform: uppercase; letter-spacing: .5px; margin: 18px 0 8px;
         }
         .lm p {
-          font-size: 14px; color: rgba(245,239,227,.7);
+          font-size: 14px; color: rgba(255,255,255,.7);
           margin-bottom: 12px; line-height: 1.8;
         }
         .lm ul { margin: 8px 0 14px 0; padding: 0; list-style: none; }
         .lm ul li {
-          font-size: 14px; color: rgba(245,239,227,.7); line-height: 1.8;
+          font-size: 14px; color: rgba(255,255,255,.7); line-height: 1.8;
           padding: 4px 0 4px 18px; position: relative;
           border-bottom: 1px solid rgba(255,255,255,.04);
         }
@@ -103,10 +92,10 @@ export default function PrivacyPage() {
           color: var(--orange); font-size: 11px; top: 6px;
         }
         .lm .hb {
-          background: rgba(255,74,28,.06); border: 1px solid rgba(255,74,28,.15);
+          background: var(--o-dim); border: 1px solid var(--o-bright);
           border-radius: 10px; padding: 14px 18px; margin: 16px 0;
         }
-        .lm .hb p { margin: 0; color: rgba(245,239,227,.8); }
+        .lm .hb p { margin: 0; color: rgba(255,255,255,.8); }
         .lm a { color: var(--orange); }
 
         .lgl-footer {

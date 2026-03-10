@@ -115,7 +115,7 @@ export default function AdminPage() {
 
   if (error) return (
     <main style={{ minHeight: '100svh', background: 'var(--black)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <p style={{ color: '#ff6b6b', fontSize: 14 }}>{error}</p>
+      <p style={{ color: 'var(--sunset)', fontSize: 14 }}>{error}</p>
     </main>
   )
 
@@ -139,7 +139,7 @@ export default function AdminPage() {
           {[
             { label: 'Active Students',      value: verified.length,              color: 'var(--green)'  },
             { label: 'Pending Verification', value: pendingVerifications.length,  color: 'var(--orange)' },
-            { label: 'New Bookings',         value: pendingBookings.length,       color: '#60a5fa'       },
+            { label: 'New Bookings',         value: pendingBookings.length,       color: 'var(--lavender)' },
             { label: 'Waitlist',             value: pendingWaitlist.length,       color: 'var(--gold)'   },
             { label: 'Total Bookings',       value: bookings.length,              color: 'var(--cream)'  },
           ].map(stat => (
@@ -167,13 +167,13 @@ export default function AdminPage() {
                       <button
                         onClick={() => handleVerifyApprove(v)}
                         disabled={!!actionLoading}
-                        style={{ fontSize: 11, fontWeight: 700, padding: '4px 10px', borderRadius: 6, border: 'none', background: '#16a34a', color: '#fff', cursor: 'pointer', opacity: isLoadingApprove ? 0.6 : 1 }}>
+                        style={{ fontSize: 11, fontWeight: 700, padding: '4px 10px', borderRadius: 6, border: 'none', background: 'var(--mint-2)', color: 'var(--black)', cursor: 'pointer', opacity: isLoadingApprove ? 0.6 : 1 }}>
                         {isLoadingApprove ? '...' : '✓ Approve'}
                       </button>
                       <button
                         onClick={() => handleVerifyReject(v)}
                         disabled={!!actionLoading}
-                        style={{ fontSize: 11, fontWeight: 700, padding: '4px 10px', borderRadius: 6, border: 'none', background: '#7f1d1d44', color: '#f87171', cursor: 'pointer', opacity: isLoadingReject ? 0.6 : 1 }}>
+                        style={{ fontSize: 11, fontWeight: 700, padding: '4px 10px', borderRadius: 6, border: 'none', background: 'var(--sun-dim)', color: 'var(--sunset)', cursor: 'pointer', opacity: isLoadingReject ? 0.6 : 1 }}>
                         {isLoadingReject ? '...' : '✗ Reject'}
                       </button>
                     </div>
@@ -185,7 +185,7 @@ export default function AdminPage() {
         )}
 
         {/* Bookings */}
-        <AdminSection title="Recent Bookings" count={bookings.length} accent="#60a5fa">
+        <AdminSection title="Recent Bookings" count={bookings.length} accent="var(--lavender)">
           {bookings.length === 0 && <EmptyRow text="No bookings yet" />}
           {bookings.map((b: any) => (
             <Row key={b.id}>
@@ -196,8 +196,8 @@ export default function AdminPage() {
               <Cell>
                 <span style={{
                   fontSize: 10, fontWeight: 700, padding: '3px 9px', borderRadius: 20,
-                  background: b.status === 'completed' ? '#16a34a22' : b.status === 'in_progress' ? '#2563eb22' : b.status === 'confirmed' ? '#16a34a22' : b.status === 'pending' ? '#f9731622' : '#94a3b822',
-                  color: b.status === 'completed' || b.status === 'confirmed' ? '#4ade80' : b.status === 'in_progress' ? '#60a5fa' : b.status === 'pending' ? 'var(--orange)' : 'var(--muted)'
+                  background: b.status === 'completed' ? 'var(--mint-dim)' : b.status === 'in_progress' ? 'var(--o-dim)' : b.status === 'confirmed' ? 'var(--mint-dim)' : b.status === 'pending' ? 'var(--sun-dim)' : 'var(--card)',
+                  color: b.status === 'completed' || b.status === 'confirmed' ? 'var(--mint)' : b.status === 'in_progress' ? 'var(--lavender)' : b.status === 'pending' ? 'var(--orange)' : 'var(--muted)'
                 }}>
                   {b.status?.toUpperCase().replace('_', ' ')}
                 </span>
@@ -217,7 +217,7 @@ export default function AdminPage() {
               <Cell style={{ color: 'var(--muted)', fontSize: 12 }}>{s.skill}</Cell>
               <Cell style={{ color: 'var(--muted)', fontSize: 12 }}>{s.email}</Cell>
               <Cell>
-                <span style={{ fontSize: 10, fontWeight: 700, padding: '3px 9px', borderRadius: 20, background: s.verified ? '#16a34a22' : '#f9731622', color: s.verified ? '#4ade80' : 'var(--orange)' }}>
+                <span style={{ fontSize: 10, fontWeight: 700, padding: '3px 9px', borderRadius: 20, background: s.verified ? 'var(--mint-dim)' : 'var(--o-dim)', color: s.verified ? 'var(--mint)' : 'var(--orange)' }}>
                   {s.verified ? 'VERIFIED' : 'PENDING'}
                 </span>
               </Cell>
@@ -248,22 +248,22 @@ export default function AdminPage() {
                       <button
                         onClick={() => handleApprove(w)}
                         disabled={!!actionLoading}
-                        style={{ fontSize: 11, fontWeight: 700, padding: '4px 10px', borderRadius: 6, border: 'none', background: '#16a34a', color: '#fff', cursor: 'pointer', opacity: isLoadingApprove ? 0.6 : 1 }}>
+                        style={{ fontSize: 11, fontWeight: 700, padding: '4px 10px', borderRadius: 6, border: 'none', background: 'var(--mint-2)', color: 'var(--black)', cursor: 'pointer', opacity: isLoadingApprove ? 0.6 : 1 }}>
                         {isLoadingApprove ? '...' : 'Approve'}
                       </button>
                       <button
                         onClick={() => handleReject(w)}
                         disabled={!!actionLoading}
-                        style={{ fontSize: 11, fontWeight: 700, padding: '4px 10px', borderRadius: 6, border: 'none', background: '#7f1d1d44', color: '#f87171', cursor: 'pointer', opacity: isLoadingReject ? 0.6 : 1 }}>
+                        style={{ fontSize: 11, fontWeight: 700, padding: '4px 10px', borderRadius: 6, border: 'none', background: 'var(--sun-dim)', color: 'var(--sunset)', cursor: 'pointer', opacity: isLoadingReject ? 0.6 : 1 }}>
                         {isLoadingReject ? '...' : 'Reject'}
                       </button>
                     </div>
                   )}
                   {isApproved && (
-                    <span style={{ fontSize: 10, fontWeight: 700, padding: '3px 9px', borderRadius: 20, background: '#16a34a22', color: '#4ade80' }}>APPROVED</span>
+                    <span style={{ fontSize: 10, fontWeight: 700, padding: '3px 9px', borderRadius: 20, background: 'var(--mint-dim)', color: 'var(--mint)' }}>APPROVED</span>
                   )}
                   {isRejected && (
-                    <span style={{ fontSize: 10, fontWeight: 700, padding: '3px 9px', borderRadius: 20, background: '#7f1d1d44', color: '#f87171' }}>REJECTED</span>
+                    <span style={{ fontSize: 10, fontWeight: 700, padding: '3px 9px', borderRadius: 20, background: 'var(--sun-dim)', color: 'var(--sunset)' }}>REJECTED</span>
                   )}
                 </Cell>
               </Row>

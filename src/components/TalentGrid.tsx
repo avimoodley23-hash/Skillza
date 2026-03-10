@@ -63,6 +63,16 @@ const SORT_OPTIONS = [
   { id: 'rating', label: 'Top Rated' },
 ]
 
+// Palette-driven card colour themes — cycles per card index
+const CARD_COLORS = [
+  { bg: '#334ED8', imgGrad: '#1E3AC0', border: '#2540B8', hoverShadow: 'rgba(51,78,216,0.35)',  text: '#FFFFFF', sub: 'rgba(255,255,255,0.65)', tagBg: 'rgba(255,255,255,0.15)', tagText: 'rgba(255,255,255,0.85)', uniBg: 'rgba(255,255,255,0.12)', uniText: 'rgba(255,255,255,0.8)',  uniBorder: 'rgba(255,255,255,0.2)',  verBg: '#E0E446', verText: '#1A1A1A', ratingCol: '#E0E446', priceBorder: 'rgba(255,255,255,0.2)',  bookBg: '#FFFFFF', bookText: '#334ED8' },
+  { bg: '#C0F0AA', imgGrad: '#88CC70', border: '#9EDA89', hoverShadow: 'rgba(80,160,50,0.25)',  text: '#1A3A1A', sub: 'rgba(26,58,26,0.6)',    tagBg: 'rgba(26,58,26,0.1)',    tagText: '#33473B',              uniBg: 'rgba(26,58,26,0.08)',  uniText: '#33473B',            uniBorder: 'rgba(26,58,26,0.18)', verBg: '#334ED8', verText: '#FFFFFF', ratingCol: '#FF7144', priceBorder: 'rgba(26,58,26,0.15)',  bookBg: '#334ED8', bookText: '#FFFFFF' },
+  { bg: '#FFE8D2', imgGrad: '#E8C090', border: '#E0C090', hoverShadow: 'rgba(200,100,40,0.2)',  text: '#1A1A1A', sub: 'rgba(17,17,16,0.5)',    tagBg: 'rgba(17,17,16,0.06)',   tagText: '#33473B',              uniBg: 'rgba(17,17,16,0.06)',  uniText: '#33473B',            uniBorder: 'rgba(17,17,16,0.12)', verBg: '#334ED8', verText: '#FFFFFF', ratingCol: '#FF7144', priceBorder: 'rgba(17,17,16,0.12)', bookBg: '#334ED8', bookText: '#FFFFFF' },
+  { bg: '#D8E6FF', imgGrad: '#A0BEF0', border: '#AACAFF', hoverShadow: 'rgba(51,78,216,0.18)', text: '#1A1A1A', sub: 'rgba(51,78,216,0.7)',    tagBg: 'rgba(51,78,216,0.1)',   tagText: '#334ED8',              uniBg: 'rgba(51,78,216,0.08)', uniText: '#334ED8',            uniBorder: 'rgba(51,78,216,0.2)', verBg: '#33473B', verText: '#FFFFFF', ratingCol: '#FF7144', priceBorder: 'rgba(51,78,216,0.15)', bookBg: '#334ED8', bookText: '#FFFFFF' },
+  { bg: '#FFA9FF', imgGrad: '#DC78DC', border: '#E090E0', hoverShadow: 'rgba(180,80,180,0.28)', text: '#1A1A1A', sub: 'rgba(90,26,90,0.6)',    tagBg: 'rgba(90,26,90,0.08)',   tagText: '#5A1A5A',              uniBg: 'rgba(90,26,90,0.07)',  uniText: '#5A1A5A',            uniBorder: 'rgba(90,26,90,0.18)', verBg: '#334ED8', verText: '#FFFFFF', ratingCol: '#FF7144', priceBorder: 'rgba(90,26,90,0.15)', bookBg: '#334ED8', bookText: '#FFFFFF' },
+  { bg: '#E0E446', imgGrad: '#B8BC18', border: '#C8CC28', hoverShadow: 'rgba(160,168,0,0.3)',   text: '#1A1A1A', sub: 'rgba(17,17,16,0.55)',   tagBg: 'rgba(17,17,16,0.08)',   tagText: '#33473B',              uniBg: 'rgba(17,17,16,0.07)',  uniText: '#33473B',            uniBorder: 'rgba(17,17,16,0.15)', verBg: '#33473B', verText: '#FFFFFF', ratingCol: '#FF7144', priceBorder: 'rgba(17,17,16,0.12)', bookBg: '#33473B', bookText: '#FFFFFF' },
+]
+
 function parsePrice(p: string): number {
   return parseInt(p.replace(/[^0-9]/g, '')) || 0
 }
@@ -112,20 +122,23 @@ export default function TalentGrid({ students }: { students: Student[] }) {
 
   return (
     <>
-      <section id="find-talent" style={{ padding: 'clamp(48px, 8vw, 80px) 24px 40px' }}>
+      <section id="find-talent" style={{ padding: 'clamp(48px, 8vw, 80px) 24px 40px', background: '#F7F7F5' }}>
         <div style={{ marginBottom: 20 }}>
-          <div className="eyebrow">Browse Talent</div>
-          <h2 style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 'clamp(34px, 6vw, 60px)', lineHeight: .93, letterSpacing: 1, marginBottom: 14 }}>
+          <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: '2.5px', textTransform: 'uppercase', color: '#334ED8', marginBottom: 14, display: 'flex', alignItems: 'center', gap: 10 }}>
+            <span style={{ width: 18, height: 1.5, background: '#334ED8', display: 'inline-block', flexShrink: 0 }} />
+            Browse Talent
+          </div>
+          <h2 style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 'clamp(34px, 6vw, 60px)', lineHeight: .93, letterSpacing: 1, marginBottom: 14, color: '#1A1A1A' }}>
             Trained. Verified.<br />Right in your city.
           </h2>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
-            <p style={{ fontSize: 12, color: 'var(--muted)' }}>Showing {filtered.length} verified student{filtered.length !== 1 ? 's' : ''}</p>
+            <p style={{ fontSize: 12, color: '#888888' }}>Showing {filtered.length} verified student{filtered.length !== 1 ? 's' : ''}</p>
             <select
               value={sortBy}
               onChange={e => setSortBy(e.target.value)}
               style={{
-                background: 'var(--black-2)', color: 'var(--cream)',
-                border: '1px solid var(--border-2)', borderRadius: 8,
+                background: '#FFFFFF', color: '#1A1A1A',
+                border: '1px solid rgba(17,17,16,.15)', borderRadius: 8,
                 padding: '8px 12px', fontSize: 12, fontWeight: 600,
                 cursor: 'pointer', fontFamily: 'Instrument Sans, sans-serif',
               }}
@@ -138,7 +151,7 @@ export default function TalentGrid({ students }: { students: Student[] }) {
         {/* Search */}
         <div style={{ position: 'relative', marginBottom: 10 }}>
           <span style={{ position: 'absolute', left: 14, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', opacity: .4, display: 'flex', alignItems: 'center' }}>
-            <Search size={15} strokeWidth={1.5} style={{ color: 'var(--cream)' }} />
+            <Search size={15} strokeWidth={1.5} style={{ color: '#1A1A1A' }} />
           </span>
           <input
             type="search"
@@ -146,14 +159,14 @@ export default function TalentGrid({ students }: { students: Student[] }) {
             onChange={e => { setSearch(e.target.value); setActiveFilter('all') }}
             placeholder="Search by name, skill or university…"
             style={{
-              width: '100%', background: 'var(--black-2)', border: '1px solid var(--border-2)',
+              width: '100%', background: '#FFFFFF', border: '1px solid rgba(17,17,16,.15)',
               borderRadius: 10, padding: '11px 16px 11px 40px',
-              color: 'var(--cream)', fontSize: 13,
+              color: '#1A1A1A', fontSize: 13,
               fontFamily: 'Instrument Sans, sans-serif', outline: 'none',
               transition: 'border-color .2s',
             }}
-            onFocus={e => (e.currentTarget.style.borderColor = 'var(--orange)')}
-            onBlur={e => (e.currentTarget.style.borderColor = 'var(--border-2)')}
+            onFocus={e => (e.currentTarget.style.borderColor = '#334ED8')}
+            onBlur={e => (e.currentTarget.style.borderColor = 'rgba(17,17,16,.15)')}
           />
         </div>
 
@@ -176,9 +189,9 @@ export default function TalentGrid({ students }: { students: Student[] }) {
                   padding: '8px 16px', borderRadius: 100,
                   fontSize: 12, fontWeight: 600,
                   border: '1px solid',
-                  borderColor: activeFilter === cat.id ? 'var(--orange)' : 'var(--border-2)',
-                  background: activeFilter === cat.id ? 'var(--orange)' : 'transparent',
-                  color: activeFilter === cat.id ? '#fff' : 'var(--muted-2)',
+                  borderColor: activeFilter === cat.id ? '#334ED8' : 'rgba(17,17,16,.14)',
+                  background: activeFilter === cat.id ? '#334ED8' : '#FFFFFF',
+                  color: activeFilter === cat.id ? '#fff' : '#555555',
                   cursor: 'pointer', whiteSpace: 'nowrap',
                   transition: 'all .18s', minHeight: 36, flexShrink: 0,
                   boxShadow: activeFilter === cat.id ? '0 2px 12px rgba(20,69,255,.25)' : 'none',
@@ -202,6 +215,7 @@ export default function TalentGrid({ students }: { students: Student[] }) {
               isInitialLoad={!hasAnimated.current}
               onOpen={() => openProfile(student)}
               onBook={() => openBooking(student)}
+              colors={CARD_COLORS[i % CARD_COLORS.length]}
             />
           ))}
           {filtered.length === 0 && (
@@ -209,7 +223,7 @@ export default function TalentGrid({ students }: { students: Student[] }) {
               <div style={{ marginBottom: 12, display: 'flex', justifyContent: 'center' }}>
                 <Search size={32} strokeWidth={1.5} style={{ color: 'var(--muted)' }} />
               </div>
-              <p style={{ color: 'var(--muted)', fontSize: 14, marginBottom: 8 }}>
+              <p style={{ color: '#888888', fontSize: 14, marginBottom: 8 }}>
                 {search ? `No results for "${search}"` : 'No students in this category yet.'}
               </p>
               {search && (
@@ -316,12 +330,13 @@ export default function TalentGrid({ students }: { students: Student[] }) {
   )
 }
 
-function StudentCard({ student, index, isInitialLoad, onOpen, onBook }: {
+function StudentCard({ student, index, isInitialLoad, onOpen, onBook, colors }: {
   student: Student
   index: number
   isInitialLoad: boolean
   onOpen: () => void
   onBook: () => void
+  colors: typeof CARD_COLORS[0]
 }) {
   const cardRef = useRef<HTMLDivElement>(null)
   const { display: nameDisplay, scramble, reset: resetScramble } = useScramble(student.short_name ?? student.name)
@@ -341,18 +356,15 @@ function StudentCard({ student, index, isInitialLoad, onOpen, onBook }: {
 
   const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
     const el = e.currentTarget as HTMLElement
-    el.style.background = '#FFFFFF'
-    el.style.borderColor = 'rgba(20,69,255,.3)'
-    el.style.boxShadow = '0 8px 32px rgba(20,69,255,0.14)'
+    el.style.boxShadow = `0 12px 40px ${colors.hoverShadow}`
+    el.style.transform = 'translateY(-3px)'
     scramble()
   }
 
   const handleMouseLeave = (e: React.MouseEvent<HTMLDivElement>) => {
     const el = e.currentTarget as HTMLElement
-    el.style.background = '#FFFFFF'
-    el.style.borderColor = 'var(--border)'
+    el.style.boxShadow = '0 2px 16px rgba(17,17,16,0.06)'
     el.style.transform = 'translateY(0)'
-    el.style.boxShadow = '0 2px 20px rgba(17,17,16,0.07)'
     resetScramble()
   }
 
@@ -367,14 +379,14 @@ function StudentCard({ student, index, isInitialLoad, onOpen, onBook }: {
       onKeyDown={e => { if (e.key === 'Enter') onOpen() }}
       aria-label={`View ${student.name}'s profile`}
       style={{
-        background: '#FFFFFF',
-        border: '1px solid var(--border)',
+        background: colors.bg,
+        border: `1px solid ${colors.border}`,
         borderRadius: 14,
         overflow: 'hidden',
         transition: 'all .3s',
         cursor: 'pointer',
         willChange: 'transform',
-        boxShadow: '0 2px 20px rgba(17,17,16,0.07)',
+        boxShadow: '0 2px 16px rgba(17,17,16,0.06)',
         ...(isInitialLoad
           ? {
               animation: `fup .4s ease both`,
@@ -389,7 +401,7 @@ function StudentCard({ student, index, isInitialLoad, onOpen, onBook }: {
       <div className="student-card-inner">
 
         {/* Image */}
-        <div className="student-card-image">
+        <div className="student-card-image" style={{ background: `linear-gradient(150deg, ${colors.bg}, ${colors.imgGrad})` }}>
           {student.photo_url
             ? <Image
                 src={student.photo_url}
@@ -398,10 +410,10 @@ function StudentCard({ student, index, isInitialLoad, onOpen, onBook }: {
                 sizes="(max-width: 600px) 110px, (max-width: 900px) 50vw, 280px"
                 style={{ objectFit: 'cover', objectPosition: 'center top' }}
               />
-            : <SkillIcon size={18} strokeWidth={1.5} style={{ color: 'var(--orange)' }} />
+            : <SkillIcon size={18} strokeWidth={1.5} style={{ color: colors.text, opacity: 0.6 }} />
           }
           {/* Gradient overlay */}
-          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(16,15,13,.7) 0, transparent 50%)' }} />
+          <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(to top, ${colors.imgGrad}CC 0, transparent 55%)` }} />
           {/* Portfolio thumbnail strip — visible on tablet+ layout */}
           {(() => {
             const thumbs = (student.student_portfolio ?? []).filter(p => p.image_url).slice(0, 3)
@@ -435,17 +447,17 @@ function StudentCard({ student, index, isInitialLoad, onOpen, onBook }: {
           <div>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 6, marginBottom: 6 }}>
               <span style={{
-                fontSize: 10, fontWeight: 600, color: 'var(--muted)',
-                background: 'rgba(17,17,16,.04)', padding: '3px 8px',
-                borderRadius: 100, border: '1px solid rgba(17,17,16,.1)',
+                fontSize: 10, fontWeight: 600, color: colors.uniText,
+                background: colors.uniBg, padding: '3px 8px',
+                borderRadius: 100, border: `1px solid ${colors.uniBorder}`,
                 whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
               }}>
                 {student.university} · {student.year}
               </span>
-              {/* Lime verified badge */}
+              {/* Verified badge */}
               <span style={{
-                fontSize: 9, fontWeight: 800, color: '#111110',
-                background: '#A8FF00',
+                fontSize: 9, fontWeight: 800, color: colors.verText,
+                background: colors.verBg,
                 padding: '3px 8px', borderRadius: 100, whiteSpace: 'nowrap',
                 display: 'inline-flex', alignItems: 'center', gap: 3,
                 letterSpacing: .4,
@@ -457,20 +469,20 @@ function StudentCard({ student, index, isInitialLoad, onOpen, onBook }: {
 
             {/* Name + rating */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 2 }}>
-              <div style={{ fontWeight: 700, fontSize: 15, color: 'var(--cream)', lineHeight: 1.2 }}>{nameDisplay}</div>
-              <div style={{ fontSize: 12, color: 'var(--gold)', fontWeight: 600, whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: 3 }}>
-                <Star size={11} strokeWidth={1.5} style={{ fill: 'var(--gold)', color: 'var(--gold)' }} />
+              <div style={{ fontWeight: 700, fontSize: 15, color: colors.text, lineHeight: 1.2 }}>{nameDisplay}</div>
+              <div style={{ fontSize: 12, color: colors.ratingCol, fontWeight: 600, whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: 3 }}>
+                <Star size={11} strokeWidth={1.5} style={{ fill: colors.ratingCol, color: colors.ratingCol }} />
                 {student.rating}
               </div>
             </div>
 
             {/* Skill */}
-            <div style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 8 }}>{student.skill}</div>
+            <div style={{ fontSize: 12, color: colors.sub, marginBottom: 8 }}>{student.skill}</div>
 
             {/* Bio */}
             {student.bio && (
               <div className="student-card-bio" style={{
-                fontSize: 11, color: 'rgba(17,17,16,.5)', lineHeight: 1.5,
+                fontSize: 11, color: colors.sub, lineHeight: 1.5,
                 marginBottom: 8,
                 display: '-webkit-box', WebkitLineClamp: 2,
                 WebkitBoxOrient: 'vertical', overflow: 'hidden',
@@ -485,8 +497,8 @@ function StudentCard({ student, index, isInitialLoad, onOpen, onBook }: {
                 {student.tags.slice(0, 3).map(tag => (
                   <span key={tag} style={{
                     fontSize: 10, padding: '3px 7px', borderRadius: 100,
-                    background: 'rgba(17,17,16,.04)', color: 'rgba(17,17,16,.5)',
-                    border: '1px solid rgba(17,17,16,.08)',
+                    background: colors.tagBg, color: colors.tagText,
+                    border: `1px solid ${colors.uniBorder}`,
                   }}>
                     {tag}
                   </span>
@@ -498,24 +510,24 @@ function StudentCard({ student, index, isInitialLoad, onOpen, onBook }: {
           {/* Bottom: price + book */}
           <div style={{
             display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-            paddingTop: 10, borderTop: '1px solid var(--border)', gap: 8, marginTop: 4,
+            paddingTop: 10, borderTop: `1px solid ${colors.priceBorder}`, gap: 8, marginTop: 4,
           }}>
             <div>
-              <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 20, letterSpacing: 1, color: 'var(--cream)', lineHeight: 1 }}>
+              <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 20, letterSpacing: 1, color: colors.text, lineHeight: 1 }}>
                 from {student.starting_price}
-                <small style={{ fontFamily: 'Instrument Sans, sans-serif', fontSize: 10, fontWeight: 400, color: 'var(--muted)', display: 'block' }}>/ {student.price_unit}</small>
+                <small style={{ fontFamily: 'Instrument Sans, sans-serif', fontSize: 10, fontWeight: 400, color: colors.sub, display: 'block' }}>/ {student.price_unit}</small>
               </div>
             </div>
             <button
               onClick={e => { e.stopPropagation(); onBook() }}
               style={{
-                background: 'var(--orange)', color: '#fff',
+                background: colors.bookBg, color: colors.bookText,
                 border: 'none',
                 padding: '10px 18px', borderRadius: 8,
                 fontSize: 12, fontWeight: 700,
                 cursor: 'pointer', minHeight: 38, whiteSpace: 'nowrap',
                 transition: 'all .2s', flexShrink: 0,
-                boxShadow: '0 2px 12px rgba(20,69,255,.35)',
+                boxShadow: `0 2px 12px ${colors.hoverShadow}`,
               }}
               onMouseEnter={e => { (e.currentTarget as HTMLElement).style.opacity = '0.85' }}
               onMouseLeave={e => { (e.currentTarget as HTMLElement).style.opacity = '1' }}
