@@ -9,6 +9,7 @@ interface Student {
   skill: string
   university: string
   emoji: string
+  photo_url?: string | null
   student_pricing: { name: string; price: string; unit: string; featured: boolean }[]
 }
 
@@ -152,8 +153,12 @@ export function BookingModal({ student, onClose, colors = DEFAULT_COLORS }: Prop
                 width: 46, height: 46, borderRadius: 10,
                 background: `linear-gradient(135deg, ${colors.bg}, ${colors.imgGrad})`,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                flexShrink: 0,
-              }}><User size={22} strokeWidth={2} color={colors.text} /></div>
+                flexShrink: 0, overflow: 'hidden',
+              }}>
+                {student.photo_url
+                  ? <img src={student.photo_url} alt={student.name} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }} />
+                  : <User size={22} strokeWidth={2} color={colors.text} />}
+              </div>
               <div>
                 <div style={{ fontWeight: 700, fontSize: 15, color: '#111110' }}>{student.name}</div>
                 <div style={{ fontSize: 12, color: '#888', marginTop: 2 }}>{student.skill} · {student.university}</div>
