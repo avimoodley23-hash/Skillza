@@ -41,7 +41,7 @@ const ROLE_BLOBS = [
   { label: 'Photography',    Icon: Camera,  bg: '#AAFF00', fg: '#0B0B0A', left: '77%', top: '17%', amp: 14, dur: 2.9, delay: 0.7 },
   { label: 'Videographer',   Icon: Video,   bg: '#FF4520', fg: '#fff',    left: '63%', top: '54%', amp: 10, dur: 3.6, delay: 1.4 },
   { label: 'AI Design',      Icon: Layers,  bg: '#7C3AED', fg: '#fff',    left: '80%', top: '43%', amp: 13, dur: 2.7, delay: 2.1 },
-  { label: 'Motion',         Icon: Music,   bg: '#F59E0B', fg: '#0B0B0A', left: '55%', top: '73%', amp: 9,  dur: 4.0, delay: 1.0 },
+  { label: 'Motion',         Icon: Music,   bg: '#F59E0B', fg: '#0B0B0A', left: '88%', top: '66%', amp: 9,  dur: 4.0, delay: 1.0 },
 ]
 
 function FloatingBlob({ label, Icon, bg, fg, left, top, amp, dur, delay }: {
@@ -207,40 +207,18 @@ export default function HeroSection({ students = [] }: { students?: StudentFull[
       position: 'relative', overflow: 'hidden',
     }}>
 
-      {/* ── Animated gradient blobs ── */}
+      {/* ── Animated background blobs ── */}
       <div aria-hidden="true" style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none', zIndex: 0 }}>
-        {/* Cobalt blob — top right */}
-        <div style={{
-          position: 'absolute', top: '-8%', right: '-5%',
-          width: '48vw', height: '48vw', maxWidth: 700, maxHeight: 700,
-          background: 'radial-gradient(ellipse at center, rgba(20,69,255,.065) 0%, transparent 65%)',
-          borderRadius: '50%',
-          animation: 'blob-drift-1 18s ease-in-out infinite',
-        }} />
-        {/* Violet blob — bottom left */}
-        <div style={{
-          position: 'absolute', bottom: '8%', left: '-8%',
-          width: '38vw', height: '38vw', maxWidth: 540, maxHeight: 540,
-          background: 'radial-gradient(ellipse at center, rgba(124,58,237,.055) 0%, transparent 65%)',
-          borderRadius: '50%',
-          animation: 'blob-drift-2 22s ease-in-out infinite',
-        }} />
-        {/* Coral blob — middle right */}
-        <div style={{
-          position: 'absolute', top: '35%', right: '22%',
-          width: '22vw', height: '22vw', maxWidth: 320, maxHeight: 320,
-          background: 'radial-gradient(ellipse at center, rgba(255,69,32,.04) 0%, transparent 65%)',
-          borderRadius: '50%',
-          animation: 'blob-drift-3 15s ease-in-out infinite',
-        }} />
-        {/* Lime blob — top left */}
-        <div style={{
-          position: 'absolute', top: '6%', left: '12%',
-          width: '18vw', height: '18vw', maxWidth: 240, maxHeight: 240,
-          background: 'radial-gradient(ellipse at center, rgba(170,255,0,.045) 0%, transparent 65%)',
-          borderRadius: '50%',
-          animation: 'blob-drift-4 25s ease-in-out infinite',
-        }} />
+        {/* Cobalt — top right */}
+        <div style={{ position: 'absolute', top: '-10%', right: '-4%', width: 440, height: 400, background: '#1445FF', borderRadius: '61% 39% 52% 48% / 44% 56% 44% 56%', opacity: .11, filter: 'blur(80px)', animation: 'blob-drift-1 18s ease-in-out infinite' }} />
+        {/* Violet — bottom left */}
+        <div style={{ position: 'absolute', bottom: '-6%', left: '-5%', width: 400, height: 360, background: '#7C3AED', borderRadius: '40% 60% 65% 35% / 55% 45% 55% 45%', opacity: .13, filter: 'blur(75px)', animation: 'blob-drift-2 22s ease-in-out infinite' }} />
+        {/* Coral — centre right */}
+        <div style={{ position: 'absolute', top: '30%', right: '16%', width: 300, height: 280, background: '#FF4520', borderRadius: '50% 50% 40% 60% / 40% 60% 50% 50%', opacity: .09, filter: 'blur(65px)', animation: 'blob-drift-3 15s ease-in-out infinite' }} />
+        {/* Lime — top left */}
+        <div style={{ position: 'absolute', top: '3%', left: '10%', width: 240, height: 220, background: '#AAFF00', borderRadius: '55% 45% 60% 40% / 40% 60% 40% 60%', opacity: .09, filter: 'blur(55px)', animation: 'blob-drift-4 25s ease-in-out infinite' }} />
+        {/* Amber — bottom right */}
+        <div style={{ position: 'absolute', bottom: '6%', right: '3%', width: 240, height: 220, background: '#F59E0B', borderRadius: '30% 70% 50% 50% / 60% 40% 60% 40%', opacity: .10, filter: 'blur(60px)', animation: 'blob-drift-1 20s ease-in-out infinite 4s' }} />
       </div>
 
       {/* Retro Perspective Grid */}
@@ -507,7 +485,7 @@ export default function HeroSection({ students = [] }: { students?: StudentFull[
           display: none;
           position: absolute; inset: 0;
           pointer-events: none;
-          z-index: 1;
+          z-index: 10;
         }
         .hero-blobs-layer > * { pointer-events: all; }
         @media (min-width: 900px) {
