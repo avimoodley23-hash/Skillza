@@ -279,7 +279,7 @@ export default function HeroSection({ students = [] }: { students?: StudentFull[
           </div>
 
           {/* Sub-copy */}
-          <p style={{ fontSize: 'clamp(14px, 1.8vw, 16px)', lineHeight: 1.75, color: 'rgba(250,250,248,.55)', maxWidth: 460, marginBottom: 28 }}>
+          <p style={{ fontSize: 'clamp(14px, 1.8vw, 16px)', lineHeight: 1.75, color: 'rgba(17,17,16,.55)', maxWidth: 460, marginBottom: 28 }}>
             Book photographers, designers, videographers and more — Skillza verified, fairly priced, and ready for your next project.
           </p>
 
