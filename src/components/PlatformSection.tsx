@@ -138,7 +138,7 @@ function BookCard({ accent }: { accent: string }) {
 
 function VerifyCard({ accent }: { accent: string }) {
   return (
-    <div style={{ position: 'relative', width: '100%', maxWidth: 320 }}>
+    <div style={{ position: 'relative', width: '100%', maxWidth: 340 }}>
       {/* Student ID card */}
       <div style={{
         background: 'linear-gradient(160deg, #1C1525 0%, #130F1A 100%)',
@@ -147,7 +147,7 @@ function VerifyCard({ accent }: { accent: string }) {
         boxShadow: `0 32px 64px rgba(0,0,0,.65), 0 0 0 1px ${accent}22`,
         position: 'relative', overflow: 'hidden',
         transform: 'rotate(-2deg)',
-      }}>
+      }} className="verify-id-card">
         <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: `linear-gradient(90deg, ${accent}, #E0E446)`, borderRadius: '20px 20px 0 0' }} />
         <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 10, letterSpacing: 3, color: 'rgba(250,250,248,.38)', marginBottom: 16 }}>UNIVERSITY OF CAPE TOWN</div>
         <div style={{ display: 'flex', gap: 13, alignItems: 'center', marginBottom: 16 }}>
@@ -271,7 +271,6 @@ export function PlatformSection() {
 
   useEffect(() => {
     const onScroll = () => {
-      if (window.innerWidth <= 859) return
       if (!sectionRef.current) return
       const rect = sectionRef.current.getBoundingClientRect()
       const scrollable = sectionRef.current.scrollHeight - window.innerHeight
@@ -424,18 +423,34 @@ export function PlatformSection() {
 
           </div>
 
-          {/* ── Right: UI card mockup ── */}
+          {/* ── Right: UI card mockup — all 3 pre-rendered in a grid-stack so height stays constant ── */}
           <div
             className="platform-card-area"
             style={{
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              display: 'grid',
+              gridTemplate: '1fr / 1fr',
+              placeItems: 'center',
               padding: 'clamp(16px, 4vw, 48px)',
-              opacity: isFading ? 0 : 1,
-              transform: isFading ? 'scale(0.96) translateY(8px)' : 'scale(1) translateY(0)',
-              transition: 'opacity 0.2s ease, transform 0.2s ease',
             }}
           >
-            {CARD_MAP[slide.card as CardKey](slide.accent)}
+            {SLIDES.map((s, i) => (
+              <div
+                key={s.id}
+                style={{
+                  gridArea: '1 / 1',
+                  width: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  opacity: displayIdx === i && !isFading ? 1 : 0,
+                  transform: displayIdx === i && !isFading ? 'scale(1) translateY(0)' : 'scale(0.96) translateY(8px)',
+                  transition: 'opacity 0.2s ease, transform 0.2s ease',
+                  pointerEvents: 'none',
+                }}
+              >
+                {CARD_MAP[s.card as CardKey](s.accent)}
+              </div>
+            ))}
           </div>
         </div>
 
@@ -459,17 +474,18 @@ export function PlatformSection() {
           grid-template-columns: 1fr;
         }
         @media (max-width: 859px) {
-          /* Use 100dvh — dynamic viewport height that excludes browser chrome on iOS Safari */
+          /* Restore scroll-driven slide animation on mobile */
           .platform-section {
-            height: 100dvh;
+            height: calc(3 * 100dvh);
           }
           .platform-sticky {
             height: 100dvh !important;
+            justify-content: flex-start !important;
           }
           .platform-bg-glow {
             opacity: 0.45;
           }
-          /* On mobile: counter flows naturally in document */
+          /* Counter flows naturally in document */
           .platform-counter {
             position: static !important;
             top: auto !important;
@@ -478,32 +494,50 @@ export function PlatformSection() {
             margin-bottom: 12px !important;
             z-index: auto !important;
           }
-          /* Stable two-row layout so all 3 slides are the same height */
+          /* Grid fills sticky height exactly — 1fr card row stays stable across slides */
           .platform-grid {
+            height: 100% !important;
+            box-sizing: border-box !important;
             gap: 0 !important;
-            padding-top: calc(60px + env(safe-area-inset-top, 0px) + 12px) !important;
+            padding-top: calc(60px + env(safe-area-inset-top, 0px) + 10px) !important;
             padding-bottom: 12px !important;
-            grid-template-rows: auto 1fr;
+            grid-template-rows: auto 1fr !important;
             align-items: stretch !important;
           }
-          /* Fixed min-height prevents text area from collapsing/expanding between slides */
+          /* Compact text area so card area has adequate room */
           .platform-text-area {
-            min-height: 240px;
-          }
-          /* Card area fills remaining vertical space — all cards centre within it */
-          .platform-card-area {
-            flex: 1;
+            min-height: 0 !important;
             display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            padding: 8px 0 !important;
-            min-height: 220px;
-            overflow: visible;
+            flex-direction: column !important;
+            justify-content: flex-end !important;
+            padding-bottom: 8px !important;
+            overflow: hidden !important;
           }
-          /* Scale oversized cards to fit without cropping */
-          .platform-card-area > * {
-            transform-origin: top center;
-            max-width: 100% !important;
+          .platform-text-area h2 {
+            font-size: clamp(34px, 9vw, 96px) !important;
+            margin-bottom: 10px !important;
+          }
+          .platform-text-area p {
+            margin-bottom: 12px !important;
+          }
+          /* Card area: grid-stack — all 3 cards overlap in same cell, only active one visible */
+          .platform-card-area {
+            grid-row: 1fr !important;
+            min-height: 0 !important;
+            display: grid !important;
+            grid-template: 1fr / 1fr !important;
+            place-items: start center !important;
+            padding: 8px 8px 0 !important;
+            overflow: visible !important;
+          }
+          /* Uniform scale — all cards now same maxWidth so zoom is consistent */
+          .platform-card-area > * > * {
+            zoom: 0.88;
+            max-width: min(340px, calc(100vw - 36px)) !important;
+          }
+          /* Remove ID card tilt on mobile — rotation caused misalignment */
+          .verify-id-card {
+            transform: none !important;
           }
         }
         @media (min-width: 860px) {
