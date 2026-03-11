@@ -735,8 +735,6 @@ export default function DashboardPage() {
               </div>
             </div>
 
-            </div>
-
             {/* Locked info */}
             <div style={{ background: '#FFFFFF', border: '1px solid rgba(0,0,0,.07)', borderRadius: 16, padding: '20px', display: 'flex', flexDirection: 'column', gap: 12, boxShadow: '0 2px 8px rgba(0,0,0,.04)' }}>
               <Field label="Name" value={student!.name} disabled />
