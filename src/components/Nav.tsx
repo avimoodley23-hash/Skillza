@@ -45,13 +45,10 @@ export default function Nav() {
           SKILL<span style={{ color: 'var(--orange)' }}>ZA</span>
         </Link>
 
-        {/* Desktop links */}
+        {/* Desktop nav */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 24 }} className="hide-mobile">
           {[
-            { href: '/#find-talent',  label: 'Browse Talent' },
             { href: '/#how-it-works', label: 'How It Works' },
-            { href: '/#platform',     label: 'For Clients' },
-            { href: '/#verify',       label: 'Verification' },
             { href: '/#for-students', label: 'For Students' },
           ].map(({ href, label }) => (
             <Link key={href} href={href} style={{ fontSize: 13, fontWeight: 500, color: 'var(--muted)', transition: 'color .2s', letterSpacing: '.2px' }}
@@ -60,33 +57,46 @@ export default function Nav() {
               {label}
             </Link>
           ))}
+          <Link href="/#talent-grid" className="btn-outline" style={{ padding: '9px 20px', fontSize: 13 }}>
+            Browse Talent
+          </Link>
           <Link href="/join" className="btn-primary" style={{ padding: '9px 20px', fontSize: 13 }}>
-            Join the Waitlist
+            Join as a Creative
           </Link>
         </div>
 
-        {/* Hamburger */}
-        <button
-          className="show-mobile"
-          onClick={() => setMenuOpen(!menuOpen)}
-          aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-          aria-expanded={menuOpen}
-          style={{ display: 'none', flexDirection: 'column', gap: 5, background: 'none', border: 'none', padding: 8, cursor: 'pointer', WebkitTapHighlightColor: 'transparent' }}
-        >
-          {[0, 1, 2].map(i => (
-            <span key={i} style={{
-              display: 'block', width: 22, height: 1.5,
-              background: 'var(--cream)', borderRadius: 2,
-              transition: 'all .3s',
-              transform: menuOpen
-                ? i === 0 ? 'rotate(45deg) translate(5px, 5px)'
-                : i === 2 ? 'rotate(-45deg) translate(5px, -5px)'
-                : 'none'
-                : 'none',
-              opacity: menuOpen && i === 1 ? 0 : 1,
-            }} />
-          ))}
-        </button>
+        {/* Mobile: Browse pill + hamburger */}
+        <div className="show-mobile" style={{ display: 'none', alignItems: 'center', gap: 10 }}>
+          <Link href="/#talent-grid" style={{
+            fontSize: 11, fontWeight: 700, letterSpacing: .4,
+            padding: '7px 14px', borderRadius: 100,
+            border: '1px solid rgba(255,255,255,.18)',
+            color: 'var(--cream)',
+            whiteSpace: 'nowrap',
+          }}>
+            Browse
+          </Link>
+          <button
+            onClick={() => setMenuOpen(v => !v)}
+            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={menuOpen}
+            style={{ display: 'flex', flexDirection: 'column', gap: 5, background: 'none', border: 'none', padding: 8, cursor: 'pointer', WebkitTapHighlightColor: 'transparent' }}
+          >
+            {[0, 1, 2].map(i => (
+              <span key={i} style={{
+                display: 'block', width: 22, height: 1.5,
+                background: 'var(--cream)', borderRadius: 2,
+                transition: 'all .3s',
+                transform: menuOpen
+                  ? i === 0 ? 'rotate(45deg) translate(5px, 5px)'
+                  : i === 2 ? 'rotate(-45deg) translate(5px, -5px)'
+                  : 'none'
+                  : 'none',
+                opacity: menuOpen && i === 1 ? 0 : 1,
+              }} />
+            ))}
+          </button>
+        </div>
       </nav>
 
       {/* Mobile overlay menu */}
@@ -102,43 +112,55 @@ export default function Nav() {
         overflowY: 'auto',
       }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 4, flex: 1 }}>
-{[
-  { href: '/#find-talent', label: 'Browse Talent' },
-  { href: '/#how-it-works', label: 'How It Works' },
-  { href: '/#platform', label: 'For Clients' },
-  { href: '/#verify', label: 'Verification' },
-  { href: '/#for-students', label: 'For Students' }
-].map(({ href, label }) => (
-  <Link
-    key={href}
-    href={href}
-    onClick={() => setMenuOpen(false)}
-    style={{
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      padding: '16px 0',
-      fontFamily: 'Bebas Neue, sans-serif',
-      fontSize: 28,
-      letterSpacing: 1.5,
-      color: 'var(--muted-2)',
-      borderBottom: '1px solid var(--border)'
-    }}
-  >
-    {label}
-  </Link>
-))}
+          {[
+            { href: '/#talent-grid',  label: 'Browse Talent' },
+            { href: '/#how-it-works', label: 'How It Works' },
+            { href: '/#for-students', label: 'For Students' },
+          ].map(({ href, label }) => (
+            <Link
+              key={href}
+              href={href}
+              onClick={() => setMenuOpen(false)}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: '16px 0',
+                fontFamily: 'Bebas Neue, sans-serif',
+                fontSize: 28,
+                letterSpacing: 1.5,
+                color: 'var(--muted-2)',
+                borderBottom: '1px solid var(--border)',
+              }}
+            >
+              {label}
+            </Link>
+          ))}
         </div>
-        <Link href="/join" onClick={() => setMenuOpen(false)} style={{
-          background: 'var(--orange)', color: '#fff',
-          textAlign: 'center', marginTop: 20,
-          padding: 16, borderRadius: 10,
-          fontFamily: 'Bebas Neue, sans-serif',
-          fontSize: 22, letterSpacing: 2,
-          display: 'block',
-        }}>
-          JOIN THE WAITLIST →
-        </Link>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 20 }}>
+          <Link href="/#talent-grid" onClick={() => setMenuOpen(false)} style={{
+            background: 'transparent',
+            border: '1px solid rgba(255,255,255,.18)',
+            color: 'var(--cream)',
+            textAlign: 'center',
+            padding: 16, borderRadius: 10,
+            fontFamily: 'Bebas Neue, sans-serif',
+            fontSize: 20, letterSpacing: 2,
+            display: 'block',
+          }}>
+            BROWSE TALENT →
+          </Link>
+          <Link href="/join" onClick={() => setMenuOpen(false)} style={{
+            background: 'var(--orange)', color: '#fff',
+            textAlign: 'center',
+            padding: 16, borderRadius: 10,
+            fontFamily: 'Bebas Neue, sans-serif',
+            fontSize: 22, letterSpacing: 2,
+            display: 'block',
+          }}>
+            JOIN AS A CREATIVE →
+          </Link>
+        </div>
       </div>
 
       <style>{`

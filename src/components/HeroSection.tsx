@@ -59,20 +59,9 @@ const CARD_ACCENTS = [
 
 export default function HeroSection({ students = [] }: { students?: StudentFull[] }) {
   const statsRef = useRef<HTMLDivElement>(null)
-  const [counted, setCounted] = useState(false)
+  const [counted] = useState(true)
   const c1 = useCountUp(9, 1200, counted)
   const c3 = useCountUp(100, 1500, counted)
-
-  useEffect(() => {
-    const el = statsRef.current
-    if (!el) return
-    const obs = new IntersectionObserver(
-      ([e]) => { if (e.isIntersecting) { setCounted(true); obs.disconnect() } },
-      { threshold: 0.4 }
-    )
-    obs.observe(el)
-    return () => obs.disconnect()
-  }, [])
 
   const gridRef = useRef<HTMLDivElement>(null)
   useEffect(() => {

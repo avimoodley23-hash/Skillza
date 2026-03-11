@@ -66,7 +66,7 @@ export function JoinSection() {
             margin: 0,
             alignSelf: 'end',
           }}>
-            You&apos;re already good at this — people are already asking. Skillza puts you in front of{' '}
+            You&apos;re already good at this. People are already asking. Skillza puts you in front of{' '}
             <span style={{ color: '#FAFAF8', fontWeight: 600 }}>clients who are ready to pay</span>{' '}
             and turns every job into a career-building moment.
           </p>

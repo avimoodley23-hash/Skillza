@@ -38,7 +38,7 @@ export function HowItWorksSection() {
           <SplitText text="Fair for students." style={{ display: 'block', color: 'rgba(250,250,248,.55)' }} delay={120} />
         </h2>
         <p style={{ fontSize: 'clamp(14px, 1.8vw, 15px)', lineHeight: 1.8, color: 'rgba(250,250,248,.5)', maxWidth: 480, marginBottom: 40 }}>
-          Browse and book in minutes with no account needed. The deposit system means students always show up, and you are never paying blind.
+          Browse and book in minutes. No account needed, no guesswork. The deposit system protects both sides.
         </p>
       </AnimateIn>
 
@@ -81,13 +81,6 @@ export function HowItWorksSection() {
             </div>
           )
         })}
-      </AnimateIn>
-
-      <AnimateIn delay={2} style={{ position: 'relative', zIndex: 1, marginTop: 28, background: 'rgba(255,69,32,.05)', border: '1px solid rgba(255,69,32,.14)', borderLeft: '3px solid var(--coral)', borderRadius: '0 10px 10px 0', padding: '18px 20px' }}>
-        <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 1.5, textTransform: 'uppercase', color: 'var(--coral)', marginBottom: 6 }}>Phase 1 — How it works right now</div>
-        <p style={{ fontSize: 13.5, color: 'rgba(250,250,248,.48)', lineHeight: 1.7 }}>
-          Skillza is launching lean. <strong style={{ color: 'rgba(250,250,248,.85)' }}>No login needed to book.</strong> All communication happens via WhatsApp. Deposits go directly between parties via EFT or SnapScan. <strong style={{ color: 'rgba(250,250,248,.85)' }}>Secure in-platform payments and student dashboards are coming in Phase 2.</strong>
-        </p>
       </AnimateIn>
 
       <style>{`

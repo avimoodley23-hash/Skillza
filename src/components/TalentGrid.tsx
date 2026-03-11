@@ -122,7 +122,7 @@ export default function TalentGrid({ students }: { students: Student[] }) {
 
   return (
     <>
-      <section id="find-talent" style={{ padding: 'clamp(48px, 8vw, 80px) 24px 40px', background: '#F7F7F5' }}>
+      <section id="talent-grid" style={{ padding: 'clamp(48px, 8vw, 80px) 24px 40px', background: '#F7F7F5' }}>
         <div style={{ marginBottom: 20 }}>
           <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: '2.5px', textTransform: 'uppercase', color: '#334ED8', marginBottom: 14, display: 'flex', alignItems: 'center', gap: 10 }}>
             <span style={{ width: 18, height: 1.5, background: '#334ED8', display: 'inline-block', flexShrink: 0 }} />
