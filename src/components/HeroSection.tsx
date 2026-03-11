@@ -2,7 +2,7 @@
 import Link from 'next/link'
 import { useRef, useState, useEffect } from 'react'
 import type { StudentFull } from '@/types/database'
-import { Camera, Video, Palette, Layers, PenLine, Globe, Share2, Music, Pen, GraduationCap, ShieldCheck, Star } from 'lucide-react'
+import { Camera, Video, Palette, Layers, PenLine, Globe, Share2, Clapperboard, Pen, GraduationCap, ShieldCheck, Star } from 'lucide-react'
 
 const SKILL_ICON_MAP: Record<string, React.ElementType> = {
   'Photography': Camera,
@@ -30,7 +30,7 @@ const TICKER_PILLS = [
   { label: 'Videography',    Icon: Video,    bg: '#FF4520', fg: '#fff'    },
   { label: 'AI Design',      Icon: Layers,   bg: '#7C3AED', fg: '#fff'    },
   { label: 'Web Design',     Icon: Globe,    bg: '#5BC4F5', fg: '#0B0B0A' },
-  { label: 'Motion',         Icon: Music,    bg: '#F59E0B', fg: '#0B0B0A' },
+  { label: 'Motion',         Icon: Clapperboard, bg: '#F59E0B', fg: '#0B0B0A' },
   { label: 'Branding',       Icon: Pen,      bg: '#E8472F', fg: '#fff'    },
   { label: 'Copywriting',    Icon: PenLine,  bg: '#3CB97D', fg: '#fff'    },
 ]
@@ -41,7 +41,7 @@ const ROLE_BLOBS = [
   { label: 'Photography',    Icon: Camera,  bg: '#AAFF00', fg: '#0B0B0A', left: '77%', top: '17%', amp: 14, dur: 2.9, delay: 0.7 },
   { label: 'Videographer',   Icon: Video,   bg: '#FF4520', fg: '#fff',    left: '63%', top: '54%', amp: 10, dur: 3.6, delay: 1.4 },
   { label: 'AI Design',      Icon: Layers,  bg: '#7C3AED', fg: '#fff',    left: '80%', top: '43%', amp: 13, dur: 2.7, delay: 2.1 },
-  { label: 'Motion',         Icon: Music,   bg: '#F59E0B', fg: '#0B0B0A', left: '88%', top: '66%', amp: 9,  dur: 4.0, delay: 1.0 },
+  { label: 'Motion',         Icon: Clapperboard, bg: '#F59E0B', fg: '#0B0B0A', left: '88%', top: '66%', amp: 9,  dur: 4.0, delay: 1.0 },
 ]
 
 function FloatingBlob({ label, Icon, bg, fg, left, top, amp, dur, delay }: {
