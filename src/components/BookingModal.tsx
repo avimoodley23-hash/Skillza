@@ -1,5 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react'
+import { User, MessageCircle, CheckCircle } from 'lucide-react'
 import type { AccentColors } from '@/components/ProfilePanel'
 
 interface Student {
@@ -151,8 +152,8 @@ export function BookingModal({ student, onClose, colors = DEFAULT_COLORS }: Prop
                 width: 46, height: 46, borderRadius: 10,
                 background: `linear-gradient(135deg, ${colors.bg}, ${colors.imgGrad})`,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 22, flexShrink: 0,
-              }}>{student.emoji}</div>
+                flexShrink: 0,
+              }}><User size={22} strokeWidth={2} color={colors.text} /></div>
               <div>
                 <div style={{ fontWeight: 700, fontSize: 15, color: '#111110' }}>{student.name}</div>
                 <div style={{ fontSize: 12, color: '#888', marginTop: 2 }}>{student.skill} · {student.university}</div>
@@ -203,7 +204,7 @@ export function BookingModal({ student, onClose, colors = DEFAULT_COLORS }: Prop
                 </div>
 
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: 9, background: 'rgba(37,167,90,.07)', border: '1px solid rgba(37,167,90,.2)', borderRadius: 10, padding: 13, marginBottom: 18 }}>
-                  <span style={{ fontSize: 18, flexShrink: 0, marginTop: 1 }}>💬</span>
+                  <MessageCircle size={18} strokeWidth={2} color="#1A7A44" style={{ flexShrink: 0, marginTop: 1 }} />
                   <p style={{ fontSize: 12, color: 'rgba(17,17,16,.65)', lineHeight: 1.65 }}>After submitting, <strong style={{ color: '#1A7A44' }}>you'll be contacted on WhatsApp</strong> within 24 hours to confirm scope and arrange the deposit.</p>
                 </div>
 
@@ -225,7 +226,7 @@ export function BookingModal({ student, onClose, colors = DEFAULT_COLORS }: Prop
               </>
             ) : (
               <div style={{ textAlign: 'center', paddingBottom: 'calc(28px + var(--safe-b))' }}>
-                <span style={{ fontSize: 48, marginBottom: 12, display: 'block' }}>🎉</span>
+                <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 12 }}><CheckCircle size={52} strokeWidth={1.5} color={colors.bookBg} /></div>
                 <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: '#888', marginBottom: 6 }}>Your Reference</div>
                 <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 36, letterSpacing: 3, color: colors.bookBg, marginBottom: 10 }}>{ref}</div>
                 <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 24, letterSpacing: .5, marginBottom: 8, color: '#111110' }}>Request Sent!</div>

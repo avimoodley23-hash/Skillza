@@ -1,5 +1,9 @@
 'use client'
 import { useEffect } from 'react'
+import {
+  User, Instagram, Music2, Linkedin, Palette, Dribbble,
+  Youtube, Github, HardDrive, Pin, Twitter, Link2, Image as ImageIcon,
+} from 'lucide-react'
 
 interface Student {
   id: number
@@ -40,19 +44,19 @@ const DEFAULT_COLORS: AccentColors = {
   ratingCol: '#E0E446', hoverShadow: 'rgba(51,78,216,0.35)',
 }
 
-function detectPlatform(url: string): { label: string; icon: string } {
+function detectPlatform(url: string): { label: string; icon: React.ReactNode } {
   const u = url.toLowerCase()
-  if (u.includes('instagram.com')) return { label: 'Instagram', icon: '📸' }
-  if (u.includes('tiktok.com')) return { label: 'TikTok', icon: '🎵' }
-  if (u.includes('linkedin.com')) return { label: 'LinkedIn', icon: '💼' }
-  if (u.includes('behance.net')) return { label: 'Behance', icon: '🎨' }
-  if (u.includes('dribbble.com')) return { label: 'Dribbble', icon: '🏀' }
-  if (u.includes('youtube.com') || u.includes('youtu.be')) return { label: 'YouTube', icon: '🎬' }
-  if (u.includes('github.com')) return { label: 'GitHub', icon: '💻' }
-  if (u.includes('drive.google.com')) return { label: 'Google Drive', icon: '📁' }
-  if (u.includes('pinterest.com')) return { label: 'Pinterest', icon: '📌' }
-  if (u.includes('twitter.com') || u.includes('x.com')) return { label: 'X / Twitter', icon: '🐦' }
-  return { label: 'Portfolio', icon: '🔗' }
+  if (u.includes('instagram.com')) return { label: 'Instagram', icon: <Instagram size={18} strokeWidth={1.5} /> }
+  if (u.includes('tiktok.com')) return { label: 'TikTok', icon: <Music2 size={18} strokeWidth={1.5} /> }
+  if (u.includes('linkedin.com')) return { label: 'LinkedIn', icon: <Linkedin size={18} strokeWidth={1.5} /> }
+  if (u.includes('behance.net')) return { label: 'Behance', icon: <Palette size={18} strokeWidth={1.5} /> }
+  if (u.includes('dribbble.com')) return { label: 'Dribbble', icon: <Dribbble size={18} strokeWidth={1.5} /> }
+  if (u.includes('youtube.com') || u.includes('youtu.be')) return { label: 'YouTube', icon: <Youtube size={18} strokeWidth={1.5} /> }
+  if (u.includes('github.com')) return { label: 'GitHub', icon: <Github size={18} strokeWidth={1.5} /> }
+  if (u.includes('drive.google.com')) return { label: 'Google Drive', icon: <HardDrive size={18} strokeWidth={1.5} /> }
+  if (u.includes('pinterest.com')) return { label: 'Pinterest', icon: <Pin size={18} strokeWidth={1.5} /> }
+  if (u.includes('twitter.com') || u.includes('x.com')) return { label: 'X / Twitter', icon: <Twitter size={18} strokeWidth={1.5} /> }
+  return { label: 'Portfolio', icon: <Link2 size={18} strokeWidth={1.5} /> }
 }
 
 interface Props {
@@ -154,7 +158,7 @@ export function ProfilePanel({ student, onClose, onBook, colors = DEFAULT_COLORS
             }}>
               {student.photo_url
                 ? <img src={student.photo_url} alt={student.name} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }} />
-                : student.emoji
+                : <User size={38} strokeWidth={1.5} color={colors.text} />
               }
             </div>
           </div>
@@ -230,10 +234,10 @@ export function ProfilePanel({ student, onClose, onBook, colors = DEFAULT_COLORS
                     <div key={i} style={{
                       aspectRatio: '1', borderRadius: 9,
                       display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-                      fontSize: 26, border: '1px solid rgba(17,17,16,.09)',
+                      border: '1px solid rgba(17,17,16,.09)',
                       background: '#F0EDE4', gap: 5,
                     }}>
-                      {p.emoji}
+                      <ImageIcon size={28} strokeWidth={1.5} color="#AAA" />
                       <span style={{ fontSize: 9, fontWeight: 700, color: '#888', letterSpacing: .3, textTransform: 'uppercase', textAlign: 'center', padding: '0 4px' }}>{p.label}</span>
                     </div>
                   )
@@ -264,7 +268,7 @@ export function ProfilePanel({ student, onClose, onBook, colors = DEFAULT_COLORS
                         onMouseEnter={e => (e.currentTarget.style.borderColor = `${colors.bg}55`)}
                         onMouseLeave={e => (e.currentTarget.style.borderColor = 'rgba(17,17,16,.09)')}
                       >
-                        <span style={{ fontSize: 18, flexShrink: 0 }}>{icon}</span>
+                        <span style={{ flexShrink: 0, display: 'flex', alignItems: 'center' }}>{icon}</span>
                         <div style={{ minWidth: 0 }}>
                           <div style={{ fontSize: 12, fontWeight: 700, color: '#111110' }}>{label}</div>
                           <div style={{ fontSize: 11, color: '#888', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{display}</div>
