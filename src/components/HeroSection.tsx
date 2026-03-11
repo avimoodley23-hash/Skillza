@@ -12,7 +12,7 @@ const SKILL_ICON_MAP: Record<string, React.ElementType> = {
   'Copywriting': PenLine,
   'Web Design': Globe,
   'Social Media': Share2,
-  'Music': Music,
+  'Music': Clapperboard,
   'Illustration': Pen,
 }
 
