@@ -221,10 +221,14 @@ export default function HeroSection({ students = [] }: { students?: StudentFull[
           </div>
 
           {/* CTAs */}
-          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 32 }}>
-            <Link href="/#find-talent" className="btn-primary">Browse Talent →</Link>
+          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 12 }}>
+            <Link href="/#talent-grid" className="btn-primary">Browse Talent →</Link>
             <Link href="/join" className="btn-outline">Are you a creative? Join →</Link>
           </div>
+          {/* Trust micro-copy */}
+          <p style={{ fontSize: 11, color: 'rgba(255,255,255,.32)', marginBottom: 24, letterSpacing: .2 }}>
+            Protected payments · Verified SA students · Free to browse
+          </p>
 
           {/* Stats */}
           <div ref={statsRef} style={{ display: 'flex', gap: 'clamp(20px, 5vw, 48px)', paddingTop: 22, borderTop: '1px solid rgba(255,255,255,.08)' }}>

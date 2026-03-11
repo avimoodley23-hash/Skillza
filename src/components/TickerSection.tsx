@@ -35,7 +35,16 @@ export function TickerSection() {
   const r2 = [...ROW2, ...ROW2]
 
   return (
-    <div style={{ background: '#000000', overflow: 'hidden', position: 'relative', borderTop: '1px solid rgba(255,255,255,.06)', borderBottom: '1px solid rgba(255,255,255,.06)' }}>
+    <div style={{ background: '#000000', overflow: 'hidden', position: 'relative', borderTop: '1px solid rgba(255,255,255,.06)', borderBottom: '1px solid rgba(255,255,255,.06)' }}
+      onMouseEnter={e => {
+        const tracks = e.currentTarget.querySelectorAll<HTMLElement>('[style*="tickLeft"], [style*="tickRight"]')
+        tracks.forEach(t => { t.style.animationPlayState = 'paused' })
+      }}
+      onMouseLeave={e => {
+        const tracks = e.currentTarget.querySelectorAll<HTMLElement>('[style*="tickLeft"], [style*="tickRight"]')
+        tracks.forEach(t => { t.style.animationPlayState = 'running' })
+      }}
+    >
 
       {/* Row 1 — scrolls left, massive */}
       <div style={{ padding: '18px 0', overflow: 'hidden', position: 'relative' }}>
