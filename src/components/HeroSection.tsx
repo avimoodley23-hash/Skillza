@@ -16,6 +16,12 @@ const SKILL_ICON_MAP: Record<string, React.ElementType> = {
   'Illustration': Pen,
 }
 
+function formatPrice(price: string): string {
+  const p = (price ?? '').trim()
+  if (!p || p.toLowerCase() === 'n/a') return p
+  return /^R/i.test(p) ? p : `R${p}`
+}
+
 function getSkillIcon(skill: string): React.ElementType {
   for (const [key, Icon] of Object.entries(SKILL_ICON_MAP)) {
     if (skill.toLowerCase().includes(key.toLowerCase())) return Icon
@@ -190,7 +196,7 @@ export default function HeroSection({ students = [] }: { students?: StudentFull[
         uni: `${s.university ?? ''} · ${s.skill}`,
         skill: `${s.skill} · ${s.city ?? 'SA'}`,
         icon: getSkillIcon(s.skill),
-        price: `from ${s.starting_price}`,
+        price: `from ${formatPrice(s.starting_price)}`,
         badge: s.review_count > 0 ? `★ ${s.rating}` : '✓ Skillza Verified',
         badgeType: s.review_count > 0 ? 'r' : 'v',
         rotate: ROTATIONS[i],
@@ -284,6 +290,7 @@ export default function HeroSection({ students = [] }: { students?: StudentFull[
           </p>
 
           {/* Mobile talent strip */}
+          <div className="hero-talent-strip-wrap">
           <div className="hero-talent-strip" aria-label="Browse student talent">
             {cards.map((card, i) => (
               <div key={i} style={{
@@ -327,11 +334,24 @@ export default function HeroSection({ students = [] }: { students?: StudentFull[
               </div>
             ))}
           </div>
+          {/* Swipe indicator dots */}
+          <div className="hero-swipe-hint" aria-hidden="true">
+            {cards.map((_, i) => (
+              <span key={i} style={{
+                width: i === 0 ? 16 : 5, height: 5, borderRadius: 9999,
+                background: i === 0 ? '#334ED8' : 'rgba(17,17,16,.18)',
+                transition: 'width .3s',
+                display: 'inline-block',
+              }} />
+            ))}
+          </div>
+
+          </div>{/* /hero-talent-strip-wrap */}
 
           {/* CTAs */}
-          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 12 }}>
-            <Link href="/#talent-grid" className="btn-primary">Browse Talent →</Link>
-            <Link href="/join" className="btn-outline">Join as a Creative →</Link>
+          <div className="hero-ctas" style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 12 }}>
+            <Link href="/#talent-grid" className="btn-primary hero-cta-primary">Browse Talent →</Link>
+            <Link href="/join" className="btn-outline hero-cta-secondary">Join as a Creative →</Link>
           </div>
           {/* Trust micro-copy */}
           <p style={{ fontSize: 11, color: 'rgba(17,17,16,.45)', marginBottom: 24, letterSpacing: .2 }}>
@@ -451,12 +471,19 @@ export default function HeroSection({ students = [] }: { students?: StudentFull[
         .hero-right { display: none; }
         .hero-cards { display: none; }
 
+        .hero-talent-strip-wrap { position: relative; margin-bottom: 20px; }
         .hero-talent-strip {
           display: flex; overflow-x: auto; gap: 12px; padding-bottom: 8px;
-          margin: 0 0 20px; -webkit-overflow-scrolling: touch;
+          -webkit-overflow-scrolling: touch;
           scrollbar-width: none; -ms-overflow-style: none;
+          -webkit-mask-image: linear-gradient(to right, black 75%, transparent 100%);
+          mask-image: linear-gradient(to right, black 75%, transparent 100%);
         }
         .hero-talent-strip::-webkit-scrollbar { display: none; }
+        .hero-swipe-hint {
+          display: flex; gap: 4px; align-items: center;
+          margin-top: 8px;
+        }
 
         /* ── Mobile skill pill ticker ── */
         .hero-pills-ticker {
@@ -492,11 +519,16 @@ export default function HeroSection({ students = [] }: { students?: StudentFull[
           .hero-blobs-layer { display: block; }
         }
 
+        @media (max-width: 899px) {
+          .hero-ctas { flex-direction: column; }
+          .hero-cta-primary, .hero-cta-secondary { width: 100%; justify-content: center; text-align: center; }
+        }
         @media (min-width: 900px) {
           .hero-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
           .hero-right { display: block; }
           .hero-cards { display: block; position: relative; height: 280px; margin-bottom: 20px; }
           .hero-talent-strip { display: none; }
+          .hero-swipe-hint { display: none; }
         }
 
         .hc-1 { animation: hcf1 6s ease-in-out infinite; }

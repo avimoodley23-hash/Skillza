@@ -77,6 +77,12 @@ function parsePrice(p: string): number {
   return parseInt(p.replace(/[^0-9]/g, '')) || 0
 }
 
+function formatPrice(price: string): string {
+  const p = (price ?? '').trim()
+  if (!p || p.toLowerCase() === 'n/a') return p
+  return /^R/i.test(p) ? p : `R${p}`
+}
+
 export default function TalentGrid({ students }: { students: Student[] }) {
   const [activeFilter, setActiveFilter] = useState('all')
   const [sortBy, setSortBy] = useState('default')
@@ -182,8 +188,8 @@ export default function TalentGrid({ students }: { students: Student[] }) {
           margin: '0 -24px', padding: '10px 24px',
           overflowX: 'auto', display: 'flex', gap: 6,
           scrollbarWidth: 'none',
-          WebkitMaskImage: 'linear-gradient(to right, black calc(100% - 56px), transparent 100%)',
-          maskImage: 'linear-gradient(to right, black calc(100% - 56px), transparent 100%)',
+          WebkitMaskImage: 'linear-gradient(to right, black calc(100% - 72px), transparent 100%)',
+          maskImage: 'linear-gradient(to right, black calc(100% - 72px), transparent 100%)',
         }}>
           {CATEGORIES.map(cat => {
             const CatIcon = cat.icon
@@ -555,7 +561,7 @@ function StudentCard({ student, index, isInitialLoad, onOpen, onBook, colors }: 
           }}>
             <div>
               <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 20, letterSpacing: 1, color: colors.text, lineHeight: 1 }}>
-                from {student.starting_price}
+                from {formatPrice(student.starting_price)}
                 <small style={{ fontFamily: 'Instrument Sans, sans-serif', fontSize: 10, fontWeight: 400, color: colors.sub, display: 'block' }}>/ {student.price_unit}</small>
               </div>
             </div>

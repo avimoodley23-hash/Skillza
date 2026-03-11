@@ -44,6 +44,12 @@ const DEFAULT_COLORS: AccentColors = {
   ratingCol: '#E0E446', hoverShadow: 'rgba(51,78,216,0.35)',
 }
 
+function formatPrice(price: string): string {
+  const p = (price ?? '').trim()
+  if (!p || p.toLowerCase() === 'n/a') return p
+  return /^R/i.test(p) ? p : `R${p}`
+}
+
 function detectPlatform(url: string): { label: string; icon: React.ReactNode } {
   const u = url.toLowerCase()
   if (u.includes('instagram.com')) return { label: 'Instagram', icon: <Instagram size={18} strokeWidth={1.5} /> }
@@ -84,7 +90,7 @@ export function ProfilePanel({ student, onClose, onBook, colors = DEFAULT_COLORS
 
   if (!student) return null
 
-  const minPrice = student.student_pricing?.[0]?.price ?? ''
+  const minPrice = formatPrice(student.student_pricing?.[0]?.price ?? '')
   // Derive a readable accent for text overlaid on the card bg
   const accentOnLight = colors.bookBg  // e.g. #334ED8
 
@@ -248,7 +254,9 @@ export function ProfilePanel({ student, onClose, onBook, colors = DEFAULT_COLORS
 
           {/* Portfolio Links / Socials */}
           {student.portfolio_links && student.portfolio_links.trim() && (() => {
-            const links = student.portfolio_links!.split('\n').map(l => l.trim()).filter(Boolean)
+            const links = student.portfolio_links!.split('\n').map(l => l.trim()).filter(l =>
+              Boolean(l) && l.toLowerCase() !== 'n/a' && (l.startsWith('http://') || l.startsWith('https://'))
+            )
             if (!links.length) return null
             return (
               <div style={{ padding: '20px 22px', borderBottom: '1px solid rgba(17,17,16,.08)' }}>

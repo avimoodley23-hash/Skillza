@@ -111,9 +111,8 @@ export default function Nav() {
         display: 'flex', flexDirection: 'column',
         overflowY: 'auto',
       }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 4, flex: 1 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
           {[
-            { href: '/#talent-grid',  label: 'Browse Talent' },
             { href: '/#how-it-works', label: 'How It Works' },
             { href: '/#for-students', label: 'For Students' },
           ].map(({ href, label }) => (
@@ -137,7 +136,7 @@ export default function Nav() {
             </Link>
           ))}
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 20 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 40 }}>
           <Link href="/#talent-grid" onClick={() => setMenuOpen(false)} style={{
             background: 'transparent',
             border: '1px solid rgba(0,0,0,.15)',
