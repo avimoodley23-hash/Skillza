@@ -83,6 +83,8 @@ export default function TalentGrid({ students }: { students: Student[] }) {
   const [search, setSearch] = useState('')
   const [activeStudent, setActiveStudent] = useState<Student | null>(null)
   const [bookingStudent, setBookingStudent] = useState<Student | null>(null)
+  const [activeColors, setActiveColors] = useState<typeof CARD_COLORS[0]>(CARD_COLORS[0])
+  const [bookingColors, setBookingColors] = useState<typeof CARD_COLORS[0]>(CARD_COLORS[0])
   const hasAnimated = useRef<boolean>(false)
 
   useEffect(() => {
@@ -110,14 +112,16 @@ export default function TalentGrid({ students }: { students: Student[] }) {
       return 0
     })
 
-  const openProfile = (student: Student) => {
+  const openProfile = (student: Student, colors: typeof CARD_COLORS[0]) => {
     setBookingStudent(null)
     setActiveStudent(student)
+    setActiveColors(colors)
   }
 
-  const openBooking = (student: Student) => {
+  const openBooking = (student: Student, colors: typeof CARD_COLORS[0]) => {
     setActiveStudent(null)
     setBookingStudent(student)
+    setBookingColors(colors)
   }
 
   return (
@@ -215,8 +219,8 @@ export default function TalentGrid({ students }: { students: Student[] }) {
               student={student}
               index={i}
               isInitialLoad={!hasAnimated.current}
-              onOpen={() => openProfile(student)}
-              onBook={() => openBooking(student)}
+              onOpen={() => openProfile(student, CARD_COLORS[i % CARD_COLORS.length])}
+              onBook={() => openBooking(student, CARD_COLORS[i % CARD_COLORS.length])}
               colors={CARD_COLORS[i % CARD_COLORS.length]}
             />
           ))}
@@ -318,7 +322,8 @@ export default function TalentGrid({ students }: { students: Student[] }) {
         <ProfilePanel
           student={activeStudent as any}
           onClose={() => setActiveStudent(null)}
-          onBook={(s) => { setActiveStudent(null); setBookingStudent(s as any) }}
+          onBook={(s) => { setActiveStudent(null); setBookingStudent(s as any); setBookingColors(activeColors) }}
+          colors={activeColors}
         />
       )}
 
@@ -326,6 +331,7 @@ export default function TalentGrid({ students }: { students: Student[] }) {
         <BookingModal
           student={bookingStudent as any}
           onClose={() => setBookingStudent(null)}
+          colors={bookingColors}
         />
       )}
     </>
