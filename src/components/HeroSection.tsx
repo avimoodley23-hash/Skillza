@@ -23,6 +23,97 @@ function getSkillIcon(skill: string): React.ElementType {
   return GraduationCap
 }
 
+// ── Floating role blobs ──────────────────────────────────────────────────────
+const ROLE_BLOBS = [
+  { label: 'Graphic Design', Icon: Palette, bg: '#1445FF', fg: '#fff',    left: '59%', top: '9%',  amp: 11, dur: 3.2, delay: 0   },
+  { label: 'Photography',    Icon: Camera,  bg: '#AAFF00', fg: '#0B0B0A', left: '77%', top: '17%', amp: 14, dur: 2.9, delay: 0.7 },
+  { label: 'Videographer',   Icon: Video,   bg: '#FF4520', fg: '#fff',    left: '63%', top: '54%', amp: 10, dur: 3.6, delay: 1.4 },
+  { label: 'AI Design',      Icon: Layers,  bg: '#7C3AED', fg: '#fff',    left: '80%', top: '43%', amp: 13, dur: 2.7, delay: 2.1 },
+  { label: 'Motion',         Icon: Music,   bg: '#F59E0B', fg: '#0B0B0A', left: '55%', top: '73%', amp: 9,  dur: 4.0, delay: 1.0 },
+]
+
+function FloatingBlob({ label, Icon, bg, fg, left, top, amp, dur, delay }: {
+  label: string; Icon: React.ElementType; bg: string; fg: string;
+  left: string; top: string; amp: number; dur: number; delay: number;
+}) {
+  const blobRef = useRef<HTMLDivElement>(null)
+  const t0 = useRef(0)
+  const drag = useRef({ on: false, sx: 0, sy: 0, sl: 0, st: 0 })
+
+  useEffect(() => {
+    t0.current = performance.now() - delay * 1000
+    let raf: number
+    const tick = (now: number) => {
+      if (blobRef.current && !drag.current.on) {
+        const y = Math.sin(((now - t0.current) / 1000) * (2 * Math.PI / dur)) * amp
+        blobRef.current.style.transform = `translateY(${y.toFixed(2)}px)`
+      }
+      raf = requestAnimationFrame(tick)
+    }
+    raf = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(raf)
+  }, [amp, dur, delay])
+
+  const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    const el = blobRef.current!
+    const pr = el.parentElement!.getBoundingClientRect()
+    const er = el.getBoundingClientRect()
+    const pl = er.left - pr.left
+    const pt = er.top - pr.top
+    el.style.left = `${pl}px`
+    el.style.top  = `${pt}px`
+    el.style.transform = 'scale(1.07)'
+    el.style.zIndex = '40'
+    el.style.cursor = 'grabbing'
+    el.setPointerCapture(e.pointerId)
+    drag.current = { on: true, sx: e.clientX, sy: e.clientY, sl: pl, st: pt }
+  }
+
+  const onPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!drag.current.on) return
+    const { sx, sy, sl, st } = drag.current
+    const el = blobRef.current!
+    el.style.left = `${sl + e.clientX - sx}px`
+    el.style.top  = `${st + e.clientY - sy}px`
+  }
+
+  const onPointerUp = () => {
+    if (!drag.current.on) return
+    drag.current.on = false
+    t0.current = performance.now()
+    const el = blobRef.current!
+    el.style.cursor = 'grab'
+    el.style.zIndex = ''
+    el.style.transform = 'scale(1)'
+  }
+
+  return (
+    <div
+      ref={blobRef}
+      onPointerDown={onPointerDown}
+      onPointerMove={onPointerMove}
+      onPointerUp={onPointerUp}
+      style={{
+        position: 'absolute', left, top,
+        display: 'flex', alignItems: 'center', gap: 6,
+        padding: '10px 20px', borderRadius: 9999,
+        background: bg, color: fg,
+        fontWeight: 700, fontSize: 13, letterSpacing: 0.1,
+        whiteSpace: 'nowrap',
+        boxShadow: `0 8px 30px ${bg}55, 0 2px 8px ${bg}33`,
+        cursor: 'grab', userSelect: 'none', touchAction: 'none',
+        willChange: 'transform', transition: 'box-shadow 0.2s',
+      }}
+      onMouseEnter={e => (e.currentTarget.style.boxShadow = `0 14px 44px ${bg}70, 0 2px 8px ${bg}44`)}
+      onMouseLeave={e => (e.currentTarget.style.boxShadow = `0 8px 30px ${bg}55, 0 2px 8px ${bg}33`)}
+    >
+      {(() => { const I = Icon as React.FC<{size:number;strokeWidth:number}>; return <I size={13} strokeWidth={2} /> })()}
+      {label}
+    </div>
+  )
+}
+
 function useCountUp(target: number, duration: number, active: boolean) {
   const [value, setValue] = useState(0)
   useEffect(() => {
@@ -151,6 +242,11 @@ export default function HeroSection({ students = [] }: { students?: StudentFull[
 
       {/* Background watermark */}
       <div aria-hidden="true" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -54%)', fontFamily: 'Bebas Neue, sans-serif', fontSize: 'clamp(100px, 28vw, 380px)', color: 'rgba(17,17,16,0.025)', whiteSpace: 'nowrap', pointerEvents: 'none', letterSpacing: 6, userSelect: 'none', zIndex: 0 }}>SKILLZA</div>
+
+      {/* ── Floating role blobs (desktop only) ── */}
+      <div className="hero-blobs-layer">
+        {ROLE_BLOBS.map((b, i) => <FloatingBlob key={i} {...b} />)}
+      </div>
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 1200, margin: '0 auto', width: '100%' }} className="hero-inner">
 
@@ -349,6 +445,17 @@ export default function HeroSection({ students = [] }: { students?: StudentFull[
           scrollbar-width: none; -ms-overflow-style: none;
         }
         .hero-talent-strip::-webkit-scrollbar { display: none; }
+
+        .hero-blobs-layer {
+          display: none;
+          position: absolute; inset: 0;
+          pointer-events: none;
+          z-index: 1;
+        }
+        .hero-blobs-layer > * { pointer-events: all; }
+        @media (min-width: 900px) {
+          .hero-blobs-layer { display: block; }
+        }
 
         @media (min-width: 900px) {
           .hero-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }

@@ -46,16 +46,21 @@ export function Footer() {
   return (
     <footer style={{
       padding: '64px 24px 40px',
-      background: '#0C0C0C',
-      borderTop: '1px solid rgba(255,255,255,.06)',
+      background: '#F0EDE4',
+      borderTop: '1px solid rgba(0,0,0,.08)',
       position: 'relative',
       overflow: 'hidden',
     }}>
+      {/* Colourful top accent stripe */}
+      <div aria-hidden="true" style={{
+        position: 'absolute', top: 0, left: 0, right: 0, height: 3,
+        background: 'linear-gradient(90deg, #1445FF 0%, #7C3AED 25%, #FF4520 50%, #AAFF00 75%, #F59E0B 100%)',
+      }} />
       {/* Subtle ambient glow */}
       <div aria-hidden="true" style={{
         position: 'absolute', top: -100, right: -60,
         width: 400, height: 400,
-        background: 'radial-gradient(ellipse at center, rgba(51,78,216,.07) 0%, transparent 65%)',
+        background: 'radial-gradient(ellipse at center, rgba(20,69,255,.05) 0%, transparent 65%)',
         borderRadius: '50%', pointerEvents: 'none',
       }} />
 
@@ -67,9 +72,9 @@ export function Footer() {
           {/* Brand */}
           <div>
             <Link href="/" style={{ display: 'inline-block', fontFamily: 'Bebas Neue, sans-serif', fontSize: 32, letterSpacing: 3, marginBottom: 12, textDecoration: 'none' }}>
-              <span style={{ color: '#FAFAF8' }}>SKILL</span><span style={{ color: 'var(--orange)' }}>ZA</span>
+              <span style={{ color: 'var(--text)' }}>SKILL</span><span style={{ color: 'var(--orange)' }}>ZA</span>
             </Link>
-            <p style={{ fontSize: 13, color: 'rgba(255,255,255,.42)', lineHeight: 1.7, maxWidth: 280 }}>
+            <p style={{ fontSize: 13, color: 'rgba(17,17,16,.52)', lineHeight: 1.7, maxWidth: 280 }}>
               Where SA students get paid to do what they love.
             </p>
 
@@ -88,24 +93,24 @@ export function Footer() {
                   aria-label={label}
                   style={{
                     width: 36, height: 36, borderRadius: 10,
-                    background: 'rgba(255,255,255,.05)',
-                    border: '1px solid rgba(255,255,255,.08)',
+                    background: 'rgba(17,17,16,.06)',
+                    border: '1px solid rgba(17,17,16,.1)',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    color: 'rgba(255,255,255,.5)',
+                    color: 'rgba(17,17,16,.45)',
                     transition: 'all .2s',
                     textDecoration: 'none',
                   }}
                   onMouseEnter={e => {
                     const el = e.currentTarget as HTMLElement
-                    el.style.background = 'rgba(51,78,216,.15)'
-                    el.style.borderColor = 'rgba(51,78,216,.4)'
+                    el.style.background = 'rgba(20,69,255,.1)'
+                    el.style.borderColor = 'rgba(20,69,255,.25)'
                     el.style.color = 'var(--orange)'
                   }}
                   onMouseLeave={e => {
                     const el = e.currentTarget as HTMLElement
-                    el.style.background = 'rgba(255,255,255,.05)'
-                    el.style.borderColor = 'rgba(255,255,255,.08)'
-                    el.style.color = 'rgba(255,255,255,.5)'
+                    el.style.background = 'rgba(17,17,16,.06)'
+                    el.style.borderColor = 'rgba(17,17,16,.1)'
+                    el.style.color = 'rgba(17,17,16,.45)'
                   }}
                 >
                   {icon}
@@ -117,29 +122,29 @@ export function Footer() {
           {/* Nav columns */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 40 }}>
             <div>
-              <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: 'rgba(255,255,255,.28)', marginBottom: 16 }}>Platform</div>
+              <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: 'rgba(17,17,16,.38)', marginBottom: 16 }}>Platform</div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                 {NAV_LINKS.map(({ href, label }) => (
                   <Link
                     key={href}
                     href={href}
-                    style={{ fontSize: 13, fontWeight: 500, color: 'rgba(255,255,255,.48)', transition: 'color .2s', textDecoration: 'none' }}
-                    onMouseEnter={e => (e.currentTarget.style.color = '#FAFAF8')}
-                    onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,.48)')}
+                    style={{ fontSize: 13, fontWeight: 500, color: 'rgba(17,17,16,.5)', transition: 'color .2s', textDecoration: 'none' }}
+                    onMouseEnter={e => (e.currentTarget.style.color = 'var(--text)')}
+                    onMouseLeave={e => (e.currentTarget.style.color = 'rgba(17,17,16,.5)')}
                   >{label}</Link>
                 ))}
               </div>
             </div>
             <div>
-              <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: 'rgba(255,255,255,.28)', marginBottom: 16 }}>Legal</div>
+              <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: 'rgba(17,17,16,.38)', marginBottom: 16 }}>Legal</div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                 {LEGAL_LINKS.map(({ href, label }) => (
                   <Link
                     key={href}
                     href={href}
-                    style={{ fontSize: 13, fontWeight: 500, color: 'rgba(255,255,255,.48)', transition: 'color .2s', textDecoration: 'none' }}
-                    onMouseEnter={e => (e.currentTarget.style.color = '#FAFAF8')}
-                    onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,.48)')}
+                    style={{ fontSize: 13, fontWeight: 500, color: 'rgba(17,17,16,.5)', transition: 'color .2s', textDecoration: 'none' }}
+                    onMouseEnter={e => (e.currentTarget.style.color = 'var(--text)')}
+                    onMouseLeave={e => (e.currentTarget.style.color = 'rgba(17,17,16,.5)')}
                   >{label}</Link>
                 ))}
                 <a
@@ -154,14 +159,14 @@ export function Footer() {
         </div>
 
         {/* Divider */}
-        <div style={{ height: 1, background: 'rgba(255,255,255,.06)', marginBottom: 28 }} />
+        <div style={{ height: 1, background: 'rgba(0,0,0,.08)', marginBottom: 28 }} />
 
         {/* Bottom: legal */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-          <p style={{ fontSize: 11.5, color: 'rgba(255,255,255,.3)', lineHeight: 1.7 }}>
+          <p style={{ fontSize: 11.5, color: 'rgba(17,17,16,.42)', lineHeight: 1.7 }}>
             Skillza is a marketplace platform. We verify student enrolment but do not supervise bookings or guarantee outcomes. Use good judgment when meeting in person.
           </p>
-          <p style={{ fontSize: 11, color: 'rgba(255,255,255,.2)' }}>
+          <p style={{ fontSize: 11, color: 'rgba(17,17,16,.3)' }}>
             © 2026 Skillza. Built for SA students. POPIA compliant.
           </p>
         </div>
