@@ -1,5 +1,7 @@
 'use client'
+import { useState } from 'react'
 import Link from 'next/link'
+import { LegalModal } from './LegalModal'
 
 const NAV_LINKS = [
   { href: '/#find-talent',  label: 'Browse Talent' },
@@ -8,9 +10,9 @@ const NAV_LINKS = [
   { href: '/#verify',       label: 'Verification' },
 ]
 
-const LEGAL_LINKS = [
-  { href: '/privacy', label: 'Privacy Policy' },
-  { href: '/terms',   label: 'Terms of Service' },
+const LEGAL_LABELS = [
+  { key: 'privacy' as const, label: 'Privacy Policy' },
+  { key: 'terms'   as const, label: 'Terms of Service' },
 ]
 
 // Social icon SVGs (inline to avoid extra deps)
@@ -43,6 +45,8 @@ function LinkedInIcon() {
 }
 
 export function Footer() {
+  const [legalModal, setLegalModal] = useState<null | 'privacy' | 'terms'>(null)
+
   return (
     <footer style={{
       padding: '64px 24px 40px',
@@ -138,14 +142,14 @@ export function Footer() {
             <div>
               <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: 'rgba(17,17,16,.38)', marginBottom: 16 }}>Legal</div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                {LEGAL_LINKS.map(({ href, label }) => (
-                  <Link
-                    key={href}
-                    href={href}
-                    style={{ fontSize: 13, fontWeight: 500, color: 'rgba(17,17,16,.5)', transition: 'color .2s', textDecoration: 'none' }}
+                {LEGAL_LABELS.map(({ key, label }) => (
+                  <button
+                    key={key}
+                    onClick={() => setLegalModal(key)}
+                    style={{ fontSize: 13, fontWeight: 500, color: 'rgba(17,17,16,.5)', transition: 'color .2s', background: 'none', border: 'none', padding: 0, cursor: 'pointer', textAlign: 'left' }}
                     onMouseEnter={e => (e.currentTarget.style.color = 'var(--text)')}
                     onMouseLeave={e => (e.currentTarget.style.color = 'rgba(17,17,16,.5)')}
-                  >{label}</Link>
+                  >{label}</button>
                 ))}
                 <a
                   href="mailto:hello@skillza.co.za"
@@ -171,6 +175,8 @@ export function Footer() {
           </p>
         </div>
       </div>
+
+      {legalModal && <LegalModal type={legalModal} onClose={() => setLegalModal(null)} />}
 
       <style>{`
         .footer-top-grid {
