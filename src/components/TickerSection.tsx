@@ -35,7 +35,7 @@ export function TickerSection() {
   const r2 = [...ROW2, ...ROW2]
 
   return (
-    <div style={{ background: '#000000', overflow: 'hidden', position: 'relative', borderTop: '1px solid rgba(255,255,255,.06)', borderBottom: '1px solid rgba(255,255,255,.06)' }}
+    <div style={{ background: '#0F0E14', overflow: 'hidden', position: 'relative', borderTop: '1px solid rgba(0,0,0,.12)', borderBottom: '1px solid rgba(0,0,0,.12)' }}
       onMouseEnter={e => {
         const tracks = e.currentTarget.querySelectorAll<HTMLElement>('[style*="tickLeft"], [style*="tickRight"]')
         tracks.forEach(t => { t.style.animationPlayState = 'paused' })
@@ -49,8 +49,8 @@ export function TickerSection() {
       {/* Row 1 — scrolls left, massive */}
       <div style={{ padding: '18px 0', overflow: 'hidden', position: 'relative' }}>
         {/* Edge fade */}
-        <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 120, background: 'linear-gradient(to right, #000, transparent)', zIndex: 1, pointerEvents: 'none' }} />
-        <div style={{ position: 'absolute', right: 0, top: 0, bottom: 0, width: 120, background: 'linear-gradient(to left, #000, transparent)', zIndex: 1, pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 120, background: 'linear-gradient(to right, #0F0E14, transparent)', zIndex: 1, pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', right: 0, top: 0, bottom: 0, width: 120, background: 'linear-gradient(to left, #0F0E14, transparent)', zIndex: 1, pointerEvents: 'none' }} />
         <div style={{ display: 'flex', whiteSpace: 'nowrap', animation: 'tickLeft 22s linear infinite', willChange: 'transform' }}>
           {r1.map((item, i) => (
             <span key={i} style={{
@@ -74,8 +74,8 @@ export function TickerSection() {
 
       {/* Row 2 — scrolls right, slightly smaller */}
       <div style={{ padding: '18px 0', overflow: 'hidden', position: 'relative' }}>
-        <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 120, background: 'linear-gradient(to right, #000, transparent)', zIndex: 1, pointerEvents: 'none' }} />
-        <div style={{ position: 'absolute', right: 0, top: 0, bottom: 0, width: 120, background: 'linear-gradient(to left, #000, transparent)', zIndex: 1, pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 120, background: 'linear-gradient(to right, #0F0E14, transparent)', zIndex: 1, pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', right: 0, top: 0, bottom: 0, width: 120, background: 'linear-gradient(to left, #0F0E14, transparent)', zIndex: 1, pointerEvents: 'none' }} />
         <div style={{ display: 'flex', whiteSpace: 'nowrap', animation: 'tickRight 28s linear infinite', willChange: 'transform' }}>
           {r2.map((item, i) => (
             <span key={i} style={{

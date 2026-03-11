@@ -5,18 +5,18 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 
-  /* ── Dark base backgrounds ────────────────────────────── */
-  --black:    #111111;     /* page bg */
-  --black-2:  #0D0D0D;     /* deeper dark */
-  --black-3:  #1C1C1C;     /* surface / dark card */
+  /* ── Light base backgrounds ───────────────────────────── */
+  --black:    #FAFAF6;     /* page bg       */
+  --black-2:  #F2F0EA;     /* tinted cream  */
+  --black-3:  #ECEAE4;     /* surface card  */
   --dark:     #33473B;     /* Deep Green — alt dark panels */
 
-  /* ── Text on dark ──────────────────────────────────────── */
-  --cream:        #FFFFFF;
-  --cream-dim:    rgba(255,255,255,.65);
-  --cream-faint:  rgba(255,255,255,.06);
+  /* ── Text on light ─────────────────────────────────────── */
+  --cream:        #111110;
+  --cream-dim:    rgba(17,17,16,.6);
+  --cream-faint:  rgba(17,17,16,.04);
 
   /* ── Electric Blue — primary CTA ──────────────────────── */
   --orange:   #334ED8;
@@ -80,17 +80,17 @@
   --sand-dim: rgba(255,113,68,.12);
 
   /* ── Muted text ────────────────────────────────────────── */
-  --muted:    #888888;
-  --muted-2:  #AAAAAA;
+  --muted:    #666666;
+  --muted-2:  #888888;
 
   /* ── Borders ───────────────────────────────────────────── */
-  --border:   rgba(255,255,255,.08);
-  --border-2: rgba(255,255,255,.15);
+  --border:   rgba(0,0,0,.09);
+  --border-2: rgba(0,0,0,.16);
 
   /* ── Cards ─────────────────────────────────────────────── */
-  --card:     rgba(255,255,255,.03);
-  --card-2:   rgba(255,255,255,.06);
-  --surface:  rgba(255,255,255,.05);   /* input / form field backgrounds */
+  --card:     rgba(0,0,0,.025);
+  --card-2:   rgba(0,0,0,.05);
+  --surface:  rgba(0,0,0,.04);         /* input / form field backgrounds */
 
   /* ── Safe areas ────────────────────────────────────────── */
   --safe-b: env(safe-area-inset-bottom, 0px);
@@ -147,8 +147,8 @@ body::before {
 /* ── Scrollbar ───────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--black); }
-::-webkit-scrollbar-thumb { background: rgba(255,255,255,.1); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,.2); }
+::-webkit-scrollbar-thumb { background: rgba(0,0,0,.12); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,.2); }
 
 /* ── Typography utilities ─────────────────────────────────────── */
 .font-bebas { font-family: 'Bebas Neue', sans-serif; }
@@ -217,8 +217,8 @@ body::before {
   align-items: center;
   gap: 8px;
   background: transparent;
-  color: rgba(255,255,255,.8);
-  border: 1.5px solid rgba(255,255,255,.2);
+  color: rgba(17,17,16,.75);
+  border: 1.5px solid rgba(17,17,16,.2);
   padding: 13px 28px;
   border-radius: 100px;
   font-size: 14px;
@@ -230,9 +230,9 @@ body::before {
   -webkit-tap-highlight-color: transparent;
 }
 .btn-outline:hover {
-  border-color: rgba(216,230,255,.6);
-  background: rgba(216,230,255,.08);
-  color: var(--glacier);
+  border-color: rgba(51,78,216,.4);
+  background: rgba(51,78,216,.06);
+  color: var(--orange);
 }
 
 .btn-citrus {

@@ -5,9 +5,9 @@ import { MessageCircle } from 'lucide-react'
 
 // Each step gets its own accent color — cobalt, violet, coral
 const STEP_ACCENTS = [
-  { top: '#1445FF', numColor: 'rgba(20,69,255,.08)', hoverBg: '#0B1C66', badge: null },
-  { top: '#7C3AED', numColor: 'rgba(124,58,237,.08)', hoverBg: '#2D1366', badge: 'Connected via WhatsApp' },
-  { top: '#FF4520', numColor: 'rgba(255,69,32,.08)', hoverBg: '#5C1A0B', badge: null },
+  { top: '#1445FF', numColor: 'rgba(20,69,255,.1)',    hoverBg: 'rgba(20,69,255,.07)',   badge: null },
+  { top: '#7C3AED', numColor: 'rgba(124,58,237,.1)',  hoverBg: 'rgba(124,58,237,.06)', badge: 'Connected via WhatsApp' },
+  { top: '#FF4520', numColor: 'rgba(255,69,32,.1)',   hoverBg: 'rgba(255,69,32,.06)',  badge: null },
 ]
 
 export function HowItWorksSection() {
@@ -23,7 +23,7 @@ export function HowItWorksSection() {
       style={{
         padding: 'clamp(56px, 9vw, 96px) 24px',
         borderBottom: '1px solid rgba(255,255,255,.06)',
-        background: '#0F0E0E',
+        background: 'var(--black)',
         position: 'relative', overflow: 'hidden',
       }}
     >
@@ -33,16 +33,16 @@ export function HowItWorksSection() {
 
       <AnimateIn style={{ position: 'relative', zIndex: 1 }}>
         <div className="eyebrow eyebrow-coral">How It Works</div>
-        <h2 style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 'clamp(34px, 6vw, 60px)', lineHeight: .93, letterSpacing: 1, marginBottom: 14, color: '#FAFAF8' }}>
+        <h2 style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 'clamp(34px, 6vw, 60px)', lineHeight: .93, letterSpacing: 1, marginBottom: 14, color: '#111110' }}>
           <SplitText text="Simple for clients." style={{ display: 'block' }} />
-          <SplitText text="Fair for students." style={{ display: 'block', color: 'rgba(250,250,248,.55)' }} delay={120} />
+          <SplitText text="Fair for students." style={{ display: 'block', color: 'rgba(17,17,16,.52)' }} delay={120} />
         </h2>
-        <p style={{ fontSize: 'clamp(14px, 1.8vw, 15px)', lineHeight: 1.8, color: 'rgba(250,250,248,.5)', maxWidth: 480, marginBottom: 40 }}>
+        <p style={{ fontSize: 'clamp(14px, 1.8vw, 15px)', lineHeight: 1.8, color: 'rgba(17,17,16,.52)', maxWidth: 480, marginBottom: 40 }}>
           Browse and book in minutes. No account needed, no guesswork. The deposit system protects both sides.
         </p>
       </AnimateIn>
 
-      <AnimateIn delay={1} style={{ position: 'relative', zIndex: 1, display: 'grid', gridTemplateColumns: '1fr', gap: 3, borderRadius: 18, overflow: 'hidden', background: 'rgba(255,255,255,.04)' }} className="steps-grid">
+      <AnimateIn delay={1} style={{ position: 'relative', zIndex: 1, display: 'grid', gridTemplateColumns: '1fr', gap: 3, borderRadius: 18, overflow: 'hidden', background: 'rgba(0,0,0,.08)' }} className="steps-grid">
         {steps.map((step, idx) => {
           const accent = STEP_ACCENTS[idx]
           return (
@@ -50,7 +50,7 @@ export function HowItWorksSection() {
               key={step.num}
               data-accent={idx === 0 ? 'cobalt' : idx === 1 ? 'violet' : 'coral'}
               style={{
-                background: '#161514',
+                background: '#FFFFFF',
                 padding: 'clamp(28px, 4vw, 44px) clamp(20px, 3vw, 36px)',
                 transition: 'background .3s',
                 position: 'relative', overflow: 'hidden',
@@ -61,7 +61,7 @@ export function HowItWorksSection() {
               }}
               onMouseLeave={e => {
                 const el = e.currentTarget as HTMLElement
-                el.style.background = '#161514'
+                el.style.background = '#FFFFFF'
               }}
             >
               {/* Colored top bar */}
@@ -70,8 +70,8 @@ export function HowItWorksSection() {
               {/* Ghost step number */}
               <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 72, color: accent.numColor, lineHeight: 1, marginBottom: 12, userSelect: 'none' }}>{step.num}</div>
 
-              <h3 style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 22, letterSpacing: .5, marginBottom: 10, color: '#FAFAF8' }}>{step.title}</h3>
-              <p style={{ fontSize: 13.5, color: 'rgba(250,250,248,.55)', lineHeight: 1.75 }}>{step.body}</p>
+              <h3 style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 22, letterSpacing: .5, marginBottom: 10, color: '#111110' }}>{step.title}</h3>
+              <p style={{ fontSize: 13.5, color: 'rgba(17,17,16,.6)', lineHeight: 1.75 }}>{step.body}</p>
               {step.badge && (
                 <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, marginTop: 14, background: 'rgba(37,211,102,.08)', border: '1px solid rgba(37,211,102,.2)', color: '#25d366', fontSize: 11, fontWeight: 600, padding: '5px 12px', borderRadius: 100 }}>
                   <MessageCircle size={13} strokeWidth={1.5} />

@@ -25,8 +25,8 @@ export default function Nav() {
         padding: '0 24px',
         paddingTop: 'env(safe-area-inset-top, 0px)',
         height: 'calc(60px + env(safe-area-inset-top, 0px))',
-        background: scrolled ? 'rgba(16,15,13,.96)' : 'transparent',
-        borderBottom: `1px solid ${scrolled ? 'rgba(255,255,255,.07)' : 'transparent'}`,
+        background: scrolled ? 'rgba(250,250,246,.97)' : 'transparent',
+        borderBottom: `1px solid ${scrolled ? 'rgba(0,0,0,.09)' : 'transparent'}`,
         backdropFilter: scrolled ? 'blur(24px)' : 'none',
         WebkitBackdropFilter: scrolled ? 'blur(24px)' : 'none',
         transition: 'background .35s ease, border-color .35s ease, backdrop-filter .35s ease',
@@ -37,7 +37,7 @@ export default function Nav() {
           top: 'calc(-1 * env(safe-area-inset-top, 20px))',
           left: 0, right: 0,
           height: 'calc(env(safe-area-inset-top, 20px) + 4px)',
-          background: 'rgba(16,15,13,.96)',
+          background: 'rgba(250,250,246,.97)',
           pointerEvents: 'none',
         }} />
 
@@ -70,7 +70,7 @@ export default function Nav() {
           <Link href="/#talent-grid" style={{
             fontSize: 11, fontWeight: 700, letterSpacing: .4,
             padding: '7px 14px', borderRadius: 100,
-            border: '1px solid rgba(255,255,255,.18)',
+            border: '1px solid rgba(0,0,0,.15)',
             color: 'var(--cream)',
             whiteSpace: 'nowrap',
           }}>
@@ -102,7 +102,7 @@ export default function Nav() {
       {/* Mobile overlay menu */}
       <div style={{
         position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 398,
-        background: 'rgba(16,15,13,.98)',
+        background: 'rgba(250,250,246,.99)',
         backdropFilter: 'blur(24px)',
         WebkitBackdropFilter: 'blur(24px)',
         padding: '80px 28px 40px',
@@ -140,7 +140,7 @@ export default function Nav() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginTop: 20 }}>
           <Link href="/#talent-grid" onClick={() => setMenuOpen(false)} style={{
             background: 'transparent',
-            border: '1px solid rgba(255,255,255,.18)',
+            border: '1px solid rgba(0,0,0,.15)',
             color: 'var(--cream)',
             textAlign: 'center',
             padding: 16, borderRadius: 10,

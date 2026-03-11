@@ -183,9 +183,9 @@ export default function HeroSection({ students = [] }: { students?: StudentFull[
             {cards.map((card, i) => (
               <div key={i} style={{
                 flexShrink: 0, width: 160, borderRadius: 14,
-                background: '#1C1C1C',
+                background: '#FFFFFF',
                 border: `1px solid ${CARD_ACCENTS[i].border}`,
-                boxShadow: '0 2px 16px rgba(0,0,0,.4)',
+                boxShadow: '0 2px 16px rgba(0,0,0,.1)',
                 padding: 14, position: 'relative', overflow: 'hidden',
               }}>
                 <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, borderRadius: '14px 14px 0 0', background: CARD_ACCENTS[i].top }} />
@@ -226,12 +226,12 @@ export default function HeroSection({ students = [] }: { students?: StudentFull[
             <Link href="/join" className="btn-outline">Are you a creative? Join →</Link>
           </div>
           {/* Trust micro-copy */}
-          <p style={{ fontSize: 11, color: 'rgba(255,255,255,.32)', marginBottom: 24, letterSpacing: .2 }}>
+          <p style={{ fontSize: 11, color: 'rgba(17,17,16,.45)', marginBottom: 24, letterSpacing: .2 }}>
             Protected payments · Verified SA students · Free to browse
           </p>
 
           {/* Stats */}
-          <div ref={statsRef} style={{ display: 'flex', gap: 'clamp(20px, 5vw, 48px)', paddingTop: 22, borderTop: '1px solid rgba(255,255,255,.08)' }}>
+          <div ref={statsRef} style={{ display: 'flex', gap: 'clamp(20px, 5vw, 48px)', paddingTop: 22, borderTop: '1px solid rgba(0,0,0,.08)' }}>
             <div>
               <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 'clamp(30px, 4.5vw, 42px)', letterSpacing: 1, lineHeight: 1, color: 'var(--orange)' }}>
                 {c1}<span style={{ color: 'var(--orange)' }}>+</span>
@@ -263,12 +263,12 @@ export default function HeroSection({ students = [] }: { students?: StudentFull[
                 left: card.left,
                 transform: `rotate(${card.rotate})`,
                 zIndex: card.zIndex,
-                background: 'var(--black-3)',
+                background: '#FFFFFF',
                 border: `1px solid ${CARD_ACCENTS[i].border}`,
                 borderRadius: 18,
                 padding: '18px 20px',
                 width: 226,
-                boxShadow: `0 20px 56px rgba(17,17,16,0.1), 0 0 0 1px ${CARD_ACCENTS[i].border}`,
+                boxShadow: `0 16px 48px rgba(0,0,0,.14), 0 0 0 1px ${CARD_ACCENTS[i].border}`,
               }}>
                 <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, borderRadius: '18px 18px 0 0', background: CARD_ACCENTS[i].top }} />
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
@@ -281,7 +281,7 @@ export default function HeroSection({ students = [] }: { students?: StudentFull[
                       </div>
                     )}
                     {card.photo_url && (
-                      <div style={{ position: 'absolute', bottom: -2, right: -2, width: 16, height: 16, borderRadius: '50%', background: CARD_ACCENTS[i].iconBg, border: `1.5px solid var(--black-3)`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: CARD_ACCENTS[i].iconColor }}>
+                      <div style={{ position: 'absolute', bottom: -2, right: -2, width: 16, height: 16, borderRadius: '50%', background: CARD_ACCENTS[i].iconBg, border: `1.5px solid #FFFFFF`, display: 'flex', alignItems: 'center', justifyContent: 'center', color: CARD_ACCENTS[i].iconColor }}>
                         {(() => { const Icon = card.icon; return <Icon size={8} strokeWidth={2} /> })()}
                       </div>
                     )}
@@ -292,7 +292,7 @@ export default function HeroSection({ students = [] }: { students?: StudentFull[
                   </div>
                 </div>
                 <div style={{ fontSize: 11, color: 'var(--muted-2)', marginBottom: 10 }}>{card.skill}</div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 10, borderTop: '1px solid rgba(255,255,255,.08)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: 10, borderTop: '1px solid rgba(0,0,0,.08)' }}>
                   <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 17, letterSpacing: .5, color: 'var(--cream)' }}>{card.price}</div>
                   <span style={{
                     fontSize: 9, fontWeight: 800, padding: '3px 8px', borderRadius: 100, letterSpacing: .5,
@@ -332,10 +332,10 @@ export default function HeroSection({ students = [] }: { students?: StudentFull[
           transform-origin: bottom center;
         }
         .retro-grid-h {
-          background-image: repeating-linear-gradient(to bottom, rgba(20,69,255,0.06) 0px, rgba(20,69,255,0.06) 1px, transparent 1px, transparent 40px);
+          background-image: repeating-linear-gradient(to bottom, rgba(20,69,255,0.09) 0px, rgba(20,69,255,0.09) 1px, transparent 1px, transparent 40px);
         }
         .retro-grid-v {
-          background-image: repeating-linear-gradient(to right, rgba(20,69,255,0.06) 0px, rgba(20,69,255,0.06) 1px, transparent 1px, transparent 40px);
+          background-image: repeating-linear-gradient(to right, rgba(20,69,255,0.09) 0px, rgba(20,69,255,0.09) 1px, transparent 1px, transparent 40px);
         }
 
         .hero-inner { display: flex; flex-direction: column; gap: 32px; }
