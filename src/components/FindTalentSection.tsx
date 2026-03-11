@@ -47,20 +47,13 @@ export function FindTalentSection() {
 
         {/* Right: colorful blob composition — desktop only */}
         <div className="fts-blobs" aria-hidden="true" style={{ position: 'relative', overflow: 'hidden', minHeight: 300 }}>
-          {/* Cobalt blue — large anchor */}
-          <div style={{ position: 'absolute', top: '10%', left: '16%', width: 152, height: 152, background: '#334ED8', borderRadius: '60% 40% 70% 30% / 50% 60% 40% 50%' }} />
-          {/* Mint green */}
-          <div style={{ position: 'absolute', top: '5%', left: '55%', width: 112, height: 112, background: '#C0F0AA', borderRadius: '40% 60% 30% 70% / 60% 40% 60% 40%' }} />
-          {/* Pink */}
-          <div style={{ position: 'absolute', top: '44%', left: '30%', width: 72, height: 72, background: '#FFA9FF', borderRadius: '50% 50% 70% 30% / 40% 60% 40% 60%' }} />
-          {/* Sunset orange */}
-          <div style={{ position: 'absolute', bottom: '18%', left: '8%', width: 124, height: 106, background: '#FF7144', borderRadius: '50% 50% 40% 60% / 40% 60% 50% 50%' }} />
-          {/* Citrus lime */}
-          <div style={{ position: 'absolute', bottom: '8%', left: '48%', width: 110, height: 110, background: '#E0E446', borderRadius: '30% 70% 60% 40% / 50% 40% 60% 50%' }} />
-          {/* Glacier blue — small accent */}
-          <div style={{ position: 'absolute', top: '27%', left: '60%', width: 56, height: 56, background: '#D8E6FF', borderRadius: '70% 30% 50% 50% / 50% 70% 30% 50%' }} />
-          {/* Lavender — tiny dot */}
-          <div style={{ position: 'absolute', bottom: '38%', left: '42%', width: 40, height: 40, background: '#C7B0FF', borderRadius: '50%' }} />
+          <div style={{ position: 'absolute', top: '10%', left: '16%', width: 152, height: 152, background: '#334ED8', borderRadius: '60% 40% 70% 30% / 50% 60% 40% 50%', animation: 'blobFloat1 5.2s ease-in-out infinite' }} />
+          <div style={{ position: 'absolute', top: '5%', left: '55%', width: 112, height: 112, background: '#C0F0AA', borderRadius: '40% 60% 30% 70% / 60% 40% 60% 40%', animation: 'blobFloat2 4.1s ease-in-out infinite' }} />
+          <div style={{ position: 'absolute', top: '44%', left: '30%', width: 72, height: 72, background: '#FFA9FF', borderRadius: '50% 50% 70% 30% / 40% 60% 40% 60%', animation: 'blobFloat3 3.6s ease-in-out infinite' }} />
+          <div style={{ position: 'absolute', bottom: '18%', left: '8%', width: 124, height: 106, background: '#FF7144', borderRadius: '50% 50% 40% 60% / 40% 60% 50% 50%', animation: 'blobFloat4 6.0s ease-in-out infinite' }} />
+          <div style={{ position: 'absolute', bottom: '8%', left: '48%', width: 110, height: 110, background: '#E0E446', borderRadius: '30% 70% 60% 40% / 50% 40% 60% 50%', animation: 'blobFloat5 4.8s ease-in-out infinite' }} />
+          <div style={{ position: 'absolute', top: '27%', left: '60%', width: 56, height: 56, background: '#D8E6FF', borderRadius: '70% 30% 50% 50% / 50% 70% 30% 50%', animation: 'blobFloat3 3.3s ease-in-out infinite' }} />
+          <div style={{ position: 'absolute', bottom: '38%', left: '42%', width: 40, height: 40, background: '#C7B0FF', borderRadius: '50%', animation: 'blobFloat2 2.9s ease-in-out infinite' }} />
         </div>
       </div>
 
@@ -70,6 +63,14 @@ export function FindTalentSection() {
         @media (min-width: 900px) {
           .fts-grid { grid-template-columns: 1fr 1fr; }
           .fts-blobs { display: block; }
+        }
+        @keyframes blobFloat1 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(6px,-14px); } }
+        @keyframes blobFloat2 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-5px,-10px); } }
+        @keyframes blobFloat3 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(4px,-8px); } }
+        @keyframes blobFloat4 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-4px,-12px); } }
+        @keyframes blobFloat5 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(5px,-9px); } }
+        @media (prefers-reduced-motion: reduce) {
+          .fts-blobs > div { animation: none !important; }
         }
       `}</style>
     </section>

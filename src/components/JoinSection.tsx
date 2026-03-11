@@ -23,11 +23,11 @@ export function JoinSection() {
       }}
     >
       {/* Background blob decorations */}
-      <div aria-hidden="true" style={{ position: 'absolute', top: '-8%', left: '-6%',  width: 300, height: 260, background: '#C7B0FF', borderRadius: '60% 40% 70% 30% / 50% 60% 40% 50%', opacity: .28, pointerEvents: 'none' }} />
-      <div aria-hidden="true" style={{ position: 'absolute', top: '5%',  right: '-4%', width: 240, height: 220, background: '#334ED8', borderRadius: '40% 60% 30% 70% / 60% 40% 60% 40%', opacity: .12, pointerEvents: 'none' }} />
-      <div aria-hidden="true" style={{ position: 'absolute', bottom: '-6%', left: '14%', width: 220, height: 200, background: '#FF7144', borderRadius: '50% 50% 40% 60% / 40% 60% 50% 50%', opacity: .18, pointerEvents: 'none' }} />
-      <div aria-hidden="true" style={{ position: 'absolute', bottom: '4%', right: '3%', width: 180, height: 180, background: '#C0F0AA', borderRadius: '30% 70% 60% 40% / 50% 40% 60% 50%', opacity: .38, pointerEvents: 'none' }} />
-      <div aria-hidden="true" style={{ position: 'absolute', top: '52%', left: '38%',  width: 140, height: 140, background: '#E0E446', borderRadius: '50% 50% 70% 30% / 40% 60% 40% 60%', opacity: .20, pointerEvents: 'none' }} />
+      <div aria-hidden="true" style={{ position: 'absolute', top: '-8%', left: '-6%', width: 300, height: 260, background: '#C7B0FF', borderRadius: '60% 40% 70% 30% / 50% 60% 40% 50%', opacity: .28, pointerEvents: 'none', animation: 'joinBlob1 6.4s ease-in-out infinite' }} />
+      <div aria-hidden="true" style={{ position: 'absolute', top: '5%', right: '-4%', width: 240, height: 220, background: '#334ED8', borderRadius: '40% 60% 30% 70% / 60% 40% 60% 40%', opacity: .12, pointerEvents: 'none', animation: 'joinBlob2 5.1s ease-in-out infinite' }} />
+      <div aria-hidden="true" style={{ position: 'absolute', bottom: '-6%', left: '14%', width: 220, height: 200, background: '#FF7144', borderRadius: '50% 50% 40% 60% / 40% 60% 50% 50%', opacity: .18, pointerEvents: 'none', animation: 'joinBlob3 4.7s ease-in-out infinite' }} />
+      <div aria-hidden="true" style={{ position: 'absolute', bottom: '4%', right: '3%', width: 180, height: 180, background: '#C0F0AA', borderRadius: '30% 70% 60% 40% / 50% 40% 60% 50%', opacity: .38, pointerEvents: 'none', animation: 'joinBlob4 3.9s ease-in-out infinite' }} />
+      <div aria-hidden="true" style={{ position: 'absolute', top: '52%', left: '38%', width: 140, height: 140, background: '#E0E446', borderRadius: '50% 50% 70% 30% / 40% 60% 40% 60%', opacity: .20, pointerEvents: 'none', animation: 'joinBlob5 5.5s ease-in-out infinite' }} />
 
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 1200, margin: '0 auto', padding: 'clamp(56px, 8vw, 96px) clamp(20px, 5vw, 80px)' }}>
         <div style={{ display: 'grid', gap: 'clamp(40px, 6vw, 72px)', alignItems: 'start' }} className="join-layout">
@@ -160,6 +160,14 @@ export function JoinSection() {
         }
         @media (max-width: 560px) {
           .join-perks { grid-template-columns: 1fr !important; }
+        }
+        @keyframes joinBlob1 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(8px,-16px); } }
+        @keyframes joinBlob2 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-6px,-12px); } }
+        @keyframes joinBlob3 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-5px,-10px); } }
+        @keyframes joinBlob4 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(0,-13px); } }
+        @keyframes joinBlob5 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(5px,-8px); } }
+        @media (prefers-reduced-motion: reduce) {
+          [style*="joinBlob"] { animation: none !important; }
         }
       `}</style>
     </section>
