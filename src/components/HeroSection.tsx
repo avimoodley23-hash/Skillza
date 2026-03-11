@@ -23,6 +23,18 @@ function getSkillIcon(skill: string): React.ElementType {
   return GraduationCap
 }
 
+// ── Mobile ticker pills ─────────────────────────────────────────────────────
+const TICKER_PILLS = [
+  { label: 'Graphic Design', Icon: Palette,  bg: '#1445FF', fg: '#fff'    },
+  { label: 'Photography',    Icon: Camera,   bg: '#AAFF00', fg: '#0B0B0A' },
+  { label: 'Videography',    Icon: Video,    bg: '#FF4520', fg: '#fff'    },
+  { label: 'AI Design',      Icon: Layers,   bg: '#7C3AED', fg: '#fff'    },
+  { label: 'Web Design',     Icon: Globe,    bg: '#5BC4F5', fg: '#0B0B0A' },
+  { label: 'Motion',         Icon: Music,    bg: '#F59E0B', fg: '#0B0B0A' },
+  { label: 'Branding',       Icon: Pen,      bg: '#E8472F', fg: '#fff'    },
+  { label: 'Copywriting',    Icon: PenLine,  bg: '#3CB97D', fg: '#fff'    },
+]
+
 // ── Floating role blobs ──────────────────────────────────────────────────────
 const ROLE_BLOBS = [
   { label: 'Graphic Design', Icon: Palette, bg: '#1445FF', fg: '#fff',    left: '59%', top: '9%',  amp: 11, dur: 3.2, delay: 0   },
@@ -262,12 +274,31 @@ export default function HeroSection({ students = [] }: { students?: StudentFull[
           </div>
 
           {/* H1 */}
-          <h1 style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 'clamp(58px, 10vw, 112px)', lineHeight: .88, letterSpacing: 1, marginBottom: 22 }}>
+          <h1 style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 'clamp(58px, 10vw, 112px)', lineHeight: .88, letterSpacing: 1, marginBottom: 14 }}>
             <span style={{ color: 'var(--cream)' }}>Your next</span>{' '}
             <span style={{ color: 'var(--cream)' }}>favourite</span><br />
             <span style={{ color: 'var(--cream)' }}>creative is</span><br />
             <span style={{ fontFamily: 'Instrument Serif, serif', fontStyle: 'italic', color: 'var(--orange)' }}>probably a student.</span>
           </h1>
+
+          {/* Mobile scrolling skill pills */}
+          <div className="hero-pills-ticker" aria-hidden="true">
+            <div className="hero-pills-track">
+              {[...TICKER_PILLS, ...TICKER_PILLS].map((p, i) => (
+                <span key={i} style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 6,
+                  padding: '8px 16px', borderRadius: 9999,
+                  background: p.bg, color: p.fg,
+                  fontWeight: 700, fontSize: 12, letterSpacing: 0.2,
+                  whiteSpace: 'nowrap', flexShrink: 0,
+                  boxShadow: `0 4px 18px ${p.bg}55`,
+                }}>
+                  {(() => { const I = p.Icon as React.FC<{size:number;strokeWidth:number}>; return <I size={12} strokeWidth={2} /> })()}
+                  {p.label}
+                </span>
+              ))}
+            </div>
+          </div>
 
           {/* Sub-copy */}
           <p style={{ fontSize: 'clamp(14px, 1.8vw, 16px)', lineHeight: 1.75, color: 'rgba(250,250,248,.55)', maxWidth: 460, marginBottom: 28 }}>
@@ -445,6 +476,29 @@ export default function HeroSection({ students = [] }: { students?: StudentFull[
           scrollbar-width: none; -ms-overflow-style: none;
         }
         .hero-talent-strip::-webkit-scrollbar { display: none; }
+
+        /* ── Mobile skill pill ticker ── */
+        .hero-pills-ticker {
+          overflow: hidden;
+          margin: 8px -24px 24px;
+          -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+          mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+        }
+        .hero-pills-track {
+          display: flex;
+          gap: 10px;
+          padding: 6px 24px;
+          width: max-content;
+          animation: hero-pills-scroll 24s linear infinite;
+        }
+        .hero-pills-track:hover { animation-play-state: paused; }
+        @keyframes hero-pills-scroll {
+          0%   { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        @media (min-width: 900px) {
+          .hero-pills-ticker { display: none; }
+        }
 
         .hero-blobs-layer {
           display: none;
