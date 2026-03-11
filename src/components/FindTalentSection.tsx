@@ -2,10 +2,26 @@
 import { AnimateIn } from '@/components/AnimateIn'
 import { SplitText } from '@/components/SplitText'
 import Link from 'next/link'
+import { GraduationCap, Zap, ShieldCheck, Star } from 'lucide-react'
+import type React from 'react'
+
+const HIRER_PERKS = [
+  { icon: GraduationCap, title: 'Trained for exactly this',    body: 'Mid-degree students at UCT, AFDA, Red & Yellow, Wits and ICA — studying full-time in the skill you need.', bg: '#334ED8', text: '#FFFFFF', sub: 'rgba(255,255,255,.70)' },
+  { icon: Zap,           title: 'No account. No friction.',   body: 'Fill a short form, the student contacts you on WhatsApp within 24 hours. Direct, human, no platform in the way.', bg: '#C0F0AA', text: '#1A3A1A', sub: 'rgba(26,58,26,.65)' },
+  { icon: ShieldCheck,   title: 'Protected payments',          body: '30% deposit before work starts. Balance only on completion. Scope agreed upfront. Both parties leave verified reviews.', bg: '#FF7144', text: '#FFFFFF', sub: 'rgba(255,255,255,.70)' },
+  { icon: Star,          title: 'Fresh work at fair prices',   body: "Lower rates because they're students. The quality isn't. Every job builds their portfolio — they're invested.", bg: '#E0E446', text: '#1A1A00', sub: 'rgba(26,26,0,.65)' },
+] as { icon: React.ElementType; title: string; body: string; bg: string; text: string; sub: string }[]
 
 export function FindTalentSection() {
   return (
-    <section id="find-talent" style={{ borderBottom: '1px solid var(--border)', background: 'var(--black-2)', overflow: 'hidden' }}>
+    <section id="find-talent" style={{ borderBottom: '1px solid var(--border)', background: 'var(--black-2)', overflow: 'hidden', position: 'relative' }}>
+      {/* Animated background blobs */}
+      <div aria-hidden="true" style={{ position: 'absolute', top: '-6%', right: '-5%', width: 300, height: 260, background: '#C7B0FF', borderRadius: '60% 40% 70% 30% / 50% 60% 40% 50%', opacity: .26, pointerEvents: 'none', animation: 'ftBlob1 6.4s ease-in-out infinite' }} />
+      <div aria-hidden="true" style={{ position: 'absolute', top: '8%', left: '-4%', width: 220, height: 200, background: '#FF7144', borderRadius: '40% 60% 30% 70% / 60% 40% 60% 40%', opacity: .15, pointerEvents: 'none', animation: 'ftBlob2 5.1s ease-in-out infinite' }} />
+      <div aria-hidden="true" style={{ position: 'absolute', bottom: '-5%', left: '12%', width: 200, height: 190, background: '#C0F0AA', borderRadius: '50% 50% 40% 60% / 40% 60% 50% 50%', opacity: .22, pointerEvents: 'none', animation: 'ftBlob3 4.7s ease-in-out infinite' }} />
+      <div aria-hidden="true" style={{ position: 'absolute', bottom: '6%', right: '4%', width: 160, height: 160, background: '#E0E446', borderRadius: '30% 70% 60% 40%', opacity: .20, pointerEvents: 'none', animation: 'ftBlob4 3.9s ease-in-out infinite' }} />
+      <div aria-hidden="true" style={{ position: 'absolute', top: '48%', left: '40%', width: 120, height: 120, background: '#5BC4F5', borderRadius: '50%', opacity: .14, pointerEvents: 'none', animation: 'ftBlob5 5.5s ease-in-out infinite' }} />
+
       <div className="fts-grid">
 
         {/* Left: content */}
@@ -42,6 +58,22 @@ export function FindTalentSection() {
                 No account needed to book — browse available creatives →
               </Link>
             </div>
+
+            {/* Hirer benefit cards */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginTop: 28 }} className="fts-perks">
+              {HIRER_PERKS.map(item => {
+                const Icon = item.icon
+                return (
+                  <div key={item.title} style={{ padding: '16px 18px', borderRadius: 14, background: item.bg, display: 'flex', flexDirection: 'column', gap: 8 }}>
+                    <div style={{ width: 30, height: 30, flexShrink: 0, background: 'rgba(0,0,0,.09)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', color: item.text }}>
+                      <Icon size={14} strokeWidth={1.8} />
+                    </div>
+                    <h4 style={{ fontSize: 12, fontWeight: 700, color: item.text, margin: '0 0 2px', lineHeight: 1.3 }}>{item.title}</h4>
+                    <p style={{ fontSize: 11, color: item.sub, lineHeight: 1.6, margin: 0 }}>{item.body}</p>
+                  </div>
+                )
+              })}
+            </div>
           </AnimateIn>
         </div>
 
@@ -60,16 +92,26 @@ export function FindTalentSection() {
       <style>{`
         .fts-grid { display: grid; grid-template-columns: 1fr; }
         .fts-blobs { display: none; }
+        .fts-perks { grid-template-columns: 1fr 1fr; }
         @media (min-width: 900px) {
           .fts-grid { grid-template-columns: 1fr 1fr; }
           .fts-blobs { display: block; }
+        }
+        @media (max-width: 499px) {
+          .fts-perks { grid-template-columns: 1fr; }
         }
         @keyframes blobFloat1 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(6px,-14px); } }
         @keyframes blobFloat2 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-5px,-10px); } }
         @keyframes blobFloat3 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(4px,-8px); } }
         @keyframes blobFloat4 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-4px,-12px); } }
         @keyframes blobFloat5 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(5px,-9px); } }
+        @keyframes ftBlob1 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-8px,-14px); } }
+        @keyframes ftBlob2 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(6px,-10px); } }
+        @keyframes ftBlob3 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(5px,-8px); } }
+        @keyframes ftBlob4 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-5px,-11px); } }
+        @keyframes ftBlob5 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(4px,-7px); } }
         @media (prefers-reduced-motion: reduce) {
+          [style*="ftBlob"] { animation: none !important; }
           .fts-blobs > div { animation: none !important; }
         }
       `}</style>

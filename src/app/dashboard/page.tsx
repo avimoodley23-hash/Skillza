@@ -66,22 +66,22 @@ const PRICE_UNITS = ['session', 'hour', 'project', 'event', 'day', 'order', 'pac
 const CITIES = ['Cape Town', 'Johannesburg', 'Pretoria', 'Durban', 'Other']
 const AVAILABILITY_OPTIONS = ['Weekdays', 'Weekday evenings', 'Saturdays', 'Sundays', 'Flexible']
 const STATUS_CONFIG: Record<string, { label: string; color: string; bg: string }> = {
-  pending:     { label: 'PENDING',     color: 'var(--orange)',  bg: 'var(--o-dim)' },
-  confirmed:   { label: 'CONFIRMED',   color: 'var(--mint)',    bg: 'var(--mint-dim)' },
-  in_progress: { label: 'IN PROGRESS', color: 'var(--lavender)', bg: 'var(--lav-dim)' },
-  completed:   { label: 'COMPLETED',   color: 'var(--mint)',    bg: 'var(--mint-dim)' },
-  rejected:    { label: 'REJECTED',    color: 'var(--muted)',   bg: 'var(--card)' },
-  unavailable: { label: 'UNAVAILABLE', color: 'var(--muted)',   bg: 'var(--card)' },
+  pending:     { label: 'PENDING',     color: '#C04A20', bg: 'rgba(255,113,68,.18)' },
+  confirmed:   { label: 'CONFIRMED',   color: '#1B7A50', bg: 'rgba(192,240,170,.35)' },
+  in_progress: { label: 'IN PROGRESS', color: '#5E3FD0', bg: 'rgba(199,176,255,.35)' },
+  completed:   { label: 'COMPLETED',   color: '#1B7A50', bg: 'rgba(192,240,170,.35)' },
+  rejected:    { label: 'REJECTED',    color: '#555555', bg: 'rgba(0,0,0,.07)' },
+  unavailable: { label: 'UNAVAILABLE', color: '#555555', bg: 'rgba(0,0,0,.07)' },
 }
 
 const STATUS_ACTIONS: Record<string, { label: string; next: string; color: string }[]> = {
   pending: [
-    { label: 'Accept',      next: 'confirmed',   color: 'var(--mint)' },
-    { label: 'Unavailable', next: 'unavailable', color: 'var(--muted)' },
-    { label: 'Reject',      next: 'rejected',    color: 'var(--sunset)' },
+    { label: 'Accept',      next: 'confirmed',   color: '#3CB97D' },
+    { label: 'Unavailable', next: 'unavailable', color: '#888888' },
+    { label: 'Reject',      next: 'rejected',    color: '#E05A2E' },
   ],
-  confirmed:   [{ label: 'Mark In Progress', next: 'in_progress', color: 'var(--lavender)' }, { label: 'Reject', next: 'rejected', color: 'var(--sunset)' }],
-  in_progress: [{ label: 'Mark Completed', next: 'completed', color: 'var(--mint)' }],
+  confirmed:   [{ label: 'Mark In Progress', next: 'in_progress', color: '#7C4FF7' }, { label: 'Reject', next: 'rejected', color: '#E05A2E' }],
+  in_progress: [{ label: 'Mark Completed', next: 'completed', color: '#3CB97D' }],
   completed: [], rejected: [], unavailable: [],
 }
 
@@ -448,54 +448,68 @@ export default function DashboardPage() {
   const pendingCount = bookings.filter(b => b.status === 'pending').length
 
   const tabStyle = (t: string): React.CSSProperties => ({
-    padding: '10px 20px', borderRadius: 8, border: 'none', cursor: 'pointer',
-    fontFamily: 'Bebas Neue, sans-serif', letterSpacing: 1, fontSize: 15,
-    background: tab === t ? 'var(--orange)' : 'transparent',
-    color: tab === t ? '#fff' : 'var(--muted)', transition: 'all .2s',
+    flex: 1, padding: '10px 16px', borderRadius: 9, border: 'none', cursor: 'pointer',
+    fontFamily: 'Bebas Neue, sans-serif', letterSpacing: 1, fontSize: 14,
+    background: tab === t ? '#334ED8' : 'transparent',
+    color: tab === t ? '#fff' : 'rgba(17,17,16,.5)', transition: 'all .2s',
+    boxShadow: tab === t ? '0 2px 10px rgba(51,78,216,.3)' : 'none',
   })
 
   // ── SCREENS ──────────────────────────────────────────
 
   if (screen === 'loading') return (
-    <main style={{ minHeight: '100vh', background: 'var(--black)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <p style={{ color: 'var(--muted)', fontFamily: 'Bebas Neue, sans-serif', fontSize: 20, letterSpacing: 2 }}>Loading...</p>
+    <main style={{ minHeight: '100vh', background: '#FAFAF6', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
+      <div aria-hidden="true" style={{ position: 'absolute', top: '-10%', left: '-8%', width: 320, height: 280, background: '#C7B0FF', borderRadius: '60% 40% 70% 30% / 50% 60% 40% 50%', opacity: .22, pointerEvents: 'none' }} />
+      <div aria-hidden="true" style={{ position: 'absolute', bottom: '-8%', right: '-6%', width: 280, height: 260, background: '#C0F0AA', borderRadius: '40% 60% 30% 70%', opacity: .28, pointerEvents: 'none' }} />
+      <p style={{ color: '#111110', fontFamily: 'Bebas Neue, sans-serif', fontSize: 20, letterSpacing: 3, opacity: .45, position: 'relative', zIndex: 1 }}>Loading...</p>
     </main>
   )
 
   if (screen === 'not-approved') return (
-    <main style={{ minHeight: '100vh', background: 'var(--black)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
-      <div style={{ textAlign: 'center', maxWidth: 420 }}>
-        <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 32, letterSpacing: 2, color: 'var(--cream)', marginBottom: 8 }}>Not on the list yet</div>
-        <p style={{ color: 'var(--muted)', fontSize: 14, lineHeight: 1.8, marginBottom: 32 }}>
-          <span style={{ color: 'var(--cream)' }}>{authEmail}</span> has not been approved yet. Reach out and we will get you set up.
+    <main style={{ minHeight: '100vh', background: '#FAFAF6', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24, position: 'relative', overflow: 'hidden' }}>
+      <div aria-hidden="true" style={{ position: 'absolute', top: '-8%', left: '-6%', width: 340, height: 300, background: '#C7B0FF', borderRadius: '60% 40% 70% 30% / 50% 60% 40% 50%', opacity: .25, pointerEvents: 'none', animation: 'dblob1 6.4s ease-in-out infinite' }} />
+      <div aria-hidden="true" style={{ position: 'absolute', bottom: '-6%', right: '-5%', width: 260, height: 240, background: '#C0F0AA', borderRadius: '40% 60% 30% 70%', opacity: .32, pointerEvents: 'none', animation: 'dblob3 4.7s ease-in-out infinite' }} />
+      <div style={{ textAlign: 'center', maxWidth: 440, position: 'relative', zIndex: 1 }}>
+        <div style={{ width: 64, height: 64, borderRadius: '50%', background: '#FF7144', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px', boxShadow: '0 6px 24px rgba(255,113,68,.3)' }}>
+          <span style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 28, color: '#fff', letterSpacing: 1 }}>!</span>
+        </div>
+        <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 36, letterSpacing: 1, color: '#111110', marginBottom: 10, lineHeight: .95 }}>Not on the list yet</div>
+        <p style={{ color: 'rgba(17,17,16,.55)', fontSize: 14, lineHeight: 1.8, marginBottom: 32 }}>
+          <span style={{ color: '#111110', fontWeight: 600 }}>{authEmail}</span> hasn&apos;t been approved yet. Reach out and we&apos;ll get you set up.
         </p>
-        <a href="mailto:hello@skillza.co.za?subject=Student profile request" style={{ display: 'inline-block', background: 'var(--orange)', color: '#fff', borderRadius: 10, padding: '13px 28px', fontSize: 15, fontWeight: 700, fontFamily: 'Bebas Neue, sans-serif', letterSpacing: 1.5, textDecoration: 'none' }}>
+        <a href="mailto:hello@skillza.co.za?subject=Student profile request" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, background: '#334ED8', color: '#fff', borderRadius: 100, padding: '14px 28px', fontSize: 15, fontWeight: 700, fontFamily: 'Bebas Neue, sans-serif', letterSpacing: 1.5, textDecoration: 'none', boxShadow: '0 4px 20px rgba(51,78,216,.35)' }}>
           Contact hello@skillza.co.za
         </a>
         <br />
-        <button onClick={handleSignOut} style={{ background: 'transparent', border: 'none', color: 'var(--muted)', fontSize: 12, cursor: 'pointer', textDecoration: 'underline', marginTop: 16 }}>Sign out</button>
+        <button onClick={handleSignOut} style={{ background: 'transparent', border: 'none', color: 'rgba(17,17,16,.45)', fontSize: 12, cursor: 'pointer', textDecoration: 'underline', marginTop: 18 }}>Sign out</button>
       </div>
+      <style>{dblobStyles}</style>
     </main>
   )
 
   // ── REGISTRATION FORM ─────────────────────────────────
   if (screen === 'register') {
     const stepTitles = ['About You', 'Your Skill', 'Packages & Portfolio', 'Final Details']
+    const stepColors = ['#334ED8', '#FF7144', '#C0F0AA', '#E0E446']
     return (
-      <main style={{ minHeight: '100vh', background: 'var(--black)', padding: '60px 24px 80px' }}>
-        <div style={{ maxWidth: 580, margin: '0 auto' }}>
+      <main style={{ minHeight: '100vh', background: '#FAFAF6', padding: '60px 24px 80px', position: 'relative', overflow: 'hidden' }}>
+        {/* Blob decorations */}
+        <div aria-hidden="true" style={{ position: 'fixed', top: '-6%', left: '-5%', width: 300, height: 260, background: '#C7B0FF', borderRadius: '60% 40% 70% 30% / 50% 60% 40% 50%', opacity: .22, pointerEvents: 'none', animation: 'dblob1 6.4s ease-in-out infinite' }} />
+        <div aria-hidden="true" style={{ position: 'fixed', bottom: '-5%', right: '-4%', width: 240, height: 220, background: '#C0F0AA', borderRadius: '40% 60% 30% 70%', opacity: .28, pointerEvents: 'none', animation: 'dblob3 4.7s ease-in-out infinite' }} />
+        <div aria-hidden="true" style={{ position: 'fixed', top: '45%', right: '-3%', width: 180, height: 180, background: '#E0E446', borderRadius: '50% 50% 70% 30%', opacity: .18, pointerEvents: 'none', animation: 'dblob4 5.1s ease-in-out infinite' }} />
+        <div style={{ maxWidth: 580, margin: '0 auto', position: 'relative', zIndex: 1 }}>
 
           <div style={{ marginBottom: 32 }}>
-            <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 32, letterSpacing: 2, color: 'var(--cream)', marginBottom: 4 }}>Create your profile</div>
-            <p style={{ color: 'var(--muted)', fontSize: 13, lineHeight: 1.6 }}>Signed in as <span style={{ color: 'var(--cream)' }}>{authEmail}</span></p>
+            <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 36, letterSpacing: 1.5, color: '#111110', marginBottom: 5, lineHeight: .95 }}>Create your profile</div>
+            <p style={{ color: 'rgba(17,17,16,.5)', fontSize: 13, lineHeight: 1.6 }}>Signed in as <span style={{ color: '#111110', fontWeight: 600 }}>{authEmail}</span></p>
           </div>
 
-          <div style={{ display: 'flex', gap: 6, marginBottom: 32 }}>
+          <div style={{ display: 'flex', gap: 6, marginBottom: 28 }}>
             {stepTitles.map((title, i) => (
-              <div key={i} style={{ flex: 1, height: 3, borderRadius: 2, background: i + 1 <= regStep ? 'var(--orange)' : 'var(--border)', transition: 'background .3s' }} />
+              <div key={i} style={{ flex: 1, height: 4, borderRadius: 2, background: i + 1 <= regStep ? stepColors[i] : 'rgba(0,0,0,.1)', transition: 'background .3s' }} />
             ))}
           </div>
-          <p style={{ color: 'var(--muted)', fontSize: 12, marginBottom: 24, textTransform: 'uppercase', letterSpacing: 1 }}>Step {regStep} of 4 — {stepTitles[regStep - 1]}</p>
+          <p style={{ color: 'rgba(17,17,16,.45)', fontSize: 11, marginBottom: 24, textTransform: 'uppercase', letterSpacing: 1.5, fontWeight: 700 }}>Step {regStep} of 4 — {stepTitles[regStep - 1]}</p>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
 
@@ -560,9 +574,9 @@ export default function DashboardPage() {
                   {AVAILABILITY_OPTIONS.map(opt => (
                     <button key={opt} type="button" onClick={() => toggleAvailability(opt)} style={{
                       padding: '7px 14px', borderRadius: 20, fontSize: 12, fontWeight: 600, cursor: 'pointer', transition: 'all .15s',
-                      background: reg.availability.includes(opt) ? 'var(--orange)' : 'transparent',
-                      color: reg.availability.includes(opt) ? '#fff' : 'var(--muted)',
-                      border: `1px solid ${reg.availability.includes(opt) ? 'var(--orange)' : 'var(--border)'}`,
+                      background: reg.availability.includes(opt) ? '#334ED8' : 'transparent',
+                      color: reg.availability.includes(opt) ? '#fff' : 'rgba(17,17,16,.5)',
+                      border: `1px solid ${reg.availability.includes(opt) ? '#334ED8' : 'rgba(0,0,0,.15)'}`,
                     }}>{opt}</button>
                   ))}
                 </div>
@@ -570,9 +584,9 @@ export default function DashboardPage() {
             </>}
 
             {regStep === 3 && <>
-              <div style={{ background: 'var(--o-dim)', border: '1px solid var(--o-bright)', borderRadius: 10, padding: '12px 16px', marginBottom: 4 }}>
-                <p style={{ fontSize: 13, color: 'rgba(255,255,255,.7)', lineHeight: 1.6 }}>
-                  Set your pricing packages. These appear on your public profile. Package 2 is marked as "Popular".
+              <div style={{ background: 'rgba(51,78,216,.08)', border: '1px solid rgba(51,78,216,.2)', borderRadius: 10, padding: '12px 16px', marginBottom: 4 }}>
+                <p style={{ fontSize: 13, color: 'rgba(17,17,16,.7)', lineHeight: 1.6 }}>
+                  Set your pricing packages. These appear on your public profile. Package 2 is marked as &quot;Popular&quot;.
                 </p>
               </div>
               <FormField label="Starting Price in Rands *" hint="Your lowest price. Clients see 'from R___'">
@@ -585,7 +599,7 @@ export default function DashboardPage() {
               </FormField>
               {([['pkg1', 'Package 1 *', false], ['pkg2', 'Package 2 * (Popular)', true], ['pkg3', 'Package 3 (optional)', false]] as [keyof typeof reg, string, boolean][]).map(([key, label, isFeatured]) => (
                 <FormField key={key as string} label={label}>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 8, background: isFeatured ? 'var(--o-dim)' : 'transparent', border: isFeatured ? '1px solid var(--o-bright)' : '1px solid var(--border)', borderRadius: 10, padding: 14 }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 8, background: isFeatured ? 'rgba(51,78,216,.06)' : '#F2F0EA', border: isFeatured ? '1px solid rgba(51,78,216,.2)' : '1px solid rgba(0,0,0,.08)', borderRadius: 10, padding: 14 }}>
                     <input value={(reg[key] as PricingPackage).name} onChange={e => setReg(r => ({ ...r, [key]: { ...(r[key] as PricingPackage), name: e.target.value } }))} placeholder="Package name e.g. Basic / Standard / Premium" style={inputStyle} />
                     <input value={(reg[key] as PricingPackage).description ?? ''} onChange={e => setReg(r => ({ ...r, [key]: { ...(r[key] as PricingPackage), description: e.target.value } }))} placeholder="Description e.g. 2-hr shoot, 30 edited photos" style={inputStyle} />
                     <input value={(reg[key] as PricingPackage).price} onChange={e => setReg(r => ({ ...r, [key]: { ...(r[key] as PricingPackage), price: e.target.value } }))} placeholder="Price e.g. R550" style={inputStyle} />
@@ -604,13 +618,13 @@ export default function DashboardPage() {
               <FormField label="Anything else we should know?" hint="Equipment you own, languages you work in, areas you cover, special skills">
                 <textarea value={reg.extra_info} onChange={e => setReg(r => ({ ...r, extra_info: e.target.value }))} rows={3} placeholder="e.g. I own a Sony A7III, I shoot in Cape Town and surrounds, I speak isiXhosa and English" style={{ ...inputStyle, resize: 'vertical' }} />
               </FormField>
-              <div style={{ background: 'rgba(255,255,255,.03)', border: '1px solid var(--border)', borderRadius: 10, padding: '16px' }}>
+              <div style={{ background: '#FFFFFF', border: '1px solid rgba(0,0,0,.1)', borderRadius: 10, padding: '16px' }}>
                 <label style={{ display: 'flex', gap: 12, alignItems: 'flex-start', cursor: 'pointer' }}>
-                  <input type="checkbox" checked={reg.agreed} onChange={e => setReg(r => ({ ...r, agreed: e.target.checked }))} style={{ marginTop: 2, accentColor: 'var(--orange)', width: 16, height: 16, flexShrink: 0 }} />
-                  <span style={{ fontSize: 13, color: 'rgba(255,255,255,.7)', lineHeight: 1.6 }}>
-                    I have read and agree to Skillza's{' '}
-                    <a href="/privacy" target="_blank" style={{ color: 'var(--orange)' }}>Privacy Policy</a> and{' '}
-                    <a href="/terms" target="_blank" style={{ color: 'var(--orange)' }}>Terms of Service</a>.
+                  <input type="checkbox" checked={reg.agreed} onChange={e => setReg(r => ({ ...r, agreed: e.target.checked }))} style={{ marginTop: 2, accentColor: '#334ED8', width: 16, height: 16, flexShrink: 0 }} />
+                  <span style={{ fontSize: 13, color: 'rgba(17,17,16,.65)', lineHeight: 1.6 }}>
+                    I have read and agree to Skillza&apos;s{' '}
+                    <a href="/privacy" target="_blank" style={{ color: '#334ED8' }}>Privacy Policy</a> and{' '}
+                    <a href="/terms" target="_blank" style={{ color: '#334ED8' }}>Terms of Service</a>.
                     I consent to Skillza collecting and storing my personal information for the purpose of creating my student profile. *
                   </span>
                 </label>
@@ -618,16 +632,16 @@ export default function DashboardPage() {
             </>}
 
             {regError && (
-              <p style={{ color: 'var(--sunset)', fontSize: 13, background: 'var(--sun-dim)', border: '1px solid rgba(255,113,68,.3)', borderRadius: 8, padding: '10px 14px' }}>{regError}</p>
+              <p style={{ color: '#E05A2E', fontSize: 13, background: 'rgba(255,113,68,.08)', border: '1px solid rgba(255,113,68,.25)', borderRadius: 10, padding: '10px 14px', lineHeight: 1.5 }}>{regError}</p>
             )}
 
             {regStepError && (
-              <p style={{ color: 'var(--sunset)', fontSize: 13, background: 'var(--sun-dim)', border: '1px solid rgba(255,113,68,.3)', borderRadius: 8, padding: '10px 14px' }}>{regStepError}</p>
+              <p style={{ color: '#E05A2E', fontSize: 13, background: 'rgba(255,113,68,.08)', border: '1px solid rgba(255,113,68,.25)', borderRadius: 10, padding: '10px 14px', lineHeight: 1.5 }}>{regStepError}</p>
             )}
 
             <div style={{ display: 'flex', gap: 10, marginTop: 4 }}>
               {regStep > 1 && (
-                <button onClick={() => { setRegStep(s => s - 1); setRegError(''); setRegStepError('') }} style={{ flex: 1, background: 'transparent', border: '1px solid var(--border)', color: 'var(--muted)', borderRadius: 10, padding: '14px', fontSize: 15, fontWeight: 600, cursor: 'pointer' }}>
+                <button onClick={() => { setRegStep(s => s - 1); setRegError(''); setRegStepError('') }} style={{ flex: 1, background: 'transparent', border: '1px solid rgba(0,0,0,.15)', color: 'rgba(17,17,16,.55)', borderRadius: 10, padding: '14px', fontSize: 15, fontWeight: 600, cursor: 'pointer' }}>
                   ← Back
                 </button>
               )}
@@ -638,64 +652,82 @@ export default function DashboardPage() {
                   setRegStepError('')
                   setRegError('')
                   setRegStep(s => s + 1)
-                }} style={{ flex: 2, background: 'var(--orange)', color: '#fff', border: 'none', borderRadius: 10, padding: '14px', fontSize: 15, fontWeight: 700, fontFamily: 'Bebas Neue, sans-serif', letterSpacing: 1.5, cursor: 'pointer' }}>
+                }} style={{ flex: 2, background: '#334ED8', color: '#fff', border: 'none', borderRadius: 10, padding: '14px', fontSize: 15, fontWeight: 700, fontFamily: 'Bebas Neue, sans-serif', letterSpacing: 1.5, cursor: 'pointer', boxShadow: '0 4px 18px rgba(51,78,216,.3)' }}>
                   Next →
                 </button>
               ) : (
-                <button onClick={handleRegister} disabled={regSaving} style={{ flex: 2, background: 'var(--orange)', color: '#fff', border: 'none', borderRadius: 10, padding: '14px', fontSize: 15, fontWeight: 700, fontFamily: 'Bebas Neue, sans-serif', letterSpacing: 1.5, cursor: regSaving ? 'not-allowed' : 'pointer', opacity: regSaving ? .7 : 1 }}>
+                <button onClick={handleRegister} disabled={regSaving} style={{ flex: 2, background: '#334ED8', color: '#fff', border: 'none', borderRadius: 10, padding: '14px', fontSize: 15, fontWeight: 700, fontFamily: 'Bebas Neue, sans-serif', letterSpacing: 1.5, cursor: regSaving ? 'not-allowed' : 'pointer', opacity: regSaving ? .7 : 1, boxShadow: '0 4px 18px rgba(51,78,216,.3)' }}>
                   {regSaving ? 'Creating profile...' : 'Submit Profile →'}
                 </button>
               )}
             </div>
 
-            <p style={{ color: 'var(--muted)', fontSize: 12, textAlign: 'center', lineHeight: 1.6 }}>
-              Your profile won't go live until your Student Card is verified. We review within 24 hours.
+            <p style={{ color: 'rgba(17,17,16,.4)', fontSize: 12, textAlign: 'center', lineHeight: 1.6 }}>
+              Your profile won&apos;t go live until your Student Card is verified. We review within 24 hours.
             </p>
-            <button onClick={handleSignOut} style={{ background: 'transparent', border: 'none', color: 'var(--muted)', fontSize: 12, cursor: 'pointer', textDecoration: 'underline', textAlign: 'center' }}>Sign out</button>
+            <button onClick={handleSignOut} style={{ background: 'transparent', border: 'none', color: 'rgba(17,17,16,.4)', fontSize: 12, cursor: 'pointer', textDecoration: 'underline', textAlign: 'center' }}>Sign out</button>
           </div>
         </div>
+        <style>{dblobStyles}</style>
       </main>
     )
   }
 
   // ── DASHBOARD ─────────────────────────────────────────
   return (
-    <main style={{ minHeight: '100vh', background: 'var(--black)', padding: '80px 24px 48px' }}>
-      <div style={{ maxWidth: 680, margin: '0 auto' }}>
+    <main style={{ minHeight: '100vh', background: '#FAFAF6', padding: '80px 24px 48px', position: 'relative', overflow: 'hidden' }}>
+      {/* Subtle blob decorations */}
+      <div aria-hidden="true" style={{ position: 'fixed', top: '-8%', left: '-6%', width: 320, height: 280, background: '#C7B0FF', borderRadius: '60% 40% 70% 30% / 50% 60% 40% 50%', opacity: .18, pointerEvents: 'none', animation: 'dblob1 6.4s ease-in-out infinite' }} />
+      <div aria-hidden="true" style={{ position: 'fixed', bottom: '-6%', right: '-5%', width: 260, height: 240, background: '#C0F0AA', borderRadius: '40% 60% 30% 70%', opacity: .22, pointerEvents: 'none', animation: 'dblob3 4.7s ease-in-out infinite' }} />
+      <div aria-hidden="true" style={{ position: 'fixed', top: '38%', right: '-2%', width: 160, height: 160, background: '#E0E446', borderRadius: '50% 50% 70% 30%', opacity: .15, pointerEvents: 'none', animation: 'dblob4 5.1s ease-in-out infinite' }} />
+      <div aria-hidden="true" style={{ position: 'fixed', bottom: '28%', left: '-4%', width: 180, height: 180, background: '#FF7144', borderRadius: '50% 50% 40% 60% / 40% 60% 50% 50%', opacity: .13, pointerEvents: 'none', animation: 'dblob2 5.2s ease-in-out infinite' }} />
+      <div aria-hidden="true" style={{ position: 'fixed', top: '16%', right: '12%', width: 100, height: 100, background: '#5BC4F5', borderRadius: '50%', opacity: .18, pointerEvents: 'none', animation: 'dblob5 4.3s ease-in-out infinite' }} />
 
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 32 }}>
-          <div>
-            <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 28, letterSpacing: 2, color: 'var(--cream)' }}>Hey, {student!.short_name} 👋</div>
-            <p style={{ color: 'var(--muted)', fontSize: 13, marginTop: 2 }}>{student!.university} · {student!.skill}</p>
+      <div style={{ maxWidth: 680, margin: '0 auto', position: 'relative', zIndex: 1 }}>
+
+        {/* Header banner */}
+        <div style={{ background: '#FFFFFF', border: '1px solid rgba(0,0,0,.07)', borderRadius: 20, padding: '20px 24px', marginBottom: 24, display: 'flex', alignItems: 'center', justifyContent: 'space-between', boxShadow: '0 2px 12px rgba(0,0,0,.05)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+            {student!.photo_url ? (
+              <img src={student!.photo_url} alt="" style={{ width: 48, height: 48, borderRadius: '50%', objectFit: 'cover', objectPosition: 'center top', flexShrink: 0, border: '2px solid rgba(51,78,216,.2)' }} />
+            ) : (
+              <div style={{ width: 48, height: 48, borderRadius: '50%', background: '#334ED8', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <span style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 22, color: '#fff', letterSpacing: 1 }}>{student!.short_name.charAt(0)}</span>
+              </div>
+            )}
+            <div>
+              <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 24, letterSpacing: 1.5, color: '#111110', lineHeight: 1 }}>Hey, {student!.short_name}</div>
+              <p style={{ color: 'rgba(17,17,16,.5)', fontSize: 12, marginTop: 3 }}>{student!.university} · {student!.skill}</p>
+            </div>
           </div>
-          <button onClick={handleSignOut} style={{ background: 'transparent', border: '1px solid var(--border)', color: 'var(--muted)', borderRadius: 8, padding: '8px 16px', fontSize: 12, cursor: 'pointer' }}>Sign out</button>
+          <button onClick={handleSignOut} style={{ background: 'transparent', border: '1px solid rgba(0,0,0,.12)', color: 'rgba(17,17,16,.5)', borderRadius: 8, padding: '8px 16px', fontSize: 12, cursor: 'pointer', fontWeight: 600 }}>Sign out</button>
         </div>
 
-        <div style={{ display: 'flex', gap: 4, marginBottom: 32, background: 'var(--surface)', padding: 4, borderRadius: 10, border: '1px solid var(--border)' }}>
+        <div style={{ display: 'flex', gap: 4, marginBottom: 28, background: 'rgba(0,0,0,.04)', padding: 4, borderRadius: 12, border: '1px solid rgba(0,0,0,.07)' }}>
           <button style={tabStyle('profile')} onClick={() => setTab('profile')}>Profile</button>
           <button style={tabStyle('bookings')} onClick={() => setTab('bookings')}>
-            Bookings ({bookings.length}){pendingCount > 0 && <span style={{ marginLeft: 6, background: 'var(--orange)', color: '#fff', borderRadius: 100, fontSize: 10, padding: '1px 6px', fontFamily: 'sans-serif' }}>{pendingCount}</span>}
+            Bookings ({bookings.length}){pendingCount > 0 && <span style={{ marginLeft: 6, background: '#334ED8', color: '#fff', borderRadius: 100, fontSize: 10, padding: '1px 6px', fontFamily: 'sans-serif' }}>{pendingCount}</span>}
           </button>
           <button style={tabStyle('verification')} onClick={() => setTab('verification')}>Verification</button>
         </div>
 
         {/* PROFILE TAB */}
         {tab === 'profile' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
 
             {/* Profile Photo */}
-            <div>
+            <div style={{ background: '#FFFFFF', border: '1px solid rgba(0,0,0,.07)', borderRadius: 16, padding: '20px', boxShadow: '0 2px 8px rgba(0,0,0,.04)' }}>
               <label style={labelStyle}>Profile Photo</label>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginTop: 4 }}>
-                <div style={{ width: 72, height: 72, borderRadius: 14, overflow: 'hidden', background: '#1a1a1a', border: '1px solid var(--border)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginTop: 8 }}>
+                <div style={{ width: 76, height: 76, borderRadius: 16, overflow: 'hidden', background: '#F2F0EA', border: '2px solid rgba(51,78,216,.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                   {student!.photo_url
                     ? <img src={student!.photo_url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }} />
                     : <span style={{ fontSize: 32 }}>{student!.emoji}</span>
                   }
                 </div>
                 <div>
-                  <p style={{ color: 'var(--muted)', fontSize: 12, lineHeight: 1.5, marginBottom: 10 }}>Square crops work best. Max 5MB.</p>
-                  <label style={{ display: 'inline-block', background: 'transparent', border: '1px solid var(--border)', color: uploadingPhoto ? 'var(--muted)' : 'var(--cream)', borderRadius: 8, padding: '8px 16px', fontSize: 12, fontWeight: 600, cursor: uploadingPhoto ? 'not-allowed' : 'pointer' }}>
+                  <p style={{ color: 'rgba(17,17,16,.5)', fontSize: 12, lineHeight: 1.5, marginBottom: 10 }}>Square crops work best. Max 5MB.</p>
+                  <label style={{ display: 'inline-block', background: 'transparent', border: '1px solid rgba(0,0,0,.15)', color: uploadingPhoto ? 'rgba(17,17,16,.4)' : '#334ED8', borderRadius: 8, padding: '8px 16px', fontSize: 12, fontWeight: 600, cursor: uploadingPhoto ? 'not-allowed' : 'pointer' }}>
                     {uploadingPhoto ? 'Uploading...' : student!.photo_url ? 'Change Photo' : 'Upload Photo'}
                     <input type="file" accept="image/*" style={{ display: 'none' }} disabled={uploadingPhoto} onChange={e => { const f = e.target.files?.[0]; if (f) handlePhotoUpload(f) }} />
                   </label>
@@ -703,15 +735,23 @@ export default function DashboardPage() {
               </div>
             </div>
 
-            <Field label="Name" value={student!.name} disabled />
-            <Field label="University" value={student!.university} disabled />
-            <Field label="Degree" value={student!.degree} disabled />
-            <Field label="Year" value={student!.year} disabled />
+            </div>
 
-            {/* Editable Primary Skill */}
+            {/* Locked info */}
+            <div style={{ background: '#FFFFFF', border: '1px solid rgba(0,0,0,.07)', borderRadius: 16, padding: '20px', display: 'flex', flexDirection: 'column', gap: 12, boxShadow: '0 2px 8px rgba(0,0,0,.04)' }}>
+              <Field label="Name" value={student!.name} disabled />
+              <Field label="University" value={student!.university} disabled />
+              <Field label="Degree" value={student!.degree} disabled />
+              <Field label="Year" value={student!.year} disabled />
+            </div>
+
+            {/* Editable fields */}
+            <div style={{ background: '#FFFFFF', border: '1px solid rgba(0,0,0,.07)', borderRadius: 16, padding: '20px', display: 'flex', flexDirection: 'column', gap: 16, boxShadow: '0 2px 8px rgba(0,0,0,.04)' }}>
+
+          {/* Editable Primary Skill */}
             <div>
               <label style={labelStyle}>Primary Skill</label>
-              <p style={{ color: 'var(--muted)', fontSize: 11, marginBottom: 8, lineHeight: 1.5 }}>
+              <p style={{ color: 'rgba(17,17,16,.45)', fontSize: 11, marginBottom: 8, lineHeight: 1.5 }}>
                 Update this if you've developed new skills or want to change your main offering.
               </p>
               <select
@@ -730,8 +770,8 @@ export default function DashboardPage() {
                 />
               )}
               {/* Show what category this maps to */}
-              <p style={{ color: 'var(--muted)', fontSize: 11, marginTop: 6 }}>
-                Appears in: <span style={{ color: 'var(--orange)', fontWeight: 600 }}>
+              <p style={{ color: 'rgba(17,17,16,.4)', fontSize: 11, marginTop: 6 }}>
+                Appears in: <span style={{ color: '#334ED8', fontWeight: 600 }}>
                   {SKILL_CATEGORIES[student!.skill] || 'other'}
                 </span> filter on the browse page
               </p>
@@ -762,9 +802,9 @@ export default function DashboardPage() {
                     })}
                     style={{
                       padding: '7px 14px', borderRadius: 20, fontSize: 12, fontWeight: 600, cursor: 'pointer', transition: 'all .15s',
-                      background: (student!.availability || []).includes(opt) ? 'var(--orange)' : 'transparent',
-                      color: (student!.availability || []).includes(opt) ? '#fff' : 'var(--muted)',
-                      border: `1px solid ${(student!.availability || []).includes(opt) ? 'var(--orange)' : 'var(--border)'}`,
+                      background: (student!.availability || []).includes(opt) ? '#334ED8' : 'transparent',
+                      color: (student!.availability || []).includes(opt) ? '#fff' : 'rgba(17,17,16,.5)',
+                      border: `1px solid ${(student!.availability || []).includes(opt) ? '#334ED8' : 'rgba(0,0,0,.14)'}`,
                     }}>
                     {opt}
                   </button>
@@ -776,13 +816,14 @@ export default function DashboardPage() {
               <Field label="Starting Price (R)" value={student!.starting_price} onChange={v => setStudent({ ...student!, starting_price: v })} />
               <Field label="Price Unit" value={student!.price_unit} onChange={v => setStudent({ ...student!, price_unit: v })} />
             </div>
+            </div> {/* end editable card */}
             {packages.length > 0 && (
-              <div>
+              <div style={{ background: '#FFFFFF', border: '1px solid rgba(0,0,0,.07)', borderRadius: 16, padding: '20px', boxShadow: '0 2px 8px rgba(0,0,0,.04)' }}>
                 <label style={labelStyle}>Pricing Packages</label>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginTop: 4 }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginTop: 12 }}>
                   {packages.map((pkg, i) => (
-                    <div key={pkg.id ?? i} style={{ background: pkg.featured ? 'var(--o-dim)' : 'transparent', border: `1px solid ${pkg.featured ? 'var(--o-bright)' : 'var(--border)'}`, borderRadius: 10, padding: 14 }}>
-                      {pkg.featured && <p style={{ fontSize: 10, color: 'var(--orange)', fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 8 }}>Popular</p>}
+                    <div key={pkg.id ?? i} style={{ background: pkg.featured ? 'rgba(51,78,216,.06)' : '#F2F0EA', border: `1px solid ${pkg.featured ? 'rgba(51,78,216,.2)' : 'rgba(0,0,0,.08)'}`, borderRadius: 10, padding: 14 }}>
+                      {pkg.featured && <p style={{ fontSize: 10, color: '#334ED8', fontWeight: 700, letterSpacing: 1, textTransform: 'uppercase', marginBottom: 8 }}>Popular</p>}
                       <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                         <input value={pkg.name} onChange={e => setPackages(prev => prev.map((p, j) => j === i ? { ...p, name: e.target.value } : p))} placeholder="Package name" style={inputStyle} />
                         <input value={pkg.description ?? ''} onChange={e => setPackages(prev => prev.map((p, j) => j === i ? { ...p, description: e.target.value } : p))} placeholder="Description" style={inputStyle} />
@@ -793,13 +834,13 @@ export default function DashboardPage() {
                 </div>
               </div>
             )}
-            <div>
+            <div style={{ background: '#FFFFFF', border: '1px solid rgba(0,0,0,.07)', borderRadius: 16, padding: '20px', boxShadow: '0 2px 8px rgba(0,0,0,.04)' }}>
               <label style={labelStyle}>Portfolio Links</label>
-              <textarea value={student!.portfolio_links || ''} onChange={e => setStudent({ ...student!, portfolio_links: e.target.value })} rows={3} style={{ ...inputStyle, resize: 'vertical' }} />
+              <textarea value={student!.portfolio_links || ''} onChange={e => setStudent({ ...student!, portfolio_links: e.target.value })} rows={3} style={{ ...inputStyle, marginTop: 8, resize: 'vertical' }} />
             </div>
 
             {/* Portfolio Images */}
-            <div>
+            <div style={{ background: '#FFFFFF', border: '1px solid rgba(0,0,0,.07)', borderRadius: 16, padding: '20px', boxShadow: '0 2px 8px rgba(0,0,0,.04)' }}>
               <label style={labelStyle}>Portfolio Images</label>
               <p style={{ color: 'var(--muted)', fontSize: 11, marginBottom: 12, lineHeight: 1.5 }}>
                 Upload up to 6 images to showcase your work. These appear on your public profile.
@@ -849,8 +890,8 @@ export default function DashboardPage() {
               {portfolioImages.length < 6 && (
                 <label style={{
                   display: 'inline-flex', alignItems: 'center', gap: 8,
-                  background: 'transparent', border: '1px solid var(--border)',
-                  color: uploadingPortfolio ? 'var(--muted)' : 'var(--cream)',
+                  background: 'transparent', border: '1px solid rgba(0,0,0,.15)',
+                  color: uploadingPortfolio ? 'rgba(17,17,16,.4)' : '#334ED8',
                   borderRadius: 8, padding: '10px 18px', fontSize: 13, fontWeight: 600,
                   cursor: uploadingPortfolio ? 'not-allowed' : 'pointer',
                 }}>
@@ -869,18 +910,19 @@ export default function DashboardPage() {
               )}
 
               {portfolioError && (
-                <p style={{ color: 'var(--sunset)', fontSize: 12, marginTop: 8, background: 'var(--sun-dim)', border: '1px solid rgba(255,113,68,.3)', borderRadius: 8, padding: '8px 12px' }}>
+                <p style={{ color: '#E05A2E', fontSize: 12, marginTop: 8, background: 'rgba(255,113,68,.08)', border: '1px solid rgba(255,113,68,.25)', borderRadius: 8, padding: '8px 12px' }}>
                   {portfolioError}
                 </p>
               )}
             </div>
 
-            <div>
+            <div style={{ background: '#FFFFFF', border: '1px solid rgba(0,0,0,.07)', borderRadius: 16, padding: '20px', boxShadow: '0 2px 8px rgba(0,0,0,.04)' }}>
               <label style={labelStyle}>Extra Info</label>
-              <textarea value={student!.extra_info || ''} onChange={e => setStudent({ ...student!, extra_info: e.target.value })} rows={2} style={{ ...inputStyle, resize: 'vertical' }} />
+              <textarea value={student!.extra_info || ''} onChange={e => setStudent({ ...student!, extra_info: e.target.value })} rows={2} style={{ ...inputStyle, marginTop: 8, resize: 'vertical' }} />
             </div>
-            <button onClick={handleSaveProfile} style={{ background: 'var(--orange)', color: '#fff', border: 'none', borderRadius: 10, padding: '14px', fontSize: 15, fontWeight: 600, fontFamily: 'Bebas Neue, sans-serif', letterSpacing: 1.5, cursor: 'pointer', marginTop: 4 }}>
-              {saving ? 'Saving...' : saved ? '✓ Saved' : 'Save Changes'}
+
+            <button onClick={handleSaveProfile} style={{ background: '#334ED8', color: '#fff', border: 'none', borderRadius: 12, padding: '15px', fontSize: 15, fontWeight: 700, fontFamily: 'Bebas Neue, sans-serif', letterSpacing: 1.5, cursor: 'pointer', boxShadow: '0 4px 18px rgba(51,78,216,.3)', transition: 'transform .15s, box-shadow .15s' }}>
+              {saving ? 'Saving...' : saved ? '✓ Saved!' : 'Save Changes'}
             </button>
           </div>
         )}
@@ -889,26 +931,26 @@ export default function DashboardPage() {
         {tab === 'bookings' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             {bookings.length === 0 ? (
-              <div style={{ textAlign: 'center', padding: '48px 24px', border: '1px solid var(--border)', borderRadius: 12 }}>
-                <p style={{ color: 'var(--muted)', fontSize: 14 }}>No booking requests yet. Once clients book you, they'll appear here.</p>
+              <div style={{ textAlign: 'center', padding: '48px 24px', border: '1px solid rgba(0,0,0,.08)', borderRadius: 16, background: '#FFFFFF', boxShadow: '0 2px 8px rgba(0,0,0,.04)' }}>
+                <p style={{ color: 'rgba(17,17,16,.5)', fontSize: 14 }}>No booking requests yet. Once clients book you, they&apos;ll appear here.</p>
               </div>
             ) : bookings.map(b => {
               const cfg = STATUS_CONFIG[b.status] ?? STATUS_CONFIG.pending
               const actions = STATUS_ACTIONS[b.status] ?? []
               const isUpdating = updatingBooking === b.id
               return (
-                <div key={b.id} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, padding: '20px', opacity: isUpdating ? 0.6 : 1, transition: 'opacity .2s' }}>
+                <div key={b.id} style={{ background: '#FFFFFF', border: '1px solid rgba(0,0,0,.07)', borderRadius: 16, padding: '20px', opacity: isUpdating ? 0.6 : 1, transition: 'opacity .2s', boxShadow: '0 2px 8px rgba(0,0,0,.04)' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 10 }}>
                     <div>
-                      <p style={{ color: 'var(--cream)', fontWeight: 600, fontSize: 15, marginBottom: 2 }}>{b.client_name}</p>
-                      <p style={{ color: 'var(--muted)', fontSize: 11 }}>{b.reference}</p>
+                      <p style={{ color: '#111110', fontWeight: 600, fontSize: 15, marginBottom: 2 }}>{b.client_name}</p>
+                      <p style={{ color: 'rgba(17,17,16,.45)', fontSize: 11 }}>{b.reference}</p>
                     </div>
                     <span style={{ fontSize: 11, fontWeight: 700, padding: '4px 10px', borderRadius: 20, background: cfg.bg, color: cfg.color, whiteSpace: 'nowrap' }}>{cfg.label}</span>
                   </div>
-                  {b.description && <p style={{ color: 'var(--muted)', fontSize: 13, marginBottom: 10, lineHeight: 1.5 }}>{b.description}</p>}
+                  {b.description && <p style={{ color: 'rgba(17,17,16,.6)', fontSize: 13, marginBottom: 10, lineHeight: 1.5 }}>{b.description}</p>}
                   <div style={{ display: 'flex', gap: 16, marginBottom: 14, flexWrap: 'wrap' }}>
-                    <a href={`https://wa.me/${b.client_whatsapp.replace(/\D/g, '')}`} target="_blank" rel="noreferrer" style={{ fontSize: 12, color: 'var(--mint)', textDecoration: 'none' }}>💬 WhatsApp {b.client_whatsapp}</a>
-                    <a href={`mailto:${b.client_email}`} style={{ fontSize: 12, color: 'var(--muted)', textDecoration: 'none' }}>✉ {b.client_email}</a>
+                    <a href={`https://wa.me/${b.client_whatsapp.replace(/\D/g, '')}`} target="_blank" rel="noreferrer" style={{ fontSize: 12, color: '#3CB97D', fontWeight: 600, textDecoration: 'none' }}>WhatsApp {b.client_whatsapp}</a>
+                    <a href={`mailto:${b.client_email}`} style={{ fontSize: 12, color: 'rgba(17,17,16,.5)', textDecoration: 'none' }}>{b.client_email}</a>
                   </div>
                   {actions.length > 0 && (
                     <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
@@ -920,7 +962,7 @@ export default function DashboardPage() {
                       ))}
                     </div>
                   )}
-                  <p style={{ color: 'var(--muted)', fontSize: 11, marginTop: 12 }}>{new Date(b.created_at).toLocaleDateString('en-ZA', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
+                  <p style={{ color: 'rgba(17,17,16,.4)', fontSize: 11, marginTop: 12 }}>{new Date(b.created_at).toLocaleDateString('en-ZA', { day: 'numeric', month: 'short', year: 'numeric' })}</p>
                 </div>
               )
             })}
@@ -929,39 +971,51 @@ export default function DashboardPage() {
 
         {/* VERIFICATION TAB */}
         {tab === 'verification' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-            <div style={{ background: student!.verified ? 'var(--mint-dim)' : 'var(--sun-dim)', border: '1px solid ' + (student!.verified ? 'rgba(192,240,170,.3)' : 'rgba(255,113,68,.3)'), borderRadius: 12, padding: '20px' }}>
-              <p style={{ color: student!.verified ? 'var(--mint)' : 'var(--orange)', fontWeight: 600, fontSize: 15, marginBottom: 4 }}>{student!.verified ? 'Verified ✓' : 'Not yet verified'}</p>
-              <p style={{ color: 'var(--muted)', fontSize: 13, lineHeight: 1.6 }}>{student!.verified ? 'Your student card has been verified. Your profile is live.' : 'Upload your student card below to get verified. We review within 24 hours.'}</p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <div style={{ background: student!.verified ? '#E8F8E0' : '#FFF3ED', border: '1px solid ' + (student!.verified ? 'rgba(59,185,125,.25)' : 'rgba(255,113,68,.25)'), borderRadius: 16, padding: '20px 22px', boxShadow: '0 2px 8px rgba(0,0,0,.04)' }}>
+              <p style={{ color: student!.verified ? '#1A6040' : '#C04A20', fontWeight: 700, fontSize: 15, marginBottom: 5 }}>{student!.verified ? 'Verified ✓' : 'Not yet verified'}</p>
+              <p style={{ color: student!.verified ? 'rgba(26,96,64,.65)' : 'rgba(192,74,32,.7)', fontSize: 13, lineHeight: 1.6 }}>{student!.verified ? 'Your student card has been verified. Your profile is live.' : 'Upload your student card below to get verified. We review within 24 hours.'}</p>
             </div>
             {!student!.verified && (
-              <div style={{ border: '1px solid var(--border)', borderRadius: 12, padding: '24px' }}>
-                <p style={{ color: 'var(--cream)', fontSize: 14, fontWeight: 600, marginBottom: 16 }}>Upload Student Card</p>
-                <input type="file" accept="image/*,.pdf" onChange={e => setCardFile(e.target.files?.[0] || null)} style={{ color: 'var(--muted)', fontSize: 13, marginBottom: 16, display: 'block' }} />
+              <div style={{ background: '#FFFFFF', border: '1px solid rgba(0,0,0,.07)', borderRadius: 16, padding: '24px', boxShadow: '0 2px 8px rgba(0,0,0,.04)' }}>
+                <p style={{ color: '#111110', fontSize: 14, fontWeight: 600, marginBottom: 16 }}>Upload Student Card</p>
+                <input type="file" accept="image/*,.pdf" onChange={e => setCardFile(e.target.files?.[0] || null)} style={{ color: 'rgba(17,17,16,.6)', fontSize: 13, marginBottom: 16, display: 'block' }} />
                 {cardFile && (
-                  <button onClick={handleCardUpload} style={{ background: 'var(--orange)', color: '#fff', border: 'none', borderRadius: 10, padding: '12px 24px', fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
+                  <button onClick={handleCardUpload} style={{ background: '#334ED8', color: '#fff', border: 'none', borderRadius: 10, padding: '12px 24px', fontSize: 14, fontWeight: 600, cursor: 'pointer', boxShadow: '0 4px 16px rgba(51,78,216,.3)' }}>
                     {uploading ? 'Uploading...' : uploadDone ? 'Submitted ✓' : 'Submit for Verification'}
                   </button>
                 )}
-                {uploadError && <p style={{ color: 'var(--sunset)', fontSize: 12, marginTop: 8 }}>{uploadError}</p>}
+                {uploadError && <p style={{ color: '#E05A2E', fontSize: 12, marginTop: 8 }}>{uploadError}</p>}
               </div>
             )}
           </div>
         )}
 
       </div>
+      <style>{dblobStyles}</style>
     </main>
   )
 }
 
+const dblobStyles = `
+  @keyframes dblob1 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(8px,-16px); } }
+  @keyframes dblob2 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(6px,-11px); } }
+  @keyframes dblob3 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-5px,-10px); } }
+  @keyframes dblob4 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(0,-13px); } }
+  @keyframes dblob5 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-4px,-8px); } }
+  @media (prefers-reduced-motion: reduce) {
+    [style*="dblob"] { animation: none !important; }
+  }
+`
+
 const labelStyle: React.CSSProperties = {
-  display: 'block', color: 'var(--muted)', fontSize: 12, fontWeight: 600,
-  letterSpacing: '.5px', marginBottom: 6, textTransform: 'uppercase',
+  display: 'block', color: 'rgba(17,17,16,.5)', fontSize: 11, fontWeight: 700,
+  letterSpacing: '1px', marginBottom: 6, textTransform: 'uppercase',
 }
 const inputStyle: React.CSSProperties = {
-  width: '100%', background: 'var(--surface)', border: '1px solid var(--border)',
-  borderRadius: 8, padding: '11px 14px', fontSize: 14, color: 'var(--cream)',
-  outline: 'none', boxSizing: 'border-box',
+  width: '100%', background: '#F2F0EA', border: '1px solid rgba(0,0,0,.1)',
+  borderRadius: 8, padding: '11px 14px', fontSize: 14, color: '#111110',
+  outline: 'none', boxSizing: 'border-box', transition: 'border-color .2s, box-shadow .2s',
 }
 
 function Field({ label, value, onChange, disabled }: { label: string; value: string; onChange?: (v: string) => void; disabled?: boolean }) {
@@ -978,7 +1032,7 @@ function FormField({ label, hint, children }: { label: string; hint?: string; ch
   return (
     <div>
       <label style={labelStyle}>{label}</label>
-      {hint && <p style={{ color: 'var(--muted)', fontSize: 11, marginBottom: 8, lineHeight: 1.5 }}>{hint}</p>}
+      {hint && <p style={{ color: 'rgba(17,17,16,.45)', fontSize: 11, marginBottom: 8, lineHeight: 1.5 }}>{hint}</p>}
       {children}
     </div>
   )

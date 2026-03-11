@@ -108,14 +108,18 @@ export default function AdminPage() {
   }
 
   if (loading) return (
-    <main style={{ minHeight: '100svh', background: 'var(--black)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <p style={{ color: 'var(--muted)', fontFamily: 'Bebas Neue, sans-serif', fontSize: 20, letterSpacing: 2 }}>Loading...</p>
+    <main style={{ minHeight: '100svh', background: 'var(--black)', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
+      <div aria-hidden="true" style={{ position: 'absolute', top: '-10%', left: '-8%', width: 340, height: 300, background: '#C7B0FF', borderRadius: '60% 40% 70% 30% / 50% 60% 40% 50%', opacity: .22, pointerEvents: 'none', animation: 'aBlob1 6.4s ease-in-out infinite' }} />
+      <div aria-hidden="true" style={{ position: 'absolute', bottom: '-8%', right: '-6%', width: 280, height: 260, background: '#C0F0AA', borderRadius: '40% 60% 30% 70%', opacity: .28, pointerEvents: 'none', animation: 'aBlob3 4.7s ease-in-out infinite' }} />
+      <p style={{ color: 'var(--cream)', fontFamily: 'Bebas Neue, sans-serif', fontSize: 20, letterSpacing: 2, position: 'relative', zIndex: 1 }}>Loading...</p>
+      <style>{adminBlobStyles}</style>
     </main>
   )
 
   if (error) return (
-    <main style={{ minHeight: '100svh', background: 'var(--black)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <p style={{ color: 'var(--sunset)', fontSize: 14 }}>{error}</p>
+    <main style={{ minHeight: '100svh', background: 'var(--black)', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
+      <div aria-hidden="true" style={{ position: 'absolute', top: '-10%', left: '-8%', width: 300, height: 260, background: '#FF7144', borderRadius: '60% 40% 70% 30%', opacity: .15, pointerEvents: 'none' }} />
+      <p style={{ color: '#E05A2E', fontSize: 14, position: 'relative', zIndex: 1 }}>{error}</p>
     </main>
   )
 
@@ -127,25 +131,36 @@ export default function AdminPage() {
   const pendingWaitlist = waitlist.filter((w: any) => !w.status || w.status === 'pending')
 
   return (
-    <main style={{ minHeight: '100svh', background: 'var(--black)', padding: '40px 24px', fontFamily: 'Instrument Sans, sans-serif', color: 'var(--cream)' }}>
-      <div style={{ maxWidth: 1100, margin: '0 auto' }}>
-        <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 32, letterSpacing: 2, marginBottom: 8 }}>
-          SKILL<span style={{ color: 'var(--orange)' }}>ZA</span> ADMIN
+    <main style={{ minHeight: '100svh', background: 'var(--black)', padding: '40px 24px', fontFamily: 'Instrument Sans, sans-serif', color: 'var(--cream)', position: 'relative', overflow: 'hidden' }}>
+      {/* Background blobs */}
+      <div aria-hidden="true" style={{ position: 'fixed', top: '-7%', left: '-6%', width: 360, height: 320, background: '#C7B0FF', borderRadius: '60% 40% 70% 30% / 50% 60% 40% 50%', opacity: .18, pointerEvents: 'none', animation: 'aBlob1 6.4s ease-in-out infinite' }} />
+      <div aria-hidden="true" style={{ position: 'fixed', top: '5%', right: '-5%', width: 260, height: 240, background: '#FF7144', borderRadius: '40% 60% 30% 70% / 60% 40% 60% 40%', opacity: .12, pointerEvents: 'none', animation: 'aBlob2 5.1s ease-in-out infinite' }} />
+      <div aria-hidden="true" style={{ position: 'fixed', bottom: '-4%', right: '-4%', width: 300, height: 280, background: '#C0F0AA', borderRadius: '30% 70% 60% 40% / 50% 40% 60% 50%', opacity: .20, pointerEvents: 'none', animation: 'aBlob3 4.7s ease-in-out infinite' }} />
+      <div aria-hidden="true" style={{ position: 'fixed', bottom: '22%', left: '-3%', width: 200, height: 200, background: '#E0E446', borderRadius: '50% 50% 40% 60% / 40% 60% 50% 50%', opacity: .15, pointerEvents: 'none', animation: 'aBlob4 3.9s ease-in-out infinite' }} />
+      <div aria-hidden="true" style={{ position: 'fixed', top: '44%', left: '32%', width: 160, height: 160, background: '#5BC4F5', borderRadius: '50%', opacity: .10, pointerEvents: 'none', animation: 'aBlob5 5.5s ease-in-out infinite' }} />
+
+      <div style={{ maxWidth: 1100, margin: '0 auto', position: 'relative', zIndex: 1 }}>
+        {/* Admin header */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 6 }}>
+          <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 32, letterSpacing: 2, lineHeight: 1 }}>
+            SKILL<span style={{ color: '#334ED8' }}>ZA</span>
+          </div>
+          <span style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 11, letterSpacing: 3, background: '#E0E446', color: '#111110', padding: '4px 10px', borderRadius: 100 }}>ADMIN</span>
         </div>
         <p style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 40 }}>Internal dashboard</p>
 
         {/* Stats */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: 12, marginBottom: 40 }}>
           {[
-            { label: 'Active Students',      value: verified.length,              color: 'var(--green)'  },
-            { label: 'Pending Verification', value: pendingVerifications.length,  color: 'var(--orange)' },
-            { label: 'New Bookings',         value: pendingBookings.length,       color: 'var(--lavender)' },
-            { label: 'Waitlist',             value: pendingWaitlist.length,       color: 'var(--gold)'   },
-            { label: 'Total Bookings',       value: bookings.length,              color: 'var(--cream)'  },
+            { label: 'Active Students',      value: verified.length,              bg: '#C0F0AA',  text: '#1A3A1A', sub: 'rgba(26,58,26,.65)'  },
+            { label: 'Pending Verification', value: pendingVerifications.length,  bg: '#FF7144',  text: '#FFFFFF', sub: 'rgba(255,255,255,.80)' },
+            { label: 'New Bookings',         value: pendingBookings.length,       bg: '#C7B0FF',  text: '#1A0A3A', sub: 'rgba(26,10,58,.65)'  },
+            { label: 'Waitlist',             value: pendingWaitlist.length,       bg: '#E0E446',  text: '#1A1A00', sub: 'rgba(26,26,0,.65)'   },
+            { label: 'Total Bookings',       value: bookings.length,              bg: '#5BC4F5',  text: '#001A2A', sub: 'rgba(0,26,42,.60)'   },
           ].map(stat => (
-            <div key={stat.label} style={{ background: 'var(--black-2)', border: '1px solid var(--border)', borderRadius: 12, padding: '18px 20px' }}>
-              <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 36, color: stat.color, lineHeight: 1 }}>{stat.value}</div>
-              <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 4 }}>{stat.label}</div>
+            <div key={stat.label} style={{ background: stat.bg, borderRadius: 12, padding: '18px 20px' }}>
+              <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 36, color: stat.text, lineHeight: 1 }}>{stat.value}</div>
+              <div style={{ fontSize: 11, color: stat.sub, marginTop: 4, fontWeight: 600 }}>{stat.label}</div>
             </div>
           ))}
         </div>
@@ -271,6 +286,7 @@ export default function AdminPage() {
           })}
         </AdminSection>
       </div>
+      <style>{adminBlobStyles}</style>
     </main>
   )
 }
@@ -279,13 +295,25 @@ function AdminSection({ title, count, accent, children }: { title: string; count
   return (
     <div style={{ marginBottom: 40 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
+        <div style={{ width: 4, height: 24, borderRadius: 2, background: accent, flexShrink: 0 }} />
         <h2 style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 22, letterSpacing: 1 }}>{title}</h2>
-        <span style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 18, color: accent }}>{count}</span>
+        <span style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 14, background: accent, color: '#111110', padding: '2px 8px', borderRadius: 6 }}>{count}</span>
       </div>
       <div style={{ background: 'var(--black-2)', border: '1px solid var(--border)', borderRadius: 12, overflow: 'hidden' }}>{children}</div>
     </div>
   )
 }
+
+const adminBlobStyles = `
+  @keyframes aBlob1 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(8px,-16px); } }
+  @keyframes aBlob2 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-6px,-11px); } }
+  @keyframes aBlob3 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-5px,-10px); } }
+  @keyframes aBlob4 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(5px,-9px); } }
+  @keyframes aBlob5 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(-4px,-8px); } }
+  @media (prefers-reduced-motion: reduce) {
+    [style*="aBlob"] { animation: none !important; }
+  }
+`
 function Row({ children }: { children: React.ReactNode }) {
   return <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: 12, padding: '12px 16px', borderBottom: '1px solid var(--border)', alignItems: 'center' }}>{children}</div>
 }
