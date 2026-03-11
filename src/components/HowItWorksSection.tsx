@@ -3,11 +3,11 @@ import { AnimateIn } from '@/components/AnimateIn'
 import { SplitText } from '@/components/SplitText'
 import { MessageCircle } from 'lucide-react'
 
-// Each step gets its own accent color — cobalt, violet, coral
+// Each step card gets a bold solid colour — cobalt, lavender, sunset
 const STEP_ACCENTS = [
-  { top: '#1445FF', numColor: 'rgba(20,69,255,.1)',    hoverBg: 'rgba(20,69,255,.07)',   badge: null },
-  { top: '#7C3AED', numColor: 'rgba(124,58,237,.1)',  hoverBg: 'rgba(124,58,237,.06)', badge: 'Connected via WhatsApp' },
-  { top: '#FF4520', numColor: 'rgba(255,69,32,.1)',   hoverBg: 'rgba(255,69,32,.06)',  badge: null },
+  { bg: '#334ED8', hoverBg: '#2540B8', text: '#FFFFFF', textDim: 'rgba(255,255,255,.68)', numColor: 'rgba(255,255,255,.14)', badge: null },
+  { bg: '#C7B0FF', hoverBg: '#B09AE8', text: '#1A0A3A', textDim: 'rgba(26,10,58,.62)',   numColor: 'rgba(26,10,58,.10)',   badge: 'Connected via WhatsApp' },
+  { bg: '#FF7144', hoverBg: '#E05A2E', text: '#FFFFFF', textDim: 'rgba(255,255,255,.68)', numColor: 'rgba(255,255,255,.14)', badge: null },
 ]
 
 export function HowItWorksSection() {
@@ -27,10 +27,6 @@ export function HowItWorksSection() {
         position: 'relative', overflow: 'hidden',
       }}
     >
-      {/* Background decorative geometry */}
-      <div aria-hidden="true" style={{ position: 'absolute', top: -80, right: -60, width: 360, height: 360, background: 'radial-gradient(ellipse at center, rgba(255,69,32,.06) 0%, transparent 65%)', borderRadius: '50%', pointerEvents: 'none' }} />
-      <div aria-hidden="true" style={{ position: 'absolute', bottom: -60, left: -40, width: 280, height: 280, background: 'radial-gradient(ellipse at center, rgba(124,58,237,.07) 0%, transparent 65%)', borderRadius: '50%', pointerEvents: 'none' }} />
-
       <AnimateIn style={{ position: 'relative', zIndex: 1 }}>
         <div className="eyebrow eyebrow-coral">How It Works</div>
         <h2 style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 'clamp(34px, 6vw, 60px)', lineHeight: .93, letterSpacing: 1, marginBottom: 14, color: '#111110' }}>
@@ -42,38 +38,28 @@ export function HowItWorksSection() {
         </p>
       </AnimateIn>
 
-      <AnimateIn delay={1} style={{ position: 'relative', zIndex: 1, display: 'grid', gridTemplateColumns: '1fr', gap: 3, borderRadius: 18, overflow: 'hidden', background: 'rgba(0,0,0,.08)' }} className="steps-grid">
+      <AnimateIn delay={1} style={{ position: 'relative', zIndex: 1, display: 'grid', gridTemplateColumns: '1fr', gap: 3, borderRadius: 18, overflow: 'hidden', background: '#111110' }} className="steps-grid">
         {steps.map((step, idx) => {
           const accent = STEP_ACCENTS[idx]
           return (
             <div
               key={step.num}
-              data-accent={idx === 0 ? 'cobalt' : idx === 1 ? 'violet' : 'coral'}
               style={{
-                background: '#FFFFFF',
+                background: accent.bg,
                 padding: 'clamp(28px, 4vw, 44px) clamp(20px, 3vw, 36px)',
-                transition: 'background .3s',
+                transition: 'background .25s',
                 position: 'relative', overflow: 'hidden',
               }}
-              onMouseEnter={e => {
-                const el = e.currentTarget as HTMLElement
-                el.style.background = accent.hoverBg
-              }}
-              onMouseLeave={e => {
-                const el = e.currentTarget as HTMLElement
-                el.style.background = '#FFFFFF'
-              }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = accent.hoverBg }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = accent.bg }}
             >
-              {/* Colored top bar */}
-              <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, background: accent.top }} />
-
               {/* Ghost step number */}
               <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 72, color: accent.numColor, lineHeight: 1, marginBottom: 12, userSelect: 'none' }}>{step.num}</div>
 
-              <h3 style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 22, letterSpacing: .5, marginBottom: 10, color: '#111110' }}>{step.title}</h3>
-              <p style={{ fontSize: 13.5, color: 'rgba(17,17,16,.6)', lineHeight: 1.75 }}>{step.body}</p>
+              <h3 style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 22, letterSpacing: .5, marginBottom: 10, color: accent.text }}>{step.title}</h3>
+              <p style={{ fontSize: 13.5, color: accent.textDim, lineHeight: 1.75 }}>{step.body}</p>
               {step.badge && (
-                <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, marginTop: 14, background: 'rgba(37,211,102,.08)', border: '1px solid rgba(37,211,102,.2)', color: '#25d366', fontSize: 11, fontWeight: 600, padding: '5px 12px', borderRadius: 100 }}>
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, marginTop: 14, background: 'rgba(26,10,58,.08)', border: '1px solid rgba(26,10,58,.22)', color: accent.text, fontSize: 11, fontWeight: 600, padding: '5px 12px', borderRadius: 100 }}>
                   <MessageCircle size={13} strokeWidth={1.5} />
                   {step.badge}
                 </div>
