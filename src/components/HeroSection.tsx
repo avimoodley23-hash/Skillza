@@ -331,7 +331,7 @@ export default function HeroSection({ students = [] }: { students?: StudentFull[
           {/* CTAs */}
           <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', marginBottom: 12 }}>
             <Link href="/#talent-grid" className="btn-primary">Browse Talent →</Link>
-            <Link href="/join" className="btn-outline">Are you a creative? Join →</Link>
+            <Link href="/join" className="btn-outline">Join as a Creative →</Link>
           </div>
           {/* Trust micro-copy */}
           <p style={{ fontSize: 11, color: 'rgba(17,17,16,.45)', marginBottom: 24, letterSpacing: .2 }}>

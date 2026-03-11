@@ -57,7 +57,7 @@ export function HowItWorksSection() {
               <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 72, color: accent.numColor, lineHeight: 1, marginBottom: 12, userSelect: 'none' }}>{step.num}</div>
 
               <h3 style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 22, letterSpacing: .5, marginBottom: 10, color: accent.text }}>{step.title}</h3>
-              <p style={{ fontSize: 13.5, color: accent.textDim, lineHeight: 1.75 }}>{step.body}</p>
+              <p style={{ fontSize: 14, color: accent.textDim, lineHeight: 1.75 }}>{step.body}</p>
               {step.badge && (
                 <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, marginTop: 14, background: 'rgba(26,10,58,.08)', border: '1px solid rgba(26,10,58,.22)', color: accent.text, fontSize: 11, fontWeight: 600, padding: '5px 12px', borderRadius: 100 }}>
                   <MessageCircle size={13} strokeWidth={1.5} />

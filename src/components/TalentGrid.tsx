@@ -66,11 +66,11 @@ const SORT_OPTIONS = [
 // Palette-driven card colour themes — cycles per card index
 const CARD_COLORS = [
   { bg: '#334ED8', imgGrad: '#1E3AC0', border: '#2540B8', hoverShadow: 'rgba(51,78,216,0.35)',  text: '#FFFFFF', sub: 'rgba(255,255,255,0.65)', tagBg: 'rgba(255,255,255,0.15)', tagText: 'rgba(255,255,255,0.85)', uniBg: 'rgba(255,255,255,0.12)', uniText: 'rgba(255,255,255,0.8)',  uniBorder: 'rgba(255,255,255,0.2)',  verBg: '#E0E446', verText: '#1A1A1A', ratingCol: '#E0E446', priceBorder: 'rgba(255,255,255,0.2)',  bookBg: '#FFFFFF', bookText: '#334ED8' },
-  { bg: '#C0F0AA', imgGrad: '#88CC70', border: '#9EDA89', hoverShadow: 'rgba(80,160,50,0.25)',  text: '#1A3A1A', sub: 'rgba(26,58,26,0.6)',    tagBg: 'rgba(26,58,26,0.1)',    tagText: '#33473B',              uniBg: 'rgba(26,58,26,0.08)',  uniText: '#33473B',            uniBorder: 'rgba(26,58,26,0.18)', verBg: '#334ED8', verText: '#FFFFFF', ratingCol: '#FF7144', priceBorder: 'rgba(26,58,26,0.15)',  bookBg: '#334ED8', bookText: '#FFFFFF' },
+  { bg: '#C0F0AA', imgGrad: '#88CC70', border: '#9EDA89', hoverShadow: 'rgba(80,160,50,0.25)',  text: '#1A3A1A', sub: 'rgba(26,58,26,0.72)',   tagBg: 'rgba(26,58,26,0.1)',    tagText: '#33473B',              uniBg: 'rgba(26,58,26,0.08)',  uniText: '#33473B',            uniBorder: 'rgba(26,58,26,0.18)', verBg: '#334ED8', verText: '#FFFFFF', ratingCol: '#FF7144', priceBorder: 'rgba(26,58,26,0.15)',  bookBg: '#334ED8', bookText: '#FFFFFF' },
   { bg: '#FFE8D2', imgGrad: '#E8C090', border: '#E0C090', hoverShadow: 'rgba(200,100,40,0.2)',  text: '#1A1A1A', sub: 'rgba(17,17,16,0.5)',    tagBg: 'rgba(17,17,16,0.06)',   tagText: '#33473B',              uniBg: 'rgba(17,17,16,0.06)',  uniText: '#33473B',            uniBorder: 'rgba(17,17,16,0.12)', verBg: '#334ED8', verText: '#FFFFFF', ratingCol: '#FF7144', priceBorder: 'rgba(17,17,16,0.12)', bookBg: '#334ED8', bookText: '#FFFFFF' },
   { bg: '#D8E6FF', imgGrad: '#A0BEF0', border: '#AACAFF', hoverShadow: 'rgba(51,78,216,0.18)', text: '#1A1A1A', sub: 'rgba(51,78,216,0.7)',    tagBg: 'rgba(51,78,216,0.1)',   tagText: '#334ED8',              uniBg: 'rgba(51,78,216,0.08)', uniText: '#334ED8',            uniBorder: 'rgba(51,78,216,0.2)', verBg: '#33473B', verText: '#FFFFFF', ratingCol: '#FF7144', priceBorder: 'rgba(51,78,216,0.15)', bookBg: '#334ED8', bookText: '#FFFFFF' },
   { bg: '#FFA9FF', imgGrad: '#DC78DC', border: '#E090E0', hoverShadow: 'rgba(180,80,180,0.28)', text: '#1A1A1A', sub: 'rgba(90,26,90,0.6)',    tagBg: 'rgba(90,26,90,0.08)',   tagText: '#5A1A5A',              uniBg: 'rgba(90,26,90,0.07)',  uniText: '#5A1A5A',            uniBorder: 'rgba(90,26,90,0.18)', verBg: '#334ED8', verText: '#FFFFFF', ratingCol: '#FF7144', priceBorder: 'rgba(90,26,90,0.15)', bookBg: '#334ED8', bookText: '#FFFFFF' },
-  { bg: '#E0E446', imgGrad: '#B8BC18', border: '#C8CC28', hoverShadow: 'rgba(160,168,0,0.3)',   text: '#1A1A1A', sub: 'rgba(17,17,16,0.55)',   tagBg: 'rgba(17,17,16,0.08)',   tagText: '#33473B',              uniBg: 'rgba(17,17,16,0.07)',  uniText: '#33473B',            uniBorder: 'rgba(17,17,16,0.15)', verBg: '#33473B', verText: '#FFFFFF', ratingCol: '#FF7144', priceBorder: 'rgba(17,17,16,0.12)', bookBg: '#33473B', bookText: '#FFFFFF' },
+  { bg: '#E0E446', imgGrad: '#B8BC18', border: '#C8CC28', hoverShadow: 'rgba(160,168,0,0.3)',   text: '#1A1A1A', sub: 'rgba(17,17,16,0.68)',   tagBg: 'rgba(17,17,16,0.08)',   tagText: '#33473B',              uniBg: 'rgba(17,17,16,0.07)',  uniText: '#33473B',            uniBorder: 'rgba(17,17,16,0.15)', verBg: '#33473B', verText: '#FFFFFF', ratingCol: '#FF7144', priceBorder: 'rgba(17,17,16,0.12)', bookBg: '#33473B', bookText: '#FFFFFF' },
 ]
 
 function parsePrice(p: string): number {
@@ -199,9 +199,36 @@ export default function TalentGrid({ students }: { students: Student[] }) {
                   background: activeFilter === cat.id ? '#334ED8' : '#FFFFFF',
                   color: activeFilter === cat.id ? '#fff' : '#555555',
                   cursor: 'pointer', whiteSpace: 'nowrap',
-                  transition: 'all .18s', minHeight: 44, flexShrink: 0,
-                  boxShadow: activeFilter === cat.id ? '0 2px 12px rgba(20,69,255,.25)' : 'none',
+                  transition: 'all .22s cubic-bezier(.25,.46,.45,.94)', minHeight: 44, flexShrink: 0,
+                  boxShadow: activeFilter === cat.id ? '0 3px 14px rgba(51,78,216,.30)' : 'none',
                   display: 'inline-flex', alignItems: 'center', gap: 5,
+                  transform: 'translateY(0)',
+                }}
+                onMouseEnter={e => {
+                  const el = e.currentTarget as HTMLElement
+                  if (activeFilter !== cat.id) {
+                    el.style.borderColor = 'rgba(51,78,216,.3)'
+                    el.style.background = 'rgba(51,78,216,.05)'
+                    el.style.color = '#334ED8'
+                    el.style.transform = 'translateY(-1px)'
+                    el.style.boxShadow = '0 2px 10px rgba(51,78,216,.12)'
+                  } else {
+                    el.style.transform = 'translateY(-1px)'
+                    el.style.boxShadow = '0 5px 18px rgba(51,78,216,.35)'
+                  }
+                }}
+                onMouseLeave={e => {
+                  const el = e.currentTarget as HTMLElement
+                  if (activeFilter !== cat.id) {
+                    el.style.borderColor = 'rgba(17,17,16,.14)'
+                    el.style.background = '#FFFFFF'
+                    el.style.color = '#555555'
+                    el.style.transform = 'translateY(0)'
+                    el.style.boxShadow = 'none'
+                  } else {
+                    el.style.transform = 'translateY(0)'
+                    el.style.boxShadow = '0 3px 14px rgba(51,78,216,.30)'
+                  }
                 }}
               >
                 {CatIcon && <CatIcon size={14} strokeWidth={1.5} />}
@@ -490,12 +517,12 @@ function StudentCard({ student, index, isInitialLoad, onOpen, onBook, colors }: 
             </div>
 
             {/* Skill */}
-            <div style={{ fontSize: 12, color: colors.sub, marginBottom: 8 }}>{student.skill}</div>
+            <div style={{ fontSize: 12.5, color: colors.sub, marginBottom: 8 }}>{student.skill}</div>
 
             {/* Bio */}
             {student.bio && (
               <div className="student-card-bio" style={{
-                fontSize: 11, color: colors.sub, lineHeight: 1.5,
+                fontSize: 11.5, color: colors.sub, lineHeight: 1.55,
                 marginBottom: 8,
                 display: '-webkit-box', WebkitLineClamp: 2,
                 WebkitBoxOrient: 'vertical', overflow: 'hidden',
@@ -509,9 +536,10 @@ function StudentCard({ student, index, isInitialLoad, onOpen, onBook, colors }: 
               <div className="student-card-tags" style={{ gap: 4, flexWrap: 'wrap', marginBottom: 8 }}>
                 {student.tags.slice(0, 3).map(tag => (
                   <span key={tag} style={{
-                    fontSize: 10, padding: '3px 7px', borderRadius: 100,
+                    fontSize: 11, padding: '4px 8px', borderRadius: 100,
                     background: colors.tagBg, color: colors.tagText,
                     border: `1px solid ${colors.uniBorder}`,
+                    lineHeight: 1.2,
                   }}>
                     {tag}
                   </span>
@@ -542,8 +570,8 @@ function StudentCard({ student, index, isInitialLoad, onOpen, onBook, colors }: 
                 transition: 'all .2s', flexShrink: 0,
                 boxShadow: `0 2px 12px ${colors.hoverShadow}`,
               }}
-              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.opacity = '0.85' }}
-              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.opacity = '1' }}
+              onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.opacity = '0.9'; el.style.transform = 'translateY(-2px) scale(1.03)'; el.style.boxShadow = `0 6px 20px ${colors.hoverShadow}` }}
+              onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.opacity = '1'; el.style.transform = ''; el.style.boxShadow = `0 2px 12px ${colors.hoverShadow}` }}
               aria-label={`Book ${student.name}`}
             >
               Book

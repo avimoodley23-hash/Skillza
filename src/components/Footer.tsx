@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { LegalModal } from './LegalModal'
 
 const NAV_LINKS = [
-  { href: '/#find-talent',  label: 'Browse Talent' },
+  { href: '/#talent-grid',  label: 'Browse Talent' },
   { href: '/#how-it-works', label: 'How It Works' },
   { href: '/#for-students', label: 'For Students' },
   { href: '/#verify',       label: 'Verification' },
@@ -126,29 +126,29 @@ export function Footer() {
           {/* Nav columns */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 40 }}>
             <div>
-              <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: 'rgba(17,17,16,.38)', marginBottom: 16 }}>Platform</div>
+              <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: 'rgba(17,17,16,.50)', marginBottom: 16 }}>Platform</div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                 {NAV_LINKS.map(({ href, label }) => (
                   <Link
                     key={href}
                     href={href}
-                    style={{ fontSize: 13, fontWeight: 500, color: 'rgba(17,17,16,.5)', transition: 'color .2s', textDecoration: 'none' }}
+                    style={{ fontSize: 13, fontWeight: 500, color: 'rgba(17,17,16,.65)', transition: 'color .2s', textDecoration: 'none' }}
                     onMouseEnter={e => (e.currentTarget.style.color = 'var(--text)')}
-                    onMouseLeave={e => (e.currentTarget.style.color = 'rgba(17,17,16,.5)')}
+                    onMouseLeave={e => (e.currentTarget.style.color = 'rgba(17,17,16,.65)')}
                   >{label}</Link>
                 ))}
               </div>
             </div>
             <div>
-              <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: 'rgba(17,17,16,.38)', marginBottom: 16 }}>Legal</div>
+              <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: 'rgba(17,17,16,.50)', marginBottom: 16 }}>Legal</div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                 {LEGAL_LABELS.map(({ key, label }) => (
                   <button
                     key={key}
                     onClick={() => setLegalModal(key)}
-                    style={{ fontSize: 13, fontWeight: 500, color: 'rgba(17,17,16,.5)', transition: 'color .2s', background: 'none', border: 'none', padding: 0, cursor: 'pointer', textAlign: 'left' }}
+                    style={{ fontSize: 13, fontWeight: 500, color: 'rgba(17,17,16,.65)', transition: 'color .2s', background: 'none', border: 'none', padding: 0, cursor: 'pointer', textAlign: 'left' }}
                     onMouseEnter={e => (e.currentTarget.style.color = 'var(--text)')}
-                    onMouseLeave={e => (e.currentTarget.style.color = 'rgba(17,17,16,.5)')}
+                    onMouseLeave={e => (e.currentTarget.style.color = 'rgba(17,17,16,.65)')}
                   >{label}</button>
                 ))}
                 <a
@@ -163,7 +163,7 @@ export function Footer() {
         </div>
 
         {/* Divider */}
-        <div style={{ height: 1, background: 'rgba(0,0,0,.08)', marginBottom: 28 }} />
+        <div style={{ height: 1, background: 'rgba(0,0,0,.1)', marginBottom: 28 }} />
 
         {/* Bottom: legal */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>

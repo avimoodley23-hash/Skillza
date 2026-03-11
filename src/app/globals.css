@@ -199,7 +199,7 @@ body::before {
   letter-spacing: .3px;
   border: none;
   cursor: pointer;
-  transition: background .2s, transform .2s, box-shadow .2s;
+  transition: background .22s, transform .22s cubic-bezier(.34,1.56,.64,1), box-shadow .22s, letter-spacing .22s;
   white-space: nowrap;
   box-shadow: 0 4px 24px rgba(51,78,216,.35);
   -webkit-tap-highlight-color: transparent;
@@ -207,10 +207,11 @@ body::before {
 .btn-primary:hover {
   background: var(--mint);
   color: #1A1A1A;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 32px rgba(192,240,170,.35);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 12px 36px rgba(192,240,170,.4), 0 4px 12px rgba(0,0,0,.08);
+  letter-spacing: .5px;
 }
-.btn-primary:active { transform: translateY(0); }
+.btn-primary:active { transform: translateY(0) scale(0.99); box-shadow: 0 2px 12px rgba(51,78,216,.25); }
 
 .btn-outline {
   display: inline-flex;
@@ -225,7 +226,7 @@ body::before {
   font-weight: 600;
   letter-spacing: .3px;
   cursor: pointer;
-  transition: all .2s;
+  transition: all .22s cubic-bezier(.34,1.56,.64,1);
   white-space: nowrap;
   -webkit-tap-highlight-color: transparent;
 }
@@ -233,7 +234,10 @@ body::before {
   border-color: rgba(51,78,216,.4);
   background: rgba(51,78,216,.06);
   color: var(--orange);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(51,78,216,.12);
 }
+.btn-outline:active { transform: translateY(0); box-shadow: none; }
 
 .btn-citrus {
   display: inline-flex;
@@ -248,13 +252,13 @@ body::before {
   letter-spacing: .3px;
   border: none;
   cursor: pointer;
-  transition: all .22s;
+  transition: all .22s cubic-bezier(.34,1.56,.64,1);
   white-space: nowrap;
   box-shadow: 0 4px 28px rgba(224,228,70,.4);
   -webkit-tap-highlight-color: transparent;
 }
-.btn-citrus:hover { background: var(--citrus-2); transform: translateY(-2px); box-shadow: 0 8px 36px rgba(224,228,70,.5); }
-.btn-citrus:active { transform: translateY(0); }
+.btn-citrus:hover { background: var(--citrus-2); transform: translateY(-3px) scale(1.02); box-shadow: 0 10px 36px rgba(224,228,70,.5); }
+.btn-citrus:active { transform: translateY(0) scale(0.99); }
 
 /* Legacy */
 .btn-lime { display: inline-flex; align-items: center; gap: 8px; background: var(--citrus); color: #111111; padding: 16px 32px; border-radius: 100px; font-size: 15px; font-weight: 800; letter-spacing: .3px; border: none; cursor: pointer; transition: all .22s; white-space: nowrap; box-shadow: 0 4px 28px rgba(224,228,70,.4); -webkit-tap-highlight-color: transparent; }

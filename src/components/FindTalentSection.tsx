@@ -9,7 +9,7 @@ const HIRER_PERKS = [
   { icon: GraduationCap, title: 'Trained for exactly this',    body: 'Mid-degree students at UCT, AFDA, Red & Yellow, Wits and ICA — studying full-time in the skill you need.', bg: '#334ED8', text: '#FFFFFF', sub: 'rgba(255,255,255,.70)' },
   { icon: Zap,           title: 'No account. No friction.',   body: 'Fill a short form, the student contacts you on WhatsApp within 24 hours. Direct, human, no platform in the way.', bg: '#C0F0AA', text: '#1A3A1A', sub: 'rgba(26,58,26,.65)' },
   { icon: ShieldCheck,   title: 'Protected payments',          body: '30% deposit before work starts. Balance only on completion. Scope agreed upfront. Both parties leave verified reviews.', bg: '#FF7144', text: '#FFFFFF', sub: 'rgba(255,255,255,.70)' },
-  { icon: Star,          title: 'Fresh work at fair prices',   body: "Lower rates because they're students. The quality isn't. Every job builds their portfolio — they're invested.", bg: '#E0E446', text: '#1A1A00', sub: 'rgba(26,26,0,.65)' },
+  { icon: Star,          title: 'Fresh work at fair prices',   body: "Lower rates because they're students. The quality isn't. Every job builds their portfolio — they're invested.", bg: '#E0E446', text: '#1A1A00', sub: 'rgba(26,26,0,.72)' },
 ] as { icon: React.ElementType; title: string; body: string; bg: string; text: string; sub: string }[]
 
 export function FindTalentSection() {
@@ -68,8 +68,8 @@ export function FindTalentSection() {
                     <div style={{ width: 30, height: 30, flexShrink: 0, background: 'rgba(0,0,0,.09)', borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', color: item.text }}>
                       <Icon size={14} strokeWidth={1.8} />
                     </div>
-                    <h4 style={{ fontSize: 12, fontWeight: 700, color: item.text, margin: '0 0 2px', lineHeight: 1.3 }}>{item.title}</h4>
-                    <p style={{ fontSize: 11, color: item.sub, lineHeight: 1.6, margin: 0 }}>{item.body}</p>
+                    <h4 style={{ fontSize: 13, fontWeight: 700, color: item.text, margin: '0 0 2px', lineHeight: 1.3 }}>{item.title}</h4>
+                    <p style={{ fontSize: 12, color: item.sub, lineHeight: 1.65, margin: 0 }}>{item.body}</p>
                   </div>
                 )
               })}
