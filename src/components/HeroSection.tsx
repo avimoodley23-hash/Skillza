@@ -314,8 +314,11 @@ export default function HeroSection({ students = [] }: { students?: StudentFull[
                 border: `1px solid ${CARD_ACCENTS[i].border}`,
                 boxShadow: '0 2px 16px rgba(0,0,0,.1)',
                 padding: 14, position: 'relative', overflow: 'hidden',
+                animation: `hcm${i + 1} ${[4.2, 5.1, 3.8][i]}s ease-in-out infinite ${[0, 0.9, 1.7][i]}s`,
               }}>
                 <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 2, borderRadius: '14px 14px 0 0', background: CARD_ACCENTS[i].top }} />
+                {/* Live available dot */}
+                <div style={{ position: 'absolute', top: 10, right: 10, width: 7, height: 7, borderRadius: '50%', background: '#3CB97D', boxShadow: '0 0 0 2px rgba(59,185,125,.25)', animation: 'pdot 2s ease-in-out infinite' }} />
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
                   <div style={{ position: 'relative', flexShrink: 0 }}>
                     {card.photo_url ? (
@@ -521,6 +524,10 @@ export default function HeroSection({ students = [] }: { students?: StudentFull[
         .hc-1 { animation: hcf1 6s ease-in-out infinite; }
         .hc-2 { animation: hcf2 6s ease-in-out infinite 1.2s; }
         .hc-3 { animation: hcf3 6s ease-in-out infinite 2.4s; }
+
+        @keyframes hcm1 { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-7px)} }
+        @keyframes hcm2 { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-9px)} }
+        @keyframes hcm3 { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
 
         @media (prefers-reduced-motion: reduce) {
           .hc-1, .hc-2, .hc-3 { animation: none; }
