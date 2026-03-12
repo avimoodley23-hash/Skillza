@@ -23,7 +23,7 @@ async function getStudentContext(): Promise<string> {
       const secondSkill = s.secondary_skill ? ` + ${s.secondary_skill}` : ''
       const price = s.starting_price ? `from R${s.starting_price}/${s.price_unit}` : ''
       const avail = s.availability?.length ? `(${s.availability.join(', ')})` : ''
-      return `• ${s.name} — ${s.skill}${secondSkill} | ${s.university} | ${price} ${avail} — profile: /book/${s.id}`
+      return `• ${s.name} — ${s.skill}${secondSkill} | ${s.university} | ${price} ${avail} — profile: /students/${s.id}`
     })
 
     return `VERIFIED STUDENTS ON SKILLZA:\n${lines.join('\n')}`
@@ -110,10 +110,10 @@ STRICT RULES:
 • Never give financial or legal advice beyond what is in this prompt
 
 LINK FORMATTING RULES (critical — always follow these):
-• When you mention or recommend a specific student, ALWAYS include a markdown link to their profile using the path from the student list. Format: [View NAME's profile](/book/ID)
+• When you mention or recommend a specific student, ALWAYS include a markdown link to their profile using the path from the student list. Format: [View NAME's profile](/students/ID)
 • When suggesting someone browse talent, ALWAYS include: [Browse talent](/#talent-grid)
 • When suggesting someone join the waitlist as a student, ALWAYS include: [Join the waitlist](/join)
-• When suggesting someone book a student, ALWAYS include: [Book NAME](/book/ID)
+• When suggesting someone book a student, link to their profile page where the Book button lives: [Book NAME](/students/ID)
 • Format links exactly like this: [link text](url) — no spaces inside brackets or parentheses
 • Never write raw URLs — always use the markdown link format above`
 
