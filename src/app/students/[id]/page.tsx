@@ -18,8 +18,9 @@ async function getStudent(id: string): Promise<StudentFull | null> {
   return data as unknown as StudentFull
 }
 
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
-  const student = await getStudent(params.id)
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params
+  const student = await getStudent(id)
   if (!student) return { title: 'Student Not Found — Skillza' }
   return {
     title: `${student.name} — ${student.skill} · Skillza`,
@@ -30,8 +31,9 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
 const ACCENT = '#334ED8'
 const ACCENT2 = '#1E3AC0'
 
-export default async function StudentPage({ params }: { params: { id: string } }) {
-  const student = await getStudent(params.id)
+export default async function StudentPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+  const student = await getStudent(id)
   if (!student) notFound()
 
   const pricing = (student.student_pricing ?? []).sort((a, b) => a.sort_order - b.sort_order)
