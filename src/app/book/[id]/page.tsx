@@ -1,8 +1,9 @@
 'use client'
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { useParams } from 'next/navigation'
 import Nav from '@/components/Nav'
 import Link from 'next/link'
+import { SKILLS, SKILL_EMOJIS } from '@/lib/skills'
 
 export default function BookPage() {
   const params = useParams()
@@ -11,7 +12,42 @@ export default function BookPage() {
   const [form, setForm] = useState({ name: '', email: '', whatsapp: '', description: '' })
   const [loading, setLoading] = useState(false)
   const [reference, setReference] = useState('')
+  const [studentName, setStudentName] = useState('')
   const [error, setError] = useState('')
+
+  // Smart category hint
+  const [categoryHint, setCategoryHint] = useState<string | null>(null)
+  const [categoryLoading, setCategoryLoading] = useState(false)
+  const categoryTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  // WhatsApp draft
+  const [whatsappDraft, setWhatsappDraft] = useState('')
+  const [whatsappLoading, setWhatsappLoading] = useState(false)
+  const [whatsappCopied, setWhatsappCopied] = useState(false)
+  const [savedClientName, setSavedClientName] = useState('')
+  const [savedDescription, setSavedDescription] = useState('')
+
+  const handleDescriptionChange = (value: string) => {
+    setForm(f => ({ ...f, description: value }))
+    setCategoryHint(null)
+
+    // Debounce category suggestion — trigger after 600ms pause and 30+ chars
+    if (categoryTimer.current) clearTimeout(categoryTimer.current)
+    if (value.trim().length < 30) return
+    categoryTimer.current = setTimeout(async () => {
+      setCategoryLoading(true)
+      try {
+        const res = await fetch('/api/gemini', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'suggest_category', description: value, categories: SKILLS.filter(s => s !== 'Other') }),
+        })
+        const data = await res.json()
+        if (data.category) setCategoryHint(data.category)
+      } catch { /* silently ignore */ }
+      finally { setCategoryLoading(false) }
+    }, 600)
+  }
 
   const handleSubmit = async () => {
     if (!form.name || !form.whatsapp || !form.email) {
@@ -20,6 +56,10 @@ export default function BookPage() {
     }
     setLoading(true)
     setError('')
+
+    // Save for WhatsApp draft
+    setSavedClientName(form.name)
+    setSavedDescription(form.description)
 
     const res = await fetch('/api/book', {
       method: 'POST',
@@ -35,14 +75,41 @@ export default function BookPage() {
 
     const data = await res.json()
 
-if (!res.ok || data?.error) {
-  setError(data?.error || `Request failed (${res.status})`)
-  setLoading(false)
-  return
-}
+    if (!res.ok || data?.error) {
+      setError(data?.error || `Request failed (${res.status})`)
+      setLoading(false)
+      return
+    }
 
     setReference(data.reference)
+    setStudentName(data.studentName || '')
     setLoading(false)
+  }
+
+  const handleDraftWhatsApp = async () => {
+    setWhatsappLoading(true)
+    try {
+      const res = await fetch('/api/gemini', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'whatsapp_draft',
+          studentName,
+          clientName: savedClientName,
+          description: savedDescription,
+        }),
+      })
+      const data = await res.json()
+      if (data.text) setWhatsappDraft(data.text)
+    } catch { /* silently ignore */ }
+    finally { setWhatsappLoading(false) }
+  }
+
+  const handleCopyDraft = () => {
+    navigator.clipboard.writeText(whatsappDraft).then(() => {
+      setWhatsappCopied(true)
+      setTimeout(() => setWhatsappCopied(false), 2000)
+    })
   }
 
   if (reference) {
@@ -56,11 +123,50 @@ if (!res.ok || data?.error) {
             <p style={{ fontSize: 15, color: 'var(--cream-dim)', lineHeight: 1.7, marginBottom: 28 }}>
               The student will reach out on WhatsApp within 24 hours to confirm scope and availability.
             </p>
-            <div style={{ background: 'var(--black-2)', border: '1px solid var(--border)', borderRadius: 14, padding: 24, marginBottom: 28 }}>
+            <div style={{ background: 'var(--black-2)', border: '1px solid var(--border)', borderRadius: 14, padding: 24, marginBottom: 20 }}>
               <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: 'var(--muted)', marginBottom: 8 }}>Your Reference</div>
               <div style={{ fontFamily: 'Bebas Neue, sans-serif', fontSize: 32, letterSpacing: 4, color: 'var(--orange)' }}>{reference}</div>
               <p style={{ fontSize: 12, color: 'var(--muted)', marginTop: 8 }}>Keep this safe. Quote it in all communications.</p>
             </div>
+
+            {/* WhatsApp draft */}
+            <div style={{ background: 'rgba(37,211,102,.05)', border: '1px solid rgba(37,211,102,.2)', borderRadius: 14, padding: 20, marginBottom: 20, textAlign: 'left' }}>
+              <div style={{ fontSize: 11, fontWeight: 700, color: 'rgba(37,211,102,.9)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 1 }}>
+                💬 Opening WhatsApp Message
+              </div>
+              <p style={{ fontSize: 13, color: 'rgba(245,239,227,.6)', lineHeight: 1.6, marginBottom: 12 }}>
+                When they reach out, not sure what to say? Let AI draft your opening message.
+              </p>
+              {!whatsappDraft && (
+                <button
+                  onClick={handleDraftWhatsApp}
+                  disabled={whatsappLoading}
+                  style={{ background: whatsappLoading ? 'rgba(37,211,102,.3)' : 'rgba(37,211,102,.15)', color: 'rgba(37,211,102,.95)', border: '1px solid rgba(37,211,102,.3)', borderRadius: 8, padding: '10px 16px', fontSize: 13, fontWeight: 700, cursor: whatsappLoading ? 'not-allowed' : 'pointer' }}
+                >
+                  {whatsappLoading ? '✨ Drafting...' : '✨ Draft my opening message'}
+                </button>
+              )}
+              {whatsappDraft && (
+                <div>
+                  <div style={{ background: 'rgba(255,255,255,.05)', border: '1px solid rgba(255,255,255,.1)', borderRadius: 10, padding: '14px 16px', fontSize: 14, color: 'var(--cream)', lineHeight: 1.7, marginBottom: 10, whiteSpace: 'pre-wrap' }}>
+                    {whatsappDraft}
+                  </div>
+                  <button
+                    onClick={handleCopyDraft}
+                    style={{ background: whatsappCopied ? 'rgba(37,211,102,.2)' : 'rgba(37,211,102,.1)', color: whatsappCopied ? 'rgba(37,211,102,1)' : 'rgba(37,211,102,.8)', border: '1px solid rgba(37,211,102,.25)', borderRadius: 8, padding: '9px 16px', fontSize: 13, fontWeight: 700, cursor: 'pointer', marginRight: 8 }}
+                  >
+                    {whatsappCopied ? '✓ Copied!' : 'Copy message'}
+                  </button>
+                  <button
+                    onClick={() => { setWhatsappDraft(''); handleDraftWhatsApp() }}
+                    style={{ background: 'transparent', color: 'rgba(245,239,227,.4)', border: '1px solid rgba(245,239,227,.12)', borderRadius: 8, padding: '9px 14px', fontSize: 12, cursor: 'pointer' }}
+                  >
+                    Regenerate
+                  </button>
+                </div>
+              )}
+            </div>
+
             <div style={{ background: 'rgba(255,74,28,.06)', border: '1px solid rgba(255,74,28,.15)', borderRadius: 12, padding: '14px 18px', marginBottom: 28, textAlign: 'left' }}>
               <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--orange)', marginBottom: 6 }}>Safety reminder</div>
               <p style={{ fontSize: 13, color: 'rgba(245,239,227,.7)', lineHeight: 1.6 }}>
@@ -124,12 +230,25 @@ if (!res.ok || data?.error) {
               <textarea
                 placeholder="e.g. I need a photographer for my 21st birthday party on 15 April in Claremont..."
                 value={form.description}
-                onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
+                onChange={e => handleDescriptionChange(e.target.value)}
                 rows={4}
                 style={{ width: '100%', background: 'var(--black-2)', border: '1px solid var(--border-2)', borderRadius: 10, padding: '13px 16px', color: 'var(--cream)', fontSize: 14, fontFamily: 'Instrument Sans, sans-serif', outline: 'none', resize: 'vertical', transition: 'border-color .2s' }}
                 onFocus={e => (e.currentTarget.style.borderColor = 'var(--orange)')}
                 onBlur={e => (e.currentTarget.style.borderColor = 'var(--border-2)')}
               />
+              {/* AI category hint */}
+              {(categoryLoading || categoryHint) && (
+                <div style={{ marginTop: 8, display: 'flex', alignItems: 'center', gap: 7 }}>
+                  {categoryLoading
+                    ? <span style={{ fontSize: 12, color: 'var(--muted)', fontStyle: 'italic' }}>✨ Identifying service type…</span>
+                    : categoryHint && (
+                      <span style={{ fontSize: 12, color: 'rgba(245,239,227,.55)' }}>
+                        Looks like: <span style={{ fontWeight: 700, color: 'var(--orange)' }}>{SKILL_EMOJIS[categoryHint] ?? '✨'} {categoryHint}</span>
+                      </span>
+                    )
+                  }
+                </div>
+              )}
             </div>
 
             {error && (

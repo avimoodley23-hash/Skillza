@@ -169,7 +169,7 @@ export async function POST(req: Request) {
 
     ])
 
-    return NextResponse.json({ reference: booking.reference })
+    return NextResponse.json({ reference: booking.reference, studentName: student.name })
 
   } catch (err) {
     console.error('Unexpected error:', err)

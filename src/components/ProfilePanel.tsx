@@ -1,5 +1,5 @@
 'use client'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import {
   User, Instagram, Music2, Linkedin, Palette, Dribbble,
   Youtube, Github, HardDrive, Pin, Twitter, Link2, Image as ImageIcon,
@@ -73,6 +73,28 @@ interface Props {
 }
 
 export function ProfilePanel({ student, onClose, onBook, colors = DEFAULT_COLORS }: Props) {
+  const [reviewSummary, setReviewSummary] = useState('')
+  const [reviewSummaryLoading, setReviewSummaryLoading] = useState(false)
+
+  // Auto-fetch review summary whenever a student with 2+ reviews is opened
+  useEffect(() => {
+    setReviewSummary('')
+    if (!student || !student.student_reviews || student.student_reviews.length < 2) return
+    const reviews = student.student_reviews.filter(r => r.text?.trim())
+    if (reviews.length < 2) return
+
+    setReviewSummaryLoading(true)
+    fetch('/api/gemini', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'summarize_reviews', reviews }),
+    })
+      .then(r => r.json())
+      .then(data => { if (data.text) setReviewSummary(data.text) })
+      .catch(() => {/* silently ignore */})
+      .finally(() => setReviewSummaryLoading(false))
+  }, [student?.id])
+
   useEffect(() => {
     if (student) {
       document.body.style.overflow = 'hidden'
@@ -320,6 +342,15 @@ export function ProfilePanel({ student, onClose, onBook, colors = DEFAULT_COLORS
           {student.student_reviews?.length > 0 && (
             <div style={{ padding: '20px 22px', paddingBottom: 120 }}>
               <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: 2, textTransform: 'uppercase', color: '#888', marginBottom: 12 }}>Reviews</div>
+              {(reviewSummaryLoading || reviewSummary) && (
+                <div style={{ background: `${colors.bg}0d`, border: `1px solid ${colors.bg}25`, borderRadius: 10, padding: '10px 14px', marginBottom: 12, display: 'flex', alignItems: 'flex-start', gap: 8 }}>
+                  <span style={{ fontSize: 14, flexShrink: 0 }}>✨</span>
+                  {reviewSummaryLoading
+                    ? <span style={{ fontSize: 12, color: '#888', fontStyle: 'italic' }}>Summarising reviews…</span>
+                    : <span style={{ fontSize: 13, color: 'rgba(17,17,16,.72)', lineHeight: 1.55, fontStyle: 'italic' }}>{reviewSummary}</span>
+                  }
+                </div>
+              )}
               <div style={{ display: 'flex', flexDirection: 'column', gap: 11 }}>
                 {student.student_reviews.map((r, i) => (
                   <div key={i} style={{ background: '#F5F3EE', border: '1px solid rgba(17,17,16,.08)', borderRadius: 10, padding: 14 }}>

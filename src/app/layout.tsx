@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import './globals.css'
 import { ScrollBar } from '@/components/ScrollBar'
 import CustomCursor from '@/components/CustomCursor'
+import ChatBot from '@/components/ChatBot'
 
 export const metadata: Metadata = {
   title: 'Skillza — SA\'s Creative Talent Platform',
@@ -55,6 +56,7 @@ export default function RootLayout({
         <ScrollBar />
         <CustomCursor />
         {children}
+        <ChatBot />
       </body>
     </html>
   )

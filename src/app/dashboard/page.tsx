@@ -116,6 +116,10 @@ export default function DashboardPage() {
   const [portfolioError, setPortfolioError] = useState('')
   const [deletingPortfolioId, setDeletingPortfolioId] = useState<string | null>(null)
   const portfolioInputRef = useRef<HTMLInputElement>(null)
+  const [bioBullets, setBioBullets] = useState('')
+  const [bioAiOpen, setBioAiOpen] = useState(false)
+  const [bioAiLoading, setBioAiLoading] = useState(false)
+  const [bioAiError, setBioAiError] = useState('')
 
   const [reg, setReg] = useState({
     name: '', whatsapp: '', university: '', year: '', student_number: '',
@@ -568,6 +572,51 @@ export default function DashboardPage() {
               </FormField>
               <FormField label="Your Bio *" hint="3-4 sentences. Who are you, what do you do, what makes you great? Write like you're talking to a client.">
                 <textarea value={reg.bio} onChange={e => setReg(r => ({ ...r, bio: e.target.value }))} rows={5} placeholder="e.g. I'm a third year photography student at UCT specialising in events and portraits..." style={{ ...inputStyle, resize: 'vertical' }} />
+                <div style={{ marginTop: 8 }}>
+                  <button
+                    type="button"
+                    onClick={() => { setBioAiOpen(o => !o); setBioAiError('') }}
+                    style={{ fontSize: 11, fontWeight: 700, color: '#334ED8', background: 'rgba(51,78,216,.08)', border: '1px solid rgba(51,78,216,.2)', borderRadius: 20, padding: '4px 10px', cursor: 'pointer', letterSpacing: .3 }}
+                  >
+                    ✨ Write with AI instead
+                  </button>
+                  {bioAiOpen && (
+                    <div style={{ marginTop: 10, background: 'rgba(51,78,216,.05)', border: '1px solid rgba(51,78,216,.18)', borderRadius: 12, padding: 14 }}>
+                      <p style={{ fontSize: 12, color: 'rgba(17,17,16,.55)', marginBottom: 8, lineHeight: 1.5 }}>Drop a few bullet points — Gemini will write your bio.</p>
+                      <textarea
+                        value={bioBullets}
+                        onChange={e => { setBioBullets(e.target.value); setBioAiError('') }}
+                        rows={3}
+                        placeholder="e.g. 3rd year at UCT&#10;Specialise in event photography&#10;Shot 20+ weddings"
+                        style={{ ...inputStyle, resize: 'vertical', fontSize: 13 }}
+                      />
+                      {bioAiError && <p style={{ fontSize: 12, color: '#c0392b', marginTop: 6 }}>{bioAiError}</p>}
+                      <button
+                        type="button"
+                        disabled={bioAiLoading || !bioBullets.trim()}
+                        onClick={async () => {
+                          if (!bioBullets.trim()) return
+                          setBioAiLoading(true); setBioAiError('')
+                          try {
+                            const res = await fetch('/api/gemini', {
+                              method: 'POST',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify({ action: 'bio', bullets: bioBullets, name: reg.name, skill: reg.skill, university: reg.university, year: reg.year }),
+                            })
+                            const data = await res.json()
+                            if (!res.ok || data.error) { setBioAiError(data.error || 'AI error'); return }
+                            setReg(r => ({ ...r, bio: data.text }))
+                            setBioAiOpen(false); setBioBullets('')
+                          } catch { setBioAiError('Something went wrong.') }
+                          finally { setBioAiLoading(false) }
+                        }}
+                        style={{ marginTop: 10, background: bioAiLoading || !bioBullets.trim() ? 'rgba(51,78,216,.4)' : '#334ED8', color: '#fff', border: 'none', borderRadius: 8, padding: '10px 18px', fontSize: 13, fontWeight: 700, cursor: 'pointer' }}
+                      >
+                        {bioAiLoading ? 'Writing...' : '✨ Generate Bio'}
+                      </button>
+                    </div>
+                  )}
+                </div>
               </FormField>
               <FormField label="General Availability">
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 4 }}>
@@ -786,8 +835,66 @@ export default function DashboardPage() {
 
             <Field label="WhatsApp" value={student!.whatsapp || ''} onChange={v => setStudent({ ...student!, whatsapp: v })} />
             <div>
-              <label style={labelStyle}>Bio</label>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+                <label style={labelStyle}>Bio</label>
+                <button
+                  type="button"
+                  onClick={() => { setBioAiOpen(o => !o); setBioAiError('') }}
+                  style={{ fontSize: 11, fontWeight: 700, color: '#334ED8', background: 'rgba(51,78,216,.08)', border: '1px solid rgba(51,78,216,.2)', borderRadius: 20, padding: '4px 10px', cursor: 'pointer', letterSpacing: .3 }}
+                >
+                  ✨ Write with AI
+                </button>
+              </div>
               <textarea value={student!.bio} onChange={e => setStudent({ ...student!, bio: e.target.value })} rows={4} style={{ ...inputStyle, resize: 'vertical' }} />
+              {bioAiOpen && (
+                <div style={{ marginTop: 10, background: 'rgba(51,78,216,.05)', border: '1px solid rgba(51,78,216,.18)', borderRadius: 12, padding: 14 }}>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: '#334ED8', marginBottom: 6, letterSpacing: .4, textTransform: 'uppercase' }}>AI Bio Writer</div>
+                  <p style={{ fontSize: 12, color: 'rgba(17,17,16,.55)', marginBottom: 8, lineHeight: 1.5 }}>Jot down a few bullet points about yourself — Gemini will turn them into a polished bio.</p>
+                  <textarea
+                    value={bioBullets}
+                    onChange={e => { setBioBullets(e.target.value); setBioAiError('') }}
+                    rows={3}
+                    placeholder="e.g. 3rd year at UCT&#10;Specialise in event photography&#10;Shot 20+ weddings&#10;Available weekends"
+                    style={{ ...inputStyle, resize: 'vertical', fontSize: 13 }}
+                  />
+                  {bioAiError && <p style={{ fontSize: 12, color: '#c0392b', marginTop: 6 }}>{bioAiError}</p>}
+                  <button
+                    type="button"
+                    disabled={bioAiLoading || !bioBullets.trim()}
+                    onClick={async () => {
+                      if (!bioBullets.trim()) return
+                      setBioAiLoading(true)
+                      setBioAiError('')
+                      try {
+                        const res = await fetch('/api/gemini', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({
+                            action: 'bio',
+                            bullets: bioBullets,
+                            name: student!.name,
+                            skill: student!.skill,
+                            university: student!.university,
+                            year: student!.year,
+                          }),
+                        })
+                        const data = await res.json()
+                        if (!res.ok || data.error) { setBioAiError(data.error || 'AI error, try again'); return }
+                        setStudent(s => ({ ...s!, bio: data.text }))
+                        setBioAiOpen(false)
+                        setBioBullets('')
+                      } catch {
+                        setBioAiError('Something went wrong. Try again.')
+                      } finally {
+                        setBioAiLoading(false)
+                      }
+                    }}
+                    style={{ marginTop: 10, background: bioAiLoading || !bioBullets.trim() ? 'rgba(51,78,216,.4)' : '#334ED8', color: '#fff', border: 'none', borderRadius: 8, padding: '10px 18px', fontSize: 13, fontWeight: 700, cursor: bioAiLoading || !bioBullets.trim() ? 'not-allowed' : 'pointer' }}
+                  >
+                    {bioAiLoading ? 'Writing...' : '✨ Generate Bio'}
+                  </button>
+                </div>
+              )}
             </div>
             <div>
               <label style={labelStyle}>Availability</label>
