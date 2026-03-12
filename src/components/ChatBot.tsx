@@ -113,7 +113,7 @@ export default function ChatBot() {
     <>
       {/* ── Chat window ───────────────────────────────────────────── */}
       {open && (
-        <div style={{
+        <div className="skz-chat-window" style={{
           position: 'fixed',
           bottom: 84,
           right: 20,
@@ -339,7 +339,7 @@ export default function ChatBot() {
                 border: '1px solid rgba(0,0,0,.09)',
                 borderRadius: 10,
                 padding: '10px 14px',
-                color: '#111110', fontSize: 13,
+                color: '#111110', fontSize: 16,
                 fontFamily: 'Instrument Sans, sans-serif',
                 outline: 'none',
                 transition: 'border-color .15s, box-shadow .15s',
@@ -375,6 +375,7 @@ export default function ChatBot() {
 
       {/* ── Floating bubble ── */}
       <button
+        className="skz-chat-bubble"
         onClick={() => setOpen(o => !o)}
         aria-label="Open Skillza Bot"
         style={{
@@ -439,6 +440,20 @@ export default function ChatBot() {
         @keyframes skzBubbleIdle {
           0%, 100% { box-shadow: 0 4px 20px rgba(17,17,16,.35), 0 0 0 3px rgba(10, 6, 255, 0.25); }
           50%      { box-shadow: 0 4px 24px rgba(17,17,16,.4),  0 0 0 5px rgba(3, 3, 255, 0.32); }
+        }
+        /* ── Mobile: lift bubble above sticky booking bar ── */
+        @media (max-width: 767px) {
+          .skz-chat-bubble {
+            bottom: 90px !important;
+            right: 12px !important;
+          }
+          .skz-chat-window {
+            bottom: 150px !important;
+            right: 8px !important;
+            left: 8px !important;
+            width: calc(100vw - 16px) !important;
+            height: min(480px, calc(100svh - 180px)) !important;
+          }
         }
       `}</style>
     </>
