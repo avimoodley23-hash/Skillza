@@ -14,6 +14,31 @@ const SUGGESTIONS = [
   { text: 'Help me write my bio',    bg: '#C0F0AA', color: '#111110' },
 ]
 
+// Parse [text](url) markdown into <a> elements; everything else is plain text
+function renderContent(text: string, isUser: boolean) {
+  const parts = text.split(/(\[[^\]]+\]\([^)]+\))/g)
+  return parts.map((part, i) => {
+    const match = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/)
+    if (match) {
+      return (
+        <a
+          key={i}
+          href={match[2]}
+          style={{
+            color: isUser ? '#fff' : '#334ED8',
+            textDecoration: 'underline',
+            fontWeight: 700,
+            textUnderlineOffset: 2,
+          }}
+        >
+          {match[1]}
+        </a>
+      )
+    }
+    return <span key={i} style={{ whiteSpace: 'pre-wrap' }}>{part}</span>
+  })
+}
+
 // Small logo mark reused in avatar spots
 const Logo = ({ size = 28 }: { size?: number }) => (
   <div style={{
@@ -220,12 +245,11 @@ export default function ChatBot() {
                   color: m.role === 'user' ? '#fff' : '#111110',
                   lineHeight: 1.65,
                   maxWidth: '86%',
-                  whiteSpace: 'pre-wrap',
                   wordBreak: 'break-word',
                   fontFamily: 'Instrument Sans, sans-serif',
                   boxShadow: m.role === 'user' ? '0 2px 10px rgba(51,78,216,.3)' : 'none',
                 }}>
-                  {m.content}
+                  {renderContent(m.content, m.role === 'user')}
                 </div>
               </div>
             ))}
@@ -414,7 +438,7 @@ export default function ChatBot() {
         }
         @keyframes skzBubbleIdle {
           0%, 100% { box-shadow: 0 4px 20px rgba(17,17,16,.35), 0 0 0 3px rgba(10, 6, 255, 0.25); }
-          50%      { box-shadow: 0 4px 24px rgba(17,17,16,.4),  0 0 0 5px rgba(0, 30, 255, 0.32); }
+          50%      { box-shadow: 0 4px 24px rgba(17,17,16,.4),  0 0 0 5px rgba(3, 3, 255, 0.32); }
         }
       `}</style>
     </>
