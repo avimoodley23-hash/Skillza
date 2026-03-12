@@ -1,12 +1,12 @@
 import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
 
-const MODEL = 'gemini-2.0-flash'
-const BASE = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`
+const GROQ_MODEL = 'llama-3.3-70b-versatile'
+const GROQ_BASE = 'https://api.groq.com/openai/v1/chat/completions'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
+  process.env.SUPABASE_SERVICE_ROLE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 )
 
 async function getStudentContext(): Promise<string> {
@@ -117,40 +117,44 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'messages array required' }, { status: 400 })
     }
 
-    const key = process.env.GEMINI_API_KEY
+    const key = process.env.GROQ_API_KEY
     if (!key) return NextResponse.json({ error: 'AI not configured' }, { status: 500 })
 
     // Fetch live student list for context
     const studentContext = await getStudentContext()
     const systemWithStudents = `${SKILLZA_SYSTEM}\n\n${studentContext}`
 
-    // Build Gemini contents array (multi-turn)
-    const contents = messages.map((m: { role: string; content: string }) => ({
-      role: m.role === 'assistant' ? 'model' : 'user',
-      parts: [{ text: m.content }],
-    }))
+    // Build OpenAI-compatible messages array
+    const groqMessages = [
+      { role: 'system', content: systemWithStudents },
+      ...messages.map((m: { role: string; content: string }) => ({
+        role: m.role,
+        content: m.content,
+      })),
+    ]
 
-    const res = await fetch(`${BASE}?key=${key}`, {
+    const res = await fetch(GROQ_BASE, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${key}`,
+      },
       body: JSON.stringify({
-        system_instruction: { parts: [{ text: systemWithStudents }] },
-        contents,
-        generationConfig: {
-          temperature: 0.75,
-          maxOutputTokens: 400,
-        },
+        model: GROQ_MODEL,
+        messages: groqMessages,
+        temperature: 0.75,
+        max_tokens: 400,
       }),
     })
 
     if (!res.ok) {
       const err = await res.text()
-      console.error('[Chat route] Gemini error:', err)
+      console.error('[Chat route] Groq error:', err)
       return NextResponse.json({ error: 'AI error' }, { status: 500 })
     }
 
     const data = await res.json()
-    const text = data.candidates?.[0]?.content?.parts?.[0]?.text ?? "Sorry, I couldn't generate a response. Try again!"
+    const text = data.choices?.[0]?.message?.content ?? "Sorry, I couldn't generate a response. Try again!"
 
     return NextResponse.json({ text: text.trim() })
   } catch (err) {
