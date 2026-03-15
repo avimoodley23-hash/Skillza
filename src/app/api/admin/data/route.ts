@@ -3,7 +3,7 @@ import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
 
-const ADMIN_EMAILS = (process.env.ADMIN_EMAILS ?? 'avi.moodley23@gmail.com,gareth.rasmussen@icloud.com')
+const ADMIN_EMAILS = (process.env.ADMIN_EMAILS ?? 'avi.moodley23@gmail.com,gareth.rasmussen@icloud.com,info.garethras@gmail.com')
   .split(',').map(e => e.trim()).filter(Boolean)
 
 const supabase = createClient(
